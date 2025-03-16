@@ -13,7 +13,8 @@ namespace REPOMods
             "Hello, world!",
             "Stay positive!",
             "Keep moving forward!",
-            "Never give up!"
+            "Never give up!",
+            "Oooo Fuckk meeeee"
         };
         private static readonly Random rng = new Random();
 

@@ -1,5 +1,6 @@
 ﻿using BepInEx.Logging;
 using HarmonyLib;
+using REPOMods;
 using UnityEngine;
 
 namespace OpJosModREPO.Tourettes.Patches
@@ -23,15 +24,10 @@ namespace OpJosModREPO.Tourettes.Patches
             if (Time.time > nextExecutionTime)
             {
                 mls.LogInfo("said random phrase!");
-                sayPhrase();
+                __instance.ChatMessageSend(Phrases.GetRandomPhrase(), false);
 
-                nextExecutionTime = Time.time + rng.Next(1 * 60, 6 * 60);
+                nextExecutionTime = Time.time + rng.Next(1 * 60, 10 * 60);
             }
-        }
-
-        static void sayPhrase()
-        {
-
         }
     }
 }
