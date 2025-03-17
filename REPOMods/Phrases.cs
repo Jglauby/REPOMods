@@ -36,6 +36,17 @@ namespace REPOMods
             "sup chubby",
             "beeepp booopp beeep",
             "I SAIDDDDD, whoever threw that paperrrr. you're moms a HOE!",
+            "Bonk",
+            "Yeet",
+            "DEEENOOOOO STOOOPPPSSS",
+            "kaboom",
+            "later nerd",
+            "nahhh imma do my own thing",
+            "ass",
+            "cunt",
+            "aaaaachhhhoooooooo",
+            "sneezes in robot",
+            "no one is here"
         };
         private static readonly Random rng = new Random();
 
