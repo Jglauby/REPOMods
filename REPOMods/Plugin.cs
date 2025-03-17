@@ -1,15 +1,15 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using OpJosModREPO.modname.Patches;
+using OpJosModREPO.RainbowPlayer.Patches;
 
-namespace OpJosModREPO.modname
+namespace OpJosModREPO.RainbowPlayer
 {
     [BepInPlugin(modGUID, modName, modVersion)]
     public class OpJosModBase : BaseUnityPlugin
     {
-        private const string modGUID = "OpJosModREPO.modname";
-        private const string modName = "modname";
+        private const string modGUID = "OpJosModREPO.RainbowPlayer";
+        private const string modName = "RainbowPlayer";
         private const string modVersion = "1.0.0";
 
         private readonly Harmony harmoy = new Harmony(modGUID);

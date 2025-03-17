@@ -2,7 +2,7 @@
 using HarmonyLib;
 using System.Media;
 
-namespace OpJosModREPO.modname.Patches
+namespace OpJosModREPO.RainbowPlayer.Patches
 {
     [HarmonyPatch(typeof(PlayerAvatar))]
     internal class PlayerAvaterPatch
