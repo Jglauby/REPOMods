@@ -26,7 +26,7 @@ namespace OpJosModREPO.Tourettes.Patches
                 mls.LogInfo("said random phrase!");
                 __instance.ChatMessageSend(Phrases.GetRandomPhrase(), false);
 
-                nextExecutionTime = Time.time + rng.Next(2 * 60, 10 * 60);
+                nextExecutionTime = Time.time + rng.Next(30, 5 * 60);
             }
         }
     }
