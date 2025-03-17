@@ -21,12 +21,12 @@ namespace OpJosModREPO.Tourettes.Patches
         [HarmonyPostfix]
         static void UpdatePatch(PlayerAvatar __instance)
         {
-            if (Time.time > nextExecutionTime)
+            if (Time.time > nextExecutionTime && __instance.isActiveAndEnabled)
             {
                 mls.LogInfo("said random phrase!");
                 __instance.ChatMessageSend(Phrases.GetRandomPhrase(), false);
 
-                nextExecutionTime = Time.time + rng.Next(30, 5 * 60);
+                nextExecutionTime = Time.time + rng.Next(30, 5 * 60); //30, 5*60
             }
         }
     }
