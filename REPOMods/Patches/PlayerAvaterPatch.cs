@@ -1,5 +1,6 @@
 ﻿using BepInEx.Logging;
 using HarmonyLib;
+using System.Media;
 
 namespace OpJosModREPO.modname.Patches
 {
@@ -12,13 +13,31 @@ namespace OpJosModREPO.modname.Patches
             mls = logSource;
         }
 
+        private static bool swapColor = false;
+        private static int curColor = 0;
+
         [HarmonyPatch("Update")]
         [HarmonyPostfix]
         static void UpdatePatch(PlayerAvatar __instance)
         {
             if (SemiFunc.InputDown(InputKey.Jump))
             {
-                mls.LogMessage("Jump pressed");
+                mls.LogMessage("swaping color");
+                swapColor = true;
+            }
+
+            if (swapColor)
+            {
+                try
+                {
+                    __instance.PlayerAvatarSetColor(curColor);
+                    curColor++;
+                }
+                catch
+                {
+                    __instance.PlayerAvatarSetColor(0);
+                    curColor = 0;
+                }
             }
         }
     }
