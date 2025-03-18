@@ -16,7 +16,7 @@ namespace OpJosModREPO.RainbowPlayer.Patches
 
         private static bool swapColor = false;
         private static int curColor = 0;
-        private static float delay = 1f;
+        private static float delay = 0.5f;
         private static float lastRan = 0f;
 
         [HarmonyPatch("Update")]
