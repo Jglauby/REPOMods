@@ -26,7 +26,6 @@ namespace OpJosModREPO.IAmDucky
             mls.LogInfo($"{modName} has started!");
 
             PlayerAvaterPatch.SetLogSource(mls);
-            PhotonNetworkPatch.SetLogSource(mls);
             harmoy.PatchAll();
         }
     }

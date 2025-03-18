@@ -28,37 +28,9 @@ namespace OpJosModREPO.IAmDucky.Patches
         [HarmonyPostfix]
         static void UpdatePatch(PlayerAvatar __instance)
         {
-            //if (!PhotonNetwork.IsMasterClient) return;
-
-            if (SemiFunc.InputDown(InputKey.Chat))
-            {
-                GameObject[] allPrefabs = Resources.FindObjectsOfTypeAll<GameObject>();
-                foreach (GameObject obj in allPrefabs)
-                {
-                    if (obj.name.ToLower().Contains("duck")) // Filter by "duck" if possible
-                    {
-                        mls.LogMessage("Possible Duck Prefab: " + obj.name);
-                    }
-                }
-                //Enemy - Duck | Duck monster
-            }
-
             if (SemiFunc.InputDown(InputKey.Jump))
             {
-                string duckPrefabName = "Enemies/Duck monster"; // Corrected prefab name
-                Vector3 spawnPos = __instance.transform.position;
-                mls.LogMessage("Spawning duck at " + spawnPos);
-
-                GameObject duck = PhotonNetwork.InstantiateRoomObject(duckPrefabName, spawnPos, Quaternion.identity);
-
-                if (duck != null)
-                {
-                    mls.LogMessage("Duck spawned");
-                }
-                else
-                {
-                    mls.LogMessage("Duck not spawned");
-                }
+                //spawn duck monster at location
             }
         }
     }
