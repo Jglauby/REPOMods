@@ -26,7 +26,7 @@ namespace REPOMods
             "haha boobies",
             "eueueueueeueueue",
             "yyyyyyyyyyyyyyyy",
-            "mhmhmhmmhmhhmhmhm",
+            "GAYyyybeeeeee",
             "i'm coming",
             "this week at jeremy franklin mitsubishi",
             "its ya boi, uhhhhh. skinny penis",
