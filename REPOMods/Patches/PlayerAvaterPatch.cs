@@ -57,8 +57,11 @@ namespace OpJosModREPO.IAmDucky.Patches
 
                 EnemyDirector.instance.DebugResult();
                 mls.LogInfo("Duck spawned successfully.");
+            }
 
-                GeneralUtil.FindClosestDuck(__instance.transform.position).transform.position = __instance.transform.position;
+            if (SemiFunc.InputDown(InputKey.Chat))
+            {
+                EnemyDuck closestDuck = GeneralUtil.FindClosestDuck(__instance.transform.position);
             }
         }
     }

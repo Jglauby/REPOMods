@@ -9,24 +9,19 @@ namespace REPOMods
 {
     public static class GeneralUtil
     {
-        public static GameObject FindClosestDuck(Vector3 pos)
+        public static EnemyDuck FindClosestDuck(Vector3 pos)
         {
-            GameObject cloestDuck = null;
+            EnemyDuck cloestDuck = null;
             float closestDistance = float.MaxValue;
 
-            foreach (var enemy in GameObject.FindObjectsOfType<Enemy>())
+            foreach (var enemy in GameObject.FindObjectsOfType<EnemyDuck>())
             {
-                GameObject enemyObj = enemy.gameObject;
+                float distance = Vector3.Distance(enemy.gameObject.transform.position, pos);
 
-                if (enemyObj.name == "Enemy - Duck")
+                if (distance < closestDistance)
                 {
-                    float distance = Vector3.Distance(enemyObj.transform.position, pos);
-
-                    if (distance < closestDistance)
-                    {
-                        cloestDuck = enemyObj;
-                        closestDistance = distance;
-                    }
+                    cloestDuck = enemy;
+                    closestDistance = distance;
                 }
             }
 
