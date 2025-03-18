@@ -2,6 +2,7 @@
 using HarmonyLib;
 using OpJosModREPO.Util;
 using Photon.Pun;
+using System.Collections.Generic;
 using System.Media;
 using UnityEngine;
 
@@ -24,13 +25,55 @@ namespace OpJosModREPO.IAmDucky.Patches
             //set to duck here?
         }
 
+        //Enemies/Enemy - Duck
         [HarmonyPatch("Update")]
         [HarmonyPostfix]
         static void UpdatePatch(PlayerAvatar __instance)
         {
-            if (SemiFunc.InputDown(InputKey.Jump))
+            if (SemiFunc.InputDown(InputKey.Jump) && SemiFunc.IsMasterClient()) // Ensure only the host spawns
             {
-                //spawn duck monster at location
+                string duckPrefabPath = "Enemies/Enemy - Duck";
+
+                GameObject duckPrefab = Resources.Load<GameObject>(duckPrefabPath);
+                if (duckPrefab == null)
+                {
+                    mls.LogError($"Duck prefab not found at path: {duckPrefabPath}");
+                    return;
+                }
+
+                LevelPoint closestSpawnPoint = null;
+                float closestDistance = float.MaxValue;
+
+                // Find the nearest spawn point
+                foreach (LevelPoint levelPathPoint in LevelGenerator.Instance.LevelPathPoints)
+                {
+                    float distance = Vector3.Distance(levelPathPoint.transform.position, __instance.transform.position);
+                    if (distance < closestDistance)
+                    {
+                        closestSpawnPoint = levelPathPoint;
+                        closestDistance = distance;
+                    }
+                }
+
+                if (closestSpawnPoint != null)
+                {
+                    mls.LogMessage("Spawning duck at nearest level point.");
+
+                    // Spawn the duck at the chosen spawn location
+                    EnemySetup duckSetup = ScriptableObject.CreateInstance<EnemySetup>();
+                    duckSetup.spawnObjects = new List<GameObject> { duckPrefab };
+
+                    RunManager.instance.EnemiesSpawnedRemoveStart();
+                    ReflectionUtils.InvokeMethod(LevelGenerator.Instance, "EnemySpawn", new object[] { duckSetup, closestSpawnPoint.transform.position });
+                    RunManager.instance.EnemiesSpawnedRemoveEnd();
+
+                    EnemyDirector.instance.DebugResult();
+                    mls.LogInfo("Duck spawned successfully.");
+                }
+                else
+                {
+                    mls.LogError("No valid spawn point found for the duck.");
+                }
             }
         }
     }
