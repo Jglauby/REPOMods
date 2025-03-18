@@ -26,6 +26,7 @@ namespace OpJosModREPO.IAmDucky
             mls.LogInfo($"{modName} has started!");
 
             PlayerAvaterPatch.SetLogSource(mls);
+            EnemyPatch.SetLogSource(mls);
             harmoy.PatchAll();
         }
     }
