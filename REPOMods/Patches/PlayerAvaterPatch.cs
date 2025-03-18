@@ -2,6 +2,7 @@
 using HarmonyLib;
 using OpJosModREPO.Util;
 using Photon.Pun;
+using REPOMods;
 using System.Collections.Generic;
 using System.Linq;
 using System.Media;
@@ -56,6 +57,8 @@ namespace OpJosModREPO.IAmDucky.Patches
 
                 EnemyDirector.instance.DebugResult();
                 mls.LogInfo("Duck spawned successfully.");
+
+                GeneralUtil.FindClosestDuck(__instance.transform.position).transform.position = __instance.transform.position;
             }
         }
     }

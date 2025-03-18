@@ -18,17 +18,16 @@ namespace OpJosModREPO.IAmDucky.Patches
             mls = logSource;
         }
 
-        [HarmonyPatch("EnemyTeleported")]
-        [HarmonyPrefix]
-        static bool PreventDuckTeleport(Enemy __instance)
-        {
-            if (__instance.gameObject.name.Contains("duck"))
-            {
-                mls.LogInfo("Preventing duck from teleporting.");
-                return false; // Skip original method execution
-            }
-            return true; // Allow for other enemies
-        }
-
+        //[HarmonyPatch("EnemyTeleported")]
+        //[HarmonyPrefix]
+        //static bool PreventDuckTeleport(Enemy __instance)
+        //{
+        //    if (__instance.gameObject.name.Contains("duck"))
+        //    {
+        //        mls.LogInfo("Preventing duck from teleporting.");
+        //        return false; // Skip original method execution
+        //    }
+        //    return true; // Allow for other enemies
+        //}
     }
 }

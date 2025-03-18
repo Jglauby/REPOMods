@@ -40,6 +40,7 @@
     <Reference Include="BepInEx">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\REPO\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="PhotonRealtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="PhotonUnityNetworking, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\REPO\REPO_Data\Managed\PhotonUnityNetworking.dll</HintPath>
@@ -63,6 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeneralUtil.cs" />
     <Compile Include="Patches\EnemyPatch.cs" />
     <Compile Include="Patches\PlayerAvaterPatch.cs" />
     <Compile Include="Plugin.cs" />
