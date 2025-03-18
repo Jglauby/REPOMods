@@ -28,35 +28,37 @@ namespace OpJosModREPO.IAmDucky.Patches
         [HarmonyPostfix]
         static void UpdatePatch(PlayerAvatar __instance)
         {
+            //if (!PhotonNetwork.IsMasterClient) return;
+
+            if (SemiFunc.InputDown(InputKey.Chat))
+            {
+                GameObject[] allPrefabs = Resources.FindObjectsOfTypeAll<GameObject>();
+                foreach (GameObject obj in allPrefabs)
+                {
+                    if (obj.name.ToLower().Contains("duck")) // Filter by "duck" if possible
+                    {
+                        mls.LogMessage("Possible Duck Prefab: " + obj.name);
+                    }
+                }
+                //Enemy - Duck | Duck monster
+            }
+
             if (SemiFunc.InputDown(InputKey.Jump))
             {
-                EnemyDuck ducky = new EnemyDuck();
-                EnemySetup enemy = new EnemySetup();
-            }
+                string duckPrefabName = "Enemies/Duck monster"; // Corrected prefab name
+                Vector3 spawnPos = __instance.transform.position;
+                mls.LogMessage("Spawning duck at " + spawnPos);
 
-            //EnemyDuck
-        }
+                GameObject duck = PhotonNetwork.InstantiateRoomObject(duckPrefabName, spawnPos, Quaternion.identity);
 
-        private static void SpawnEnemy(EnemySetup enemySetup, Vector3 pos)
-        {
-            if ((Object)(object)enemySetup == (Object)null || enemySetup.spawnObjects == null || enemySetup.spawnObjects.Count == 0)
-            {
-                return;
-            }
-            GameObject val = enemySetup.spawnObjects[0];
-            if ((Object)(object)val == (Object)null)
-            {
-                return;
-            }
-            GameObject val2 = ((!GameManager.Multiplayer() || !PhotonNetwork.IsMasterClient) ? Object.Instantiate<GameObject>(val, pos, Quaternion.identity) : PhotonNetwork.InstantiateRoomObject("Enemies/" + ((Object)val).name, pos, Quaternion.identity, (byte)0, (object[])null));
-            if ((Object)(object)val2 == (Object)null)
-            {
-                return;
-            }
-            EnemyParent component = val2.GetComponent<EnemyParent>();
-            if ((Object)(object)component == (Object)null)
-            {
-                return;
+                if (duck != null)
+                {
+                    mls.LogMessage("Duck spawned");
+                }
+                else
+                {
+                    mls.LogMessage("Duck not spawned");
+                }
             }
         }
     }
