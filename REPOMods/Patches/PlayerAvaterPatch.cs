@@ -75,6 +75,8 @@ namespace OpJosModREPO.IAmDucky.Patches
                         duckAI.enabled = false;
                         duckAI.currentState = EnemyDuck.State.Idle;  // Prevent AI from overriding movement
                     }
+                    
+                    //enemy has some teleport funciton, try using that
 
                     NavMeshAgent agent = closestDuck.GetComponent<NavMeshAgent>();
                     if (agent != null)

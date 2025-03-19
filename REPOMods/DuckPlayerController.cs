@@ -15,7 +15,6 @@ namespace OpJosModREPO.IAmDucky
         private Transform cameraTransform;
         public float mouseSensitivity = 0.25f;
         private float cameraPitch = 0f;
-        private bool isGrounded = false;
 
 
         void Start()
@@ -62,20 +61,16 @@ namespace OpJosModREPO.IAmDucky
 
             moveDirection = transform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y).normalized);
 
-            if (Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)
+            if (Keyboard.current.spaceKey.wasPressedThisFrame)
             {
                 Console.WriteLine("Jumping!");
-                rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z); // Reset Y velocity before jumping
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             }
         }
 
         void FixedUpdate()
         {
-            isGrounded = true; // Physics.Raycast(transform.position, Vector3.down, 1.1f, LayerMask.GetMask("Ground"));
-
             // Apply movement
-            rb.AddForce(new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed), ForceMode.Acceleration);
+            rb.AddForce(new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.z * moveSpeed), ForceMode.Acceleration);
         }
     }
 
