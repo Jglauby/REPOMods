@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Media;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace OpJosModREPO.IAmDucky.Patches
 {
@@ -61,7 +62,32 @@ namespace OpJosModREPO.IAmDucky.Patches
 
             if (SemiFunc.InputDown(InputKey.Chat))
             {
-                EnemyDuck closestDuck = GeneralUtil.FindClosestDuck(__instance.transform.position);
+                GameObject closestDuck = GeneralUtil.FindClosestDuck(__instance.transform.position)?.gameObject;
+
+                if (closestDuck != null)
+                {
+                    mls.LogMessage($"Found closest duck at {closestDuck.transform.position}, moving it to player.");
+
+                    // Disable AI component
+                    EnemyDuck duckAI = closestDuck.GetComponent<EnemyDuck>();
+                    if (duckAI != null)
+                    {
+                        duckAI.enabled = false;
+                        duckAI.currentState = EnemyDuck.State.Idle;  // Prevent AI from overriding movement
+                    }
+
+                    NavMeshAgent agent = closestDuck.GetComponent<NavMeshAgent>();
+                    if (agent != null)
+                    {
+                        agent.Warp(__instance.transform.position); 
+                    }
+
+                    mls.LogMessage($"Duck moving towards {closestDuck.transform.position}");
+                }
+                else
+                {
+                    mls.LogError("No duck found to teleport.");
+                }
             }
         }
     }
