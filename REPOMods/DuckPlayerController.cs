@@ -10,7 +10,7 @@ namespace OpJosModREPO.IAmDucky
         private Vector3 moveDirection;
         public float moveSpeed = 5f;
         public float turnSpeed = 3f;
-        public float jumpForce = 8f;
+        public float jumpForce = 80f;
         public float gravity = 9.8f;
         private Transform cameraTransform;
         public float mouseSensitivity = 0.25f;
@@ -30,6 +30,7 @@ namespace OpJosModREPO.IAmDucky
                 rb.drag = 1.25f;
                 rb.angularDrag = 0.5f;
                 rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+                rb.useGravity = true;
             }
 
             // Attach the camera behind the duck
@@ -64,16 +65,17 @@ namespace OpJosModREPO.IAmDucky
             if (Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)
             {
                 Console.WriteLine("Jumping!");
-                rb.AddForce(Vector3.up * jumpForce * 20, ForceMode.Force);
+                rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z); // Reset Y velocity before jumping
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             }
         }
 
         void FixedUpdate()
         {
-            isGrounded = true;//Physics.Raycast(transform.position, Vector3.down, 1.1f, LayerMask.GetMask("Ground"));
+            isGrounded = true; // Physics.Raycast(transform.position, Vector3.down, 1.1f, LayerMask.GetMask("Ground"));
 
             // Apply movement
-            rb.AddForce(new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.z * moveSpeed), ForceMode.Acceleration);
+            rb.AddForce(new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed), ForceMode.Acceleration);
         }
     }
 
