@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.IAmDucky
@@ -12,8 +13,9 @@ namespace OpJosModREPO.IAmDucky
         public float jumpForce = 8f;
         public float gravity = 9.8f;
         private Transform cameraTransform;
-        public float mouseSensitivity = 2f;
+        public float mouseSensitivity = 0.25f;
         private float cameraPitch = 0f;
+        private bool isGrounded = false;
 
 
         void Start()
@@ -25,14 +27,14 @@ namespace OpJosModREPO.IAmDucky
             {
                 rb = gameObject.AddComponent<Rigidbody>();  // Ensure the duck has a Rigidbody
                 rb.mass = 5f;
-                rb.drag = 1f;
+                rb.drag = 1.25f;
                 rb.angularDrag = 0.5f;
                 rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             }
 
             // Attach the camera behind the duck
             cameraTransform.SetParent(transform);
-            cameraTransform.localPosition = new Vector3(0, 1.5f, -3f); // Adjust position
+            cameraTransform.localPosition = new Vector3(0, 1.5f, -1.5f); // Adjust position
             cameraTransform.localRotation = Quaternion.identity;
 
             Cursor.lockState = CursorLockMode.Locked; // Hide cursor and lock to center
@@ -58,10 +60,18 @@ namespace OpJosModREPO.IAmDucky
                 : Vector2.zero;
 
             moveDirection = transform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y).normalized);
+
+            if (Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)
+            {
+                Console.WriteLine("Jumping!");
+                rb.AddForce(Vector3.up * jumpForce * 20, ForceMode.Force);
+            }
         }
 
         void FixedUpdate()
         {
+            isGrounded = true;//Physics.Raycast(transform.position, Vector3.down, 1.1f, LayerMask.GetMask("Ground"));
+
             // Apply movement
             rb.AddForce(new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.z * moveSpeed), ForceMode.Acceleration);
         }
