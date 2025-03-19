@@ -89,6 +89,43 @@ namespace OpJosModREPO.IAmDucky.Patches
                     mls.LogError("No duck found to teleport.");
                 }
             }
+
+            if (SemiFunc.InputDown(InputKey.Crouch))
+            {
+                GameObject closestDuck = GeneralUtil.FindClosestDuck(__instance.transform.position)?.gameObject;
+
+                if (closestDuck != null)
+                {
+                    mls.LogMessage($"Found closest duck at {closestDuck.transform.position}, transferring control to player.");
+
+                    // Disable Player's control & collision
+                    __instance.enabled = false;
+                    CharacterController playerController = __instance.GetComponent<CharacterController>();
+                    if (playerController != null)
+                    {
+                        playerController.enabled = false;
+                    }
+
+                    // Transfer control: Add PlayerController to Duck
+                    DuckPlayerController duckPlayerController = closestDuck.GetComponent<DuckPlayerController>();
+                    if (duckPlayerController == null)
+                    {
+                        duckPlayerController = closestDuck.AddComponent<DuckPlayerController>();
+                    }
+
+                    // Set the player camera to follow the duck
+                    Camera.main.transform.SetParent(closestDuck.transform);
+                    Camera.main.transform.localPosition = new Vector3(0, 1, -2); // Adjust position
+                    Camera.main.transform.localRotation = Quaternion.identity;
+
+                    // Log the transfer
+                    mls.LogMessage("Control transferred to the duck.");
+                }
+                else
+                {
+                    mls.LogError("No duck found to transfer control.");
+                }
+            }
         }
     }
 }
