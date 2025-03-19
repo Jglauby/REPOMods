@@ -118,6 +118,13 @@ namespace OpJosModREPO.IAmDucky.Patches
                     Camera.main.transform.localPosition = new Vector3(0, 1, -2); // Adjust position
                     Camera.main.transform.localRotation = Quaternion.identity;
 
+                    NavMeshAgent agent = closestDuck.GetComponent<NavMeshAgent>();
+                    if (agent != null)
+                    {
+                        agent.isStopped = true;  // Stop AI pathfinding
+                        agent.enabled = false;   // Disable NavMeshAgent
+                    }
+
                     // Log the transfer
                     mls.LogMessage("Control transferred to the duck.");
                 }
