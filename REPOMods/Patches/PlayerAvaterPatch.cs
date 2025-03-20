@@ -28,11 +28,16 @@ namespace OpJosModREPO.IAmDucky.Patches
             //set to duck here?
         }
 
-        //Enemies/Enemy - Duck
         [HarmonyPatch("Update")]
         [HarmonyPostfix]
         static void UpdatePatch(PlayerAvatar __instance)
         {
+            //ensure only the host hits this patch
+            if (__instance.photonView == null || !__instance.photonView.IsMine)
+            {
+                return;
+            }
+
             if (SemiFunc.InputDown(InputKey.Jump) && SemiFunc.IsMasterClient()) // Ensure only the host spawns
             {
                 string duckPrefabPath = "Enemies/Enemy - Duck";
@@ -101,12 +106,7 @@ namespace OpJosModREPO.IAmDucky.Patches
                     mls.LogMessage($"Found closest duck at {closestDuck.transform.position}, transferring control to player.");
 
                     // Disable Player's control & collision
-                    __instance.enabled = false;
-                    CharacterController playerController = __instance.GetComponent<CharacterController>();
-                    if (playerController != null)
-                    {
-                        playerController.enabled = false;
-                    }
+                    PlayerController.instance.enabled = false;
 
                     // Transfer control: Add PlayerController to Duck
                     DuckPlayerController duckPlayerController = closestDuck.GetComponent<DuckPlayerController>();
