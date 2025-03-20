@@ -8,6 +8,7 @@ using System.Linq;
 using System.Media;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.IAmDucky.Patches
 {
@@ -38,7 +39,7 @@ namespace OpJosModREPO.IAmDucky.Patches
                 return;
             }
 
-            if (SemiFunc.InputDown(InputKey.Jump) && SemiFunc.IsMasterClient()) // Ensure only the host spawns
+            if (Keyboard.current.pKey.wasPressedThisFrame && SemiFunc.IsMasterClient()) // Ensure only the host spawns
             {
                 string duckPrefabPath = "Enemies/Enemy - Duck";
 
@@ -97,7 +98,7 @@ namespace OpJosModREPO.IAmDucky.Patches
                 }
             }
 
-            if (SemiFunc.InputDown(InputKey.Crouch))
+            if (Keyboard.current.leftCtrlKey.wasPressedThisFrame)
             {
                 GeneralUtil.ControlClosestDuck(__instance.gameObject.transform.position);
             }
