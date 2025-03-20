@@ -66,16 +66,7 @@ namespace OpJosModREPO.IAmDucky
 
             moveDirection = transform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y).normalized);
 
-            if (Keyboard.current.spaceKey.wasPressedThisFrame)
-            {
-                mls.LogInfo("Jumping!");
-            }
-
-            if (Keyboard.current.leftCtrlKey.wasPressedThisFrame)
-            {
-                mls.LogInfo("Reseting control of duck");
-                GeneralUtil.ControlClosestDuck(cameraTransform.position);
-            }
+            handleInput();
         }
 
         void FixedUpdate()
@@ -85,6 +76,20 @@ namespace OpJosModREPO.IAmDucky
 
             // Directly set the camera position behind the duck
             cameraTransform.position = transform.position + transform.TransformDirection(cameraOffset);
+        }
+
+        private void handleInput()
+        {
+            if (Keyboard.current.spaceKey.wasPressedThisFrame)
+            {
+                mls.LogInfo("Jumping!");
+            }
+
+            if (Keyboard.current.rightCtrlKey.isPressed && Keyboard.current.cKey.wasPressedThisFrame)
+            {
+                mls.LogInfo("Reseting control of duck");
+                GeneralUtil.ControlClosestDuck(cameraTransform.position);
+            }
         }
     }
 

@@ -39,7 +39,12 @@ namespace OpJosModREPO.IAmDucky.Patches
                 return;
             }
 
-            if (Keyboard.current.pKey.wasPressedThisFrame && SemiFunc.IsMasterClient()) // Ensure only the host spawns
+            if (!Keyboard.current.rightCtrlKey.isPressed)//all commands require holding left ctrl
+            {
+                return;
+            }
+
+            if (Keyboard.current.sKey.wasPressedThisFrame && SemiFunc.IsMasterClient()) // Ensure only the host spawns
             {
                 string duckPrefabPath = "Enemies/Enemy - Duck";
 
@@ -64,41 +69,15 @@ namespace OpJosModREPO.IAmDucky.Patches
 
                 EnemyDirector.instance.DebugResult();
                 mls.LogInfo("Duck spawned successfully.");
+
+                // Move the duck to the player after delay
+                DelayUtility.RunAfterDelay(5f, () =>
+                {
+                    GeneralUtil.MoveDuckToPos(__instance.transform.position);
+                });
             }
 
-            if (SemiFunc.InputDown(InputKey.Chat))
-            {
-                GameObject closestDuck = GeneralUtil.FindClosestDuck(__instance.transform.position)?.gameObject;
-
-                if (closestDuck != null)
-                {
-                    mls.LogMessage($"Found closest duck at {closestDuck.transform.position}, moving it to player.");
-
-                    // Disable AI component
-                    EnemyDuck duckAI = closestDuck.GetComponent<EnemyDuck>();
-                    if (duckAI != null)
-                    {
-                        duckAI.enabled = false;
-                        duckAI.currentState = EnemyDuck.State.Idle;  // Prevent AI from overriding movement
-                    }
-                    
-                    //enemy has some teleport funciton, try using that
-
-                    NavMeshAgent agent = closestDuck.GetComponent<NavMeshAgent>();
-                    if (agent != null)
-                    {
-                        agent.Warp(__instance.transform.position); 
-                    }
-
-                    mls.LogMessage($"Duck moving towards {closestDuck.transform.position}");
-                }
-                else
-                {
-                    mls.LogError("No duck found to teleport.");
-                }
-            }
-
-            if (Keyboard.current.leftCtrlKey.wasPressedThisFrame)
+            if (Keyboard.current.cKey.wasPressedThisFrame)
             {
                 GeneralUtil.ControlClosestDuck(__instance.gameObject.transform.position);
             }

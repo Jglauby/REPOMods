@@ -80,6 +80,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DelayUtility.cs" />
     <Compile Include="DuckPlayerController.cs" />
     <Compile Include="GeneralUtil.cs" />
     <Compile Include="Patches\EnemyPatch.cs" />

@@ -37,6 +37,38 @@ namespace REPOMods
             return cloestDuck;
         }
 
+        public static void MoveDuckToPos(Vector3 pos) 
+        {
+            GameObject closestDuck = GeneralUtil.FindClosestDuck(pos)?.gameObject;
+
+            if (closestDuck != null)
+            {
+                mls.LogMessage($"Found closest duck at {closestDuck.transform.position}, moving it to player.");
+
+                // Disable AI component
+                EnemyDuck duckAI = closestDuck.GetComponent<EnemyDuck>();
+                if (duckAI != null)
+                {
+                    duckAI.enabled = false;
+                    duckAI.currentState = EnemyDuck.State.Idle;  // Prevent AI from overriding movement
+                }
+
+                //enemy has some teleport funciton, try using that
+
+                NavMeshAgent agent = closestDuck.GetComponent<NavMeshAgent>();
+                if (agent != null)
+                {
+                    agent.Warp(pos);
+                }
+
+                mls.LogMessage($"Duck moving towards {closestDuck.transform.position}");
+            }
+            else
+            {
+                mls.LogError("No duck found to teleport.");
+            }
+        }
+
         public static void ControlClosestDuck(Vector3 pos)
         {
             GameObject closestDuck = FindClosestDuck(pos)?.gameObject;
