@@ -90,6 +90,17 @@ namespace OpJosModREPO.IAmDucky
                 mls.LogInfo("Reseting control of duck");
                 GeneralUtil.ControlClosestDuck(cameraTransform.position);
             }
+
+            if (Keyboard.current.rightCtrlKey.isPressed && Keyboard.current.lKey.wasPressedThisFrame)
+            {
+                mls.LogInfo("Leave duck form, if dead spectate");
+                //delete this controller
+            }
+
+            if (Keyboard.current.eKey.wasPressedThisFrame)
+            {
+                mls.LogInfo("toggle attack mode");
+            }
         }
     }
 
