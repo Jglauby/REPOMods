@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BepInEx.Logging;
+using REPOMods;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +8,12 @@ namespace OpJosModREPO.IAmDucky
 {
     public class DuckPlayerController : MonoBehaviour
     {
+        private static ManualLogSource mls;
+        public static void SetLogSource(ManualLogSource logSource)
+        {
+            mls = logSource;
+        }
+
         private Rigidbody rb;
         private Vector3 moveDirection;
         public float moveSpeed = 5f;
@@ -60,7 +68,13 @@ namespace OpJosModREPO.IAmDucky
 
             if (Keyboard.current.spaceKey.wasPressedThisFrame)
             {
-                Console.WriteLine("Jumping!");
+                mls.LogInfo("Jumping!");
+            }
+
+            if (Keyboard.current.leftCtrlKey.wasPressedThisFrame)
+            {
+                mls.LogInfo("Reseting control of duck");
+                GeneralUtil.ControlClosestDuck();
             }
         }
 

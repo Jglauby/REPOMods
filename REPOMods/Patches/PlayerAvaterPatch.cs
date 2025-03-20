@@ -99,41 +99,7 @@ namespace OpJosModREPO.IAmDucky.Patches
 
             if (SemiFunc.InputDown(InputKey.Crouch))
             {
-                GameObject closestDuck = GeneralUtil.FindClosestDuck(__instance.transform.position)?.gameObject;
-
-                if (closestDuck != null)
-                {
-                    mls.LogMessage($"Found closest duck at {closestDuck.transform.position}, transferring control to player.");
-
-                    // Disable Player's control & collision
-                    PlayerController.instance.enabled = false;
-
-                    // Transfer control: Add PlayerController to Duck
-                    DuckPlayerController duckPlayerController = closestDuck.GetComponent<DuckPlayerController>();
-                    if (duckPlayerController == null)
-                    {
-                        duckPlayerController = closestDuck.AddComponent<DuckPlayerController>();
-                    }
-
-                    // Set the player camera to follow the duck
-                    Camera.main.transform.SetParent(closestDuck.transform);
-                    Camera.main.transform.localPosition = new Vector3(0, 1, -2); // Adjust position
-                    Camera.main.transform.localRotation = Quaternion.identity;
-
-                    NavMeshAgent agent = closestDuck.GetComponent<NavMeshAgent>();
-                    if (agent != null)
-                    {
-                        agent.isStopped = true;  // Stop AI pathfinding
-                        agent.enabled = false;   // Disable NavMeshAgent
-                    }
-
-                    // Log the transfer
-                    mls.LogMessage("Control transferred to the duck.");
-                }
-                else
-                {
-                    mls.LogError("No duck found to transfer control.");
-                }
+                GeneralUtil.ControlClosestDuck();
             }
         }
     }

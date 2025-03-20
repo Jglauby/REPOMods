@@ -2,6 +2,7 @@
 using BepInEx.Logging;
 using HarmonyLib;
 using OpJosModREPO.IAmDucky.Patches;
+using REPOMods;
 
 namespace OpJosModREPO.IAmDucky
 {
@@ -27,6 +28,8 @@ namespace OpJosModREPO.IAmDucky
 
             PlayerAvaterPatch.SetLogSource(mls);
             EnemyPatch.SetLogSource(mls);
+            DuckPlayerController.SetLogSource(mls);
+            GeneralUtil.SetLogSource(mls);
             harmoy.PatchAll();
         }
     }
