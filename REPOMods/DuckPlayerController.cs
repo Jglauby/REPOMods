@@ -16,6 +16,8 @@ namespace OpJosModREPO.IAmDucky
         public float mouseSensitivity = 0.25f;
         private float cameraPitch = 0f;
 
+        public Vector3 cameraOffset = new Vector3(0, 1.5f, -1.5f); 
+        public float cameraSmoothSpeed = 10f;
 
         void Start()
         {
@@ -31,11 +33,6 @@ namespace OpJosModREPO.IAmDucky
                 rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
                 rb.useGravity = true;
             }
-
-            // Attach the camera behind the duck
-            cameraTransform.SetParent(transform);
-            cameraTransform.localPosition = new Vector3(0, 1.5f, -1.5f); // Adjust position
-            cameraTransform.localRotation = Quaternion.identity;
 
             Cursor.lockState = CursorLockMode.Locked; // Hide cursor and lock to center
             Cursor.visible = false;
@@ -71,6 +68,14 @@ namespace OpJosModREPO.IAmDucky
         {
             // Apply movement
             rb.AddForce(new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.z * moveSpeed), ForceMode.Acceleration);
+
+            UpdateCameraPosition();
+        }
+
+        private void UpdateCameraPosition()
+        {
+            Vector3 desiredPosition = transform.position + transform.TransformDirection(cameraOffset);
+            cameraTransform.position = Vector3.Lerp(cameraTransform.position, desiredPosition, cameraSmoothSpeed * Time.deltaTime);
         }
     }
 
