@@ -37,9 +37,9 @@ namespace REPOMods
             return cloestDuck;
         }
 
-        public static void ControlClosestDuck()
+        public static void ControlClosestDuck(Vector3 pos)
         {
-            GameObject closestDuck = FindClosestDuck(PlayerAvatar.instance.transform.position)?.gameObject;
+            GameObject closestDuck = FindClosestDuck(pos)?.gameObject;
 
             if (closestDuck != null)
             {

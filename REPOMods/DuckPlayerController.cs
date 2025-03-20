@@ -74,7 +74,7 @@ namespace OpJosModREPO.IAmDucky
             if (Keyboard.current.leftCtrlKey.wasPressedThisFrame)
             {
                 mls.LogInfo("Reseting control of duck");
-                GeneralUtil.ControlClosestDuck();
+                GeneralUtil.ControlClosestDuck(cameraTransform.position);
             }
         }
 
@@ -83,13 +83,8 @@ namespace OpJosModREPO.IAmDucky
             // Apply movement
             rb.AddForce(new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.z * moveSpeed), ForceMode.Acceleration);
 
-            UpdateCameraPosition();
-        }
-
-        private void UpdateCameraPosition()
-        {
-            Vector3 desiredPosition = transform.position + transform.TransformDirection(cameraOffset);
-            cameraTransform.position = Vector3.Lerp(cameraTransform.position, desiredPosition, cameraSmoothSpeed * Time.deltaTime);
+            // Directly set the camera position behind the duck
+            cameraTransform.position = transform.position + transform.TransformDirection(cameraOffset);
         }
     }
 

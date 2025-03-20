@@ -99,7 +99,7 @@ namespace OpJosModREPO.IAmDucky.Patches
 
             if (SemiFunc.InputDown(InputKey.Crouch))
             {
-                GeneralUtil.ControlClosestDuck();
+                GeneralUtil.ControlClosestDuck(__instance.gameObject.transform.position);
             }
         }
     }
