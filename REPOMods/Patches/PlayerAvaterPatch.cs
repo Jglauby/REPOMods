@@ -81,6 +81,11 @@ namespace OpJosModREPO.IAmDucky.Patches
             {
                 GeneralUtil.ControlClosestDuck(__instance.gameObject.transform.position);
             }
+
+            if (Keyboard.current.fKey.wasPressedThisFrame)
+            {
+                //make it follow player? need some good way to make duck follow you, or make it stay put, and when u control duck those get removed
+            }
         }
     }
 }
