@@ -1,5 +1,6 @@
 ﻿using BepInEx.Logging;
 using OpJosModREPO.IAmDucky;
+using OpJosModREPO.Util;
 using Photon.Realtime;
 using System;
 using System.Collections.Generic;
@@ -113,28 +114,41 @@ namespace REPOMods
         {
             PlayerController pc = PlayerController.instance;
 
-            // Re-enable player control
+            // Re-enable controller & camera
             pc.enabled = true;
-
-            // Reactivate camera system
             pc.cameraGameObject.SetActive(true);
             pc.cameraGameObjectLocal.SetActive(true);
 
-            // Re-parent main camera to player camera holder
+            // Re-parent camera
             Camera.main.transform.SetParent(pc.cameraGameObject.transform, worldPositionStays: false);
             Camera.main.transform.localPosition = Vector3.zero;
             Camera.main.transform.localRotation = Quaternion.identity;
 
-            // Destroy the duck controller if it exists
+            // Re-assign the player avatar references
+            pc.playerAvatar = PlayerAvatar.instance.gameObject;
+            pc.playerAvatarScript = PlayerAvatar.instance;
+            PlayerAvatar.instance.playerTransform = pc.transform;
+
+            // Reset player avatar state
+            PlayerAvatar.instance.gameObject.SetActive(true);
+            PlayerAvatar.instance.playerAvatarVisuals.gameObject.SetActive(true);
+            PlayerAvatar.instance.playerAvatarVisuals.transform.position = PlayerAvatar.instance.transform.position;
+
+            ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "isDisabled", false);
+            ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "deadSet", false);
+            ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "spectating", false);
+
+            PlayerAvatar.instance.RoomVolumeCheck.CheckSet();
+
+            // Re-initialize camera
+            CameraAim.Instance.CameraAimSpawn(PlayerAvatar.instance.transform.eulerAngles.y);
+
+            // Destroy duck controller
             DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
             if (duckController != null)
             {
                 GameObject.Destroy(duckController);
             }
-
-            // Optional: Hide mouse
-            //Cursor.lockState = CursorLockMode.Locked;
-            //Cursor.visible = false;
 
             mls.LogInfo("Control released from the duck.");
         }
