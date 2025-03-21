@@ -100,6 +100,16 @@ namespace OpJosModREPO.IAmDucky
             if (Keyboard.current.eKey.wasPressedThisFrame)
             {
                 mls.LogInfo("toggle attack mode");
+                EnemyDuck thisDuck = GeneralUtil.FindClosestDuck(cameraTransform.position);
+
+                if (thisDuck.currentState == EnemyDuck.State.AttackStart)
+                {
+                    thisDuck.currentState = EnemyDuck.State.Idle;
+                }
+                else
+                {
+                    thisDuck.currentState = EnemyDuck.State.AttackStart;
+                }
             }
         }
     }
