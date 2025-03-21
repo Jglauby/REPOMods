@@ -1,4 +1,5 @@
 ﻿using BepInEx.Logging;
+using OpJosModREPO.Util;
 using REPOMods;
 using System;
 using UnityEngine;
@@ -83,6 +84,17 @@ namespace OpJosModREPO.IAmDucky
             if (Keyboard.current.spaceKey.wasPressedThisFrame)
             {
                 mls.LogInfo("Jumping!");
+
+                EnemyDuck thisDuck = GeneralUtil.FindClosestDuck(cameraTransform.position);
+                if (thisDuck == null) return;
+
+                Enemy enemy = thisDuck.enemy;
+                if (enemy == null) return;
+
+                object enemyJump = ReflectionUtils.GetFieldValue<object>(enemy, "Jump");
+                if (enemyJump == null) return;
+
+                ReflectionUtils.InvokeMethod(enemyJump, "StuckTrigger", new object[] { Vector3.up });
             }
 
             if (Keyboard.current.rightCtrlKey.isPressed && Keyboard.current.cKey.wasPressedThisFrame)
