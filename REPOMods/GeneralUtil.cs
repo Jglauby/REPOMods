@@ -1,5 +1,6 @@
 ﻿using BepInEx.Logging;
 using OpJosModREPO.IAmDucky;
+using Photon.Realtime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,6 +107,36 @@ namespace REPOMods
             {
                 mls.LogInfo("No duck found to transfer control.");
             }
+        }
+
+        public static void ReleaseDuckControl()
+        {
+            PlayerController pc = PlayerController.instance;
+
+            // Re-enable player control
+            pc.enabled = true;
+
+            // Reactivate camera system
+            pc.cameraGameObject.SetActive(true);
+            pc.cameraGameObjectLocal.SetActive(true);
+
+            // Re-parent main camera to player camera holder
+            Camera.main.transform.SetParent(pc.cameraGameObject.transform, worldPositionStays: false);
+            Camera.main.transform.localPosition = Vector3.zero;
+            Camera.main.transform.localRotation = Quaternion.identity;
+
+            // Destroy the duck controller if it exists
+            DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
+            if (duckController != null)
+            {
+                GameObject.Destroy(duckController);
+            }
+
+            // Optional: Hide mouse
+            //Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.visible = false;
+
+            mls.LogInfo("Control released from the duck.");
         }
     }
 }
