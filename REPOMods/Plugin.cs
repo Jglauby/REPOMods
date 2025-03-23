@@ -30,6 +30,7 @@ namespace OpJosModREPO.IAmDucky
             EnemyPatch.SetLogSource(mls);
             DuckPlayerController.SetLogSource(mls);
             GeneralUtil.SetLogSource(mls);
+            RoundDirectorPatch.SetLogSource(mls);
             harmoy.PatchAll();
         }
     }

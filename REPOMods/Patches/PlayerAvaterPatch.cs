@@ -1,14 +1,9 @@
 ﻿using BepInEx.Logging;
 using HarmonyLib;
 using OpJosModREPO.Util;
-using Photon.Pun;
 using REPOMods;
 using System.Collections.Generic;
-using System.Linq;
-using System.Media;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.IAmDucky.Patches
 {
@@ -25,67 +20,55 @@ namespace OpJosModREPO.IAmDucky.Patches
         [HarmonyPostfix]
         static void SetSpectatePatch(PlayerAvatar __instance)
         {
-            mls.LogMessage("Player is dead");
-            //set to duck here?
-        }
+            mls.LogMessage("Player is dead, spawning duck");
 
-        [HarmonyPatch("Update")]
-        [HarmonyPostfix]
-        static void UpdatePatch(PlayerAvatar __instance)
-        {
-            //ensure only the host hits this patch
-            if (__instance.photonView == null || !__instance.photonView.IsMine)
+            string duckPrefabPath = "Enemies/Enemy - Duck";
+
+            GameObject duckPrefab = Resources.Load<GameObject>(duckPrefabPath);
+            if (duckPrefab == null)
             {
+                mls.LogError($"Duck prefab not found at path: {duckPrefabPath}");
                 return;
             }
 
-            if (!Keyboard.current.rightCtrlKey.isPressed)//all commands require holding left ctrl
+            var spawnPos = __instance.transform.position;
+
+            mls.LogMessage($"Spawning duck at {spawnPos}");
+
+            // Spawn the duck at the chosen spawn location
+            EnemySetup duckSetup = ScriptableObject.CreateInstance<EnemySetup>();
+            duckSetup.spawnObjects = new List<GameObject> { duckPrefab };
+
+            RunManager.instance.EnemiesSpawnedRemoveStart();
+            ReflectionUtils.InvokeMethod(LevelGenerator.Instance, "EnemySpawn", new object[] { duckSetup, spawnPos });
+            RunManager.instance.EnemiesSpawnedRemoveEnd();
+
+            EnemyDirector.instance.DebugResult();
+            mls.LogInfo("Duck spawned successfully.");
+
+            // Move the duck to the player after delay
+            DelayUtility.RunAfterDelay(5f, () =>
             {
-                return;
-            }
+                GeneralUtil.MoveDuckToPos(__instance.transform.position);
+            });
 
-            if (Keyboard.current.sKey.wasPressedThisFrame && SemiFunc.IsMasterClient()) // Ensure only the host spawns
-            {
-                string duckPrefabPath = "Enemies/Enemy - Duck";
-
-                GameObject duckPrefab = Resources.Load<GameObject>(duckPrefabPath);
-                if (duckPrefab == null)
-                {
-                    mls.LogError($"Duck prefab not found at path: {duckPrefabPath}");
-                    return;
-                }
-
-                var spawnPos = __instance.transform.position;
-
-                mls.LogMessage($"Spawning duck at {spawnPos}");
-
-                // Spawn the duck at the chosen spawn location
-                EnemySetup duckSetup = ScriptableObject.CreateInstance<EnemySetup>();
-                duckSetup.spawnObjects = new List<GameObject> { duckPrefab };
-
-                RunManager.instance.EnemiesSpawnedRemoveStart();
-                ReflectionUtils.InvokeMethod(LevelGenerator.Instance, "EnemySpawn", new object[] { duckSetup, spawnPos });
-                RunManager.instance.EnemiesSpawnedRemoveEnd();
-
-                EnemyDirector.instance.DebugResult();
-                mls.LogInfo("Duck spawned successfully.");
-
-                // Move the duck to the player after delay
-                DelayUtility.RunAfterDelay(5f, () =>
-                {
-                    GeneralUtil.MoveDuckToPos(__instance.transform.position);
-                });
-            }
-
-            if (Keyboard.current.cKey.wasPressedThisFrame)
+            DelayUtility.RunAfterDelay(30f, () =>
             {
                 GeneralUtil.ControlClosestDuck(__instance.gameObject.transform.position);
+            });
+        }
+
+        [HarmonyPatch("Revive")]
+        [HarmonyPostfix]
+        static void RevivePatch(PlayerAvatar __instance)
+        {
+            if (__instance.GetInstanceID() != PlayerAvatar.instance.GetInstanceID())
+            {
+                return;
             }
 
-            if (Keyboard.current.fKey.wasPressedThisFrame)
-            {
-                //make it follow player? need some good way to make duck follow you, or make it stay put, and when u control duck those get removed
-            }
+            mls.LogMessage("Player revived, releasing duck control.");
+            GeneralUtil.ReleaseDuckControl();
         }
     }
 }

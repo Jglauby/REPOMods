@@ -114,43 +114,65 @@ namespace REPOMods
         {
             PlayerController pc = PlayerController.instance;
 
-            // Re-enable controller & camera
-            pc.enabled = true;
-            pc.cameraGameObject.SetActive(true);
-            pc.cameraGameObjectLocal.SetActive(true);
+            Camera mainCam = Camera.main ?? GameObject.FindObjectOfType<Camera>();
+            if (mainCam != null)
+            {
+                mainCam.tag = "MainCamera";
+                mainCam.enabled = true;
+                mainCam.gameObject.SetActive(true);
 
-            // Re-parent camera
-            Camera.main.transform.SetParent(pc.cameraGameObject.transform, worldPositionStays: false);
-            Camera.main.transform.localPosition = Vector3.zero;
-            Camera.main.transform.localRotation = Quaternion.identity;
+                if (pc.cameraGameObject != null)
+                {
+                    mainCam.transform.SetParent(pc.cameraGameObject.transform, false);
+                    mainCam.transform.localPosition = Vector3.zero;
+                    mainCam.transform.localRotation = Quaternion.identity;
+                }
 
-            // Re-assign the player avatar references
-            pc.playerAvatar = PlayerAvatar.instance.gameObject;
-            pc.playerAvatarScript = PlayerAvatar.instance;
-            PlayerAvatar.instance.playerTransform = pc.transform;
+                mls.LogInfo("Camera moved back to player.");
+            }
+            else
+            {
+                mls.LogWarning("No main camera found when trying to move back to player.");
+            }
 
-            // Reset player avatar state
-            PlayerAvatar.instance.gameObject.SetActive(true);
-            PlayerAvatar.instance.playerAvatarVisuals.gameObject.SetActive(true);
-            PlayerAvatar.instance.playerAvatarVisuals.transform.position = PlayerAvatar.instance.transform.position;
-
-            ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "isDisabled", false);
-            ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "deadSet", false);
-            ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "spectating", false);
-
-            PlayerAvatar.instance.RoomVolumeCheck.CheckSet();
-
-            // Re-initialize camera
-            CameraAim.Instance.CameraAimSpawn(PlayerAvatar.instance.transform.eulerAngles.y);
-
-            // Destroy duck controller
+            // Now safely destroy the duck controller
             DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
             if (duckController != null)
             {
                 GameObject.Destroy(duckController);
+                mls.LogInfo("Duck controller destroyed.");
             }
 
-            mls.LogInfo("Control released from the duck.");
+            // Destroy the duck object itself
+            EnemyDuck closestDuck = FindClosestDuck(pc.transform.position);
+            if (closestDuck != null)
+            {
+                GameObject.Destroy(closestDuck.gameObject);
+                mls.LogInfo("Duck destroyed.");
+            }
+
+            // Delay to ensure everything gets restored smoothly
+            DelayUtility.RunAfterDelay(0.25f, () =>
+            {
+                pc.enabled = true;
+
+                pc.cameraGameObject?.SetActive(true);
+                pc.cameraGameObjectLocal?.SetActive(true);
+
+                pc.playerAvatar = PlayerAvatar.instance.gameObject;
+                pc.playerAvatarScript = PlayerAvatar.instance;
+                PlayerAvatar.instance.playerTransform = pc.transform;
+
+                PlayerAvatar.instance.gameObject.SetActive(true);
+                PlayerAvatar.instance.playerAvatarVisuals?.gameObject.SetActive(true);
+                PlayerAvatar.instance.playerAvatarVisuals.transform.position = PlayerAvatar.instance.transform.position;
+
+                ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "isDisabled", false);
+                ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "deadSet", false);
+                ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "spectating", false);
+
+                CameraAim.Instance.CameraAimSpawn(PlayerAvatar.instance.transform.eulerAngles.y);
+            });
         }
     }
 }

@@ -103,12 +103,6 @@ namespace OpJosModREPO.IAmDucky
                 GeneralUtil.ControlClosestDuck(cameraTransform.position);
             }
 
-            if (Keyboard.current.ctrlKey.isPressed && Keyboard.current.lKey.wasPressedThisFrame)
-            {
-                mls.LogInfo("Leave duck form, if dead spectate");
-                GeneralUtil.ReleaseDuckControl();
-            }
-
             if (Keyboard.current.eKey.wasPressedThisFrame)
             {
                 mls.LogInfo("toggle attack mode");
