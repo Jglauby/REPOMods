@@ -110,11 +110,11 @@ namespace OpJosModREPO.IAmDucky
 
                 if (thisDuck.currentState == EnemyDuck.State.AttackStart)
                 {
-                    thisDuck.currentState = EnemyDuck.State.Idle;
+                    ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.Idle });
                 }
                 else
                 {
-                    thisDuck.currentState = EnemyDuck.State.AttackStart;
+                    ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.AttackStart });
                 }
             }
         }
