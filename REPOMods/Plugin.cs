@@ -1,16 +1,15 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using OpJosModREPO.IAmDucky.Patches;
-using REPOMods;
+using OpJosModREPO.OpModTesting.Patches;
 
-namespace OpJosModREPO.IAmDucky
+namespace OpJosModREPO.OpModTesting
 {
     [BepInPlugin(modGUID, modName, modVersion)]
     public class OpJosModBase : BaseUnityPlugin
     {
-        private const string modGUID = "OpJosModREPO.IAmDucky";
-        private const string modName = "IAmDucky";
+        private const string modGUID = "OpJosModREPO.OpModTesting";
+        private const string modName = "OpModTesting";
         private const string modVersion = "1.0.0";
 
         private readonly Harmony harmoy = new Harmony(modGUID);
@@ -26,10 +25,6 @@ namespace OpJosModREPO.IAmDucky
             mls = BepInEx.Logging.Logger.CreateLogSource(modGUID);
             mls.LogInfo($"{modName} has started!");
 
-            PlayerAvaterPatch.SetLogSource(mls);
-            EnemyPatch.SetLogSource(mls);
-            DuckPlayerController.SetLogSource(mls);
-            GeneralUtil.SetLogSource(mls);
             RoundDirectorPatch.SetLogSource(mls);
             harmoy.PatchAll();
         }

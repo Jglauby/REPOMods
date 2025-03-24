@@ -1,7 +1,7 @@
 ﻿using BepInEx.Logging;
 using HarmonyLib;
 
-namespace OpJosModREPO.IAmDucky.Patches
+namespace OpJosModREPO.OpModTesting.Patches
 {
     [HarmonyPatch(typeof(RoundDirector))]
     internal class RoundDirectorPatch
