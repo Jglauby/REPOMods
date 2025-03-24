@@ -139,25 +139,30 @@ namespace OpJosModREPO.IAmDucky
         {
             if (thisDuck.currentState == EnemyDuck.State.AttackStart)
             {
-                List<Enemy> closeEnemies = GeneralUtil.FindCloseEnemies(thisDuck.transform.position, 10f);
+                List<Enemy> closeEnemies = GeneralUtil.FindCloseEnemies(thisDuck.transform.position, 1.5f);
                 foreach (var enemy in closeEnemies)
                 {
                     if (enemy != null && enemy.GetInstanceID() != thisDuck.enemy.GetInstanceID())//not controlled duck
                     {
-                        EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(enemy, "Health");
-                        if (healthComponent != null)
-                        {
-                            // Get direction from duck to enemy
-                            Vector3 hurtDir = (enemy.transform.position - thisDuck.transform.position).normalized;
+                        Vector3 toEnemy = (enemy.transform.position - thisDuck.transform.position).normalized;
+                        float angle = Vector3.Angle(thisDuck.transform.forward, toEnemy);
 
-                            // Call internal method "Hurt"
-                            healthComponent.Hurt(150, hurtDir);
-                        }
-                        else
+                        if (angle < 50f)
                         {
-                            mls.LogError($"Health component not found for enemy: {enemy.name}");
+                            EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(enemy, "Health");
+                            if (healthComponent != null)
+                            {
+                                // Get direction from duck to enemy
+                                Vector3 hurtDir = (enemy.transform.position - thisDuck.transform.position).normalized;
+
+                                // Call internal method "Hurt"
+                                healthComponent.Hurt(5, hurtDir);
+                            }
+                            else
+                            {
+                                mls.LogError($"Health component not found for enemy: {enemy.name}");
+                            }
                         }
-                        continue;
                     }
                 }
             }
