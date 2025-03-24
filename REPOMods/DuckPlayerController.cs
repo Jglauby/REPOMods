@@ -113,7 +113,7 @@ namespace OpJosModREPO.IAmDucky
                 ReflectionUtils.InvokeMethod(enemyJump, "StuckTrigger", new object[] { Vector3.up });
             }
 
-            if (Keyboard.current.rightCtrlKey.isPressed && Keyboard.current.cKey.wasPressedThisFrame)
+            if (Keyboard.current.cKey.wasPressedThisFrame)
             {
                 mls.LogInfo("Reseting control of duck");
                 GeneralUtil.ControlClosestDuck(cameraTransform.position);
