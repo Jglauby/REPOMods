@@ -23,6 +23,9 @@ namespace OpJosModREPO.RainbowPlayer.Patches
         [HarmonyPostfix]
         static void UpdatePatch(PlayerAvatar __instance)
         {
+            if (__instance.GetInstanceID() != PlayerAvatar.instance.GetInstanceID()) 
+                return;
+
             if (Time.time - lastRan > delay)
             {
                 mls.LogMessage("ChangingColor");
