@@ -2,6 +2,7 @@
 using OpJosModREPO.Util;
 using REPOMods;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -27,6 +28,9 @@ namespace OpJosModREPO.IAmDucky
 
         public Vector3 cameraOffset = new Vector3(0, 1.5f, -1.5f); 
         public float cameraSmoothSpeed = 10f;
+
+        private EnemyDuck thisDuck = null;
+        private float attackCooldown;
 
         void Start()
         {
@@ -77,14 +81,26 @@ namespace OpJosModREPO.IAmDucky
 
             // Directly set the camera position behind the duck
             cameraTransform.position = transform.position + transform.TransformDirection(cameraOffset);
+
+            if (thisDuck == null)
+            {
+                thisDuck = GeneralUtil.FindClosestDuck(cameraTransform.position);
+            }
+
+            if (attackCooldown > 0f)
+                attackCooldown -= Time.fixedDeltaTime;
+
+            if (attackCooldown <= 0f)
+            {
+                attackNearbyEnemies();
+                attackCooldown = 0.75f;
+            }
         }
 
         private void handleInput()
         {
             if (Keyboard.current.spaceKey.wasPressedThisFrame)
             {
-                mls.LogInfo("Jumping!");
-
                 EnemyDuck thisDuck = GeneralUtil.FindClosestDuck(cameraTransform.position);
                 if (thisDuck == null) return;
 
@@ -106,7 +122,7 @@ namespace OpJosModREPO.IAmDucky
             if (Keyboard.current.eKey.wasPressedThisFrame)
             {
                 mls.LogInfo("toggle attack mode");
-                EnemyDuck thisDuck = GeneralUtil.FindClosestDuck(cameraTransform.position);
+                thisDuck = GeneralUtil.FindClosestDuck(cameraTransform.position);
 
                 if (thisDuck.currentState == EnemyDuck.State.AttackStart)
                 {
@@ -115,6 +131,34 @@ namespace OpJosModREPO.IAmDucky
                 else
                 {
                     ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.AttackStart });
+                }
+            }
+        }
+
+        private void attackNearbyEnemies()
+        {
+            if (thisDuck.currentState == EnemyDuck.State.AttackStart)
+            {
+                List<Enemy> closeEnemies = GeneralUtil.FindCloseEnemies(thisDuck.transform.position, 10f);
+                foreach (var enemy in closeEnemies)
+                {
+                    if (enemy != null && enemy.GetInstanceID() != thisDuck.enemy.GetInstanceID())//not controlled duck
+                    {
+                        EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(enemy, "Health");
+                        if (healthComponent != null)
+                        {
+                            // Get direction from duck to enemy
+                            Vector3 hurtDir = (enemy.transform.position - thisDuck.transform.position).normalized;
+
+                            // Call internal method "Hurt"
+                            healthComponent.Hurt(150, hurtDir);
+                        }
+                        else
+                        {
+                            mls.LogError($"Health component not found for enemy: {enemy.name}");
+                        }
+                        continue;
+                    }
                 }
             }
         }

@@ -39,6 +39,23 @@ namespace REPOMods
             return cloestDuck;
         }
 
+        public static List<Enemy> FindCloseEnemies(Vector3 pos, float range)
+        {
+            List<Enemy> result = new List<Enemy>();
+
+            foreach (var enemy in GameObject.FindObjectsOfType<Enemy>())
+            {
+                float distance = Vector3.Distance(enemy.gameObject.transform.position, pos);
+
+                if (distance <= range)
+                {
+                    result.Add(enemy);
+                }
+            }
+
+            return result;
+        }
+
         public static void MoveDuckToPos(Vector3 pos) 
         {
             GameObject closestDuck = GeneralUtil.FindClosestDuck(pos)?.gameObject;
