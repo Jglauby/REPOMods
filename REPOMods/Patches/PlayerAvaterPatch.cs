@@ -21,6 +21,9 @@ namespace OpJosModREPO.Tourettes.Patches
         [HarmonyPostfix]
         static void UpdatePatch(PlayerAvatar __instance)
         {
+            if (__instance.GetInstanceID() != PlayerAvatar.instance.GetInstanceID())
+                return;
+
             if (Time.time > nextExecutionTime && __instance.isActiveAndEnabled)
             {
                 mls.LogInfo("said random phrase!");
