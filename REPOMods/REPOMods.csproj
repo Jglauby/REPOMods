@@ -88,7 +88,6 @@
     <Compile Include="DuckPlayerController.cs" />
     <Compile Include="GeneralUtil.cs" />
     <Compile Include="Patches\EnemyPatch.cs" />
-    <Compile Include="Patches\RoundDirectorPatch.cs" />
     <Compile Include="Patches\PlayerAvaterPatch.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
