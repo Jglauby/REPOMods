@@ -20,6 +20,11 @@ namespace OpJosModREPO.IAmDucky.Patches
         [HarmonyPostfix]
         static void SetSpectatePatch(PlayerAvatar __instance)
         {
+            if (__instance.GetInstanceID() != PlayerAvatar.instance.GetInstanceID())
+            {
+                return;
+            }
+
             mls.LogMessage("Player is dead, spawning duck");
 
             string duckPrefabPath = "Enemies/Enemy - Duck";
@@ -68,7 +73,7 @@ namespace OpJosModREPO.IAmDucky.Patches
             }
 
             mls.LogMessage("Player revived, releasing duck control.");
-            GeneralUtil.ReleaseDuckControl();
+            GeneralUtil.ReleaseDuckControlToPlayer();
         }
     }
 }

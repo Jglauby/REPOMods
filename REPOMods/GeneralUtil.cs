@@ -127,7 +127,7 @@ namespace REPOMods
             }
         }
 
-        public static void ReleaseDuckControl()
+        public static void ReleaseDuckControlToPlayer()
         {
             PlayerController pc = PlayerController.instance;
 
@@ -184,6 +184,51 @@ namespace REPOMods
             {
                 CameraAim.Instance?.CameraAimSpawn(pc.transform.eulerAngles.y);
             });
+        }
+
+        public static void ReleaseDuckControlToSpectate()
+        {
+            Camera mainCam = Camera.main ?? GameObject.FindObjectOfType<Camera>();
+
+            if (mainCam != null)
+            {
+                mainCam.tag = "MainCamera";
+                mainCam.enabled = true;
+                mainCam.gameObject.SetActive(true);
+
+                // Unparent and position the camera in a nice spot to spectate
+                mainCam.transform.SetParent(null); // No parent
+                mainCam.transform.position = new Vector3(0, 10, -10); // Or some fallback/default position
+                mainCam.transform.rotation = Quaternion.Euler(30f, 0f, 0f); // Slight top-down view
+
+                // Optionally look at a spot (like the duck's last position)
+                EnemyDuck duck = FindClosestDuck(mainCam.transform.position);
+                if (duck != null)
+                {
+                    Vector3 duckPos = duck.transform.position;
+                    mainCam.transform.position = duckPos + new Vector3(0, 8f, -8f);
+                    mainCam.transform.LookAt(duckPos + Vector3.up * 1f);
+                }
+
+                // Disable any follow/aim scripts
+                CameraAim camAim = mainCam.GetComponent<CameraAim>();
+                if (camAim != null)
+                    camAim.enabled = false;
+
+                mls.LogInfo("Camera switched to spectator mode.");
+            }
+            else
+            {
+                mls.LogWarning("No camera found to use for spectating.");
+            }
+
+            // Destroy Duck Controller if it exists
+            DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
+            if (duckController != null)
+            {
+                GameObject.Destroy(duckController);
+                mls.LogInfo("Duck controller destroyed.");
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using HarmonyLib;
 using OpJosModREPO.Util;
 using Photon.Pun;
+using REPOMods;
 using System.Collections.Generic;
 using System.Linq;
 using System.Media;
@@ -9,8 +10,8 @@ using UnityEngine;
 
 namespace OpJosModREPO.IAmDucky.Patches
 {
-    [HarmonyPatch(typeof(Enemy))]
-    internal class EnemyPatch
+    [HarmonyPatch(typeof(EnemyHealth))]
+    internal class EnemyHealthPatch
     {
         private static ManualLogSource mls;
         public static void SetLogSource(ManualLogSource logSource)
@@ -18,16 +19,22 @@ namespace OpJosModREPO.IAmDucky.Patches
             mls = logSource;
         }
 
-        //[HarmonyPatch("EnemyTeleported")]
-        //[HarmonyPrefix]
-        //static bool PreventDuckTeleport(Enemy __instance)
-        //{
-        //    if (__instance.gameObject.name.Contains("duck"))
-        //    {
-        //        mls.LogInfo("Preventing duck from teleporting.");
-        //        return false; // Skip original method execution
-        //    }
-        //    return true; // Allow for other enemies
-        //}
+        [HarmonyPatch("Death")]
+        [HarmonyPrefix]
+        static void DeathPatch(EnemyHealth __instance)
+        {
+            Enemy enemy = ReflectionUtils.GetFieldValue<Enemy>(__instance, "enemy");
+            DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
+            if (duckController != null)
+            {
+                EnemyDuck duck = GeneralUtil.FindClosestDuck(duckController.cameraTransform.position);
+                if (enemy.GetInstanceID() == duck.enemy.GetInstanceID() && 
+                    ReflectionUtils.GetFieldValue<bool>(PlayerAvatar.instance, "deadSet"))//and player is dead
+                {
+                    mls.LogInfo("Duck dying is duck being controlled, release control of duck");
+                    GeneralUtil.ReleaseDuckControlToSpectate();
+                }
+            }
+        }
     }
 }

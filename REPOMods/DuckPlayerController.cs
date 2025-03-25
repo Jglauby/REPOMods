@@ -22,7 +22,7 @@ namespace OpJosModREPO.IAmDucky
         public float turnSpeed = 3f;
         public float jumpForce = 80f;
         public float gravity = 9.8f;
-        private Transform cameraTransform;
+        public Transform cameraTransform;
         public float mouseSensitivity = 0.25f;
         private float cameraPitch = 0f;
 
@@ -156,7 +156,7 @@ namespace OpJosModREPO.IAmDucky
                                 Vector3 hurtDir = (enemy.transform.position - thisDuck.transform.position).normalized;
 
                                 // Call internal method "Hurt"
-                                healthComponent.Hurt(10, hurtDir);
+                                healthComponent.Hurt(100, hurtDir);
                             }
                             else
                             {

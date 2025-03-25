@@ -27,7 +27,7 @@ namespace OpJosModREPO.IAmDucky
             mls.LogInfo($"{modName} has started!");
 
             PlayerAvaterPatch.SetLogSource(mls);
-            EnemyPatch.SetLogSource(mls);
+            EnemyHealthPatch.SetLogSource(mls);
             DuckPlayerController.SetLogSource(mls);
             GeneralUtil.SetLogSource(mls);
             harmoy.PatchAll();
