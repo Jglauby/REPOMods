@@ -139,7 +139,7 @@ namespace OpJosModREPO.IAmDucky
         {
             if (thisDuck.currentState == EnemyDuck.State.AttackStart)
             {
-                List<Enemy> closeEnemies = GeneralUtil.FindCloseEnemies(thisDuck.transform.position, 1.5f);
+                List<Enemy> closeEnemies = GeneralUtil.FindCloseEnemies(thisDuck.transform.position, 2f);
                 foreach (var enemy in closeEnemies)
                 {
                     if (enemy != null && enemy.GetInstanceID() != thisDuck.enemy.GetInstanceID())//not controlled duck
@@ -156,7 +156,7 @@ namespace OpJosModREPO.IAmDucky
                                 Vector3 hurtDir = (enemy.transform.position - thisDuck.transform.position).normalized;
 
                                 // Call internal method "Hurt"
-                                healthComponent.Hurt(5, hurtDir);
+                                healthComponent.Hurt(10, hurtDir);
                             }
                             else
                             {
