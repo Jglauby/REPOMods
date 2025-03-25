@@ -1,7 +1,7 @@
 ﻿using BepInEx.Logging;
 using HarmonyLib;
 
-namespace OpJosModREPO.modname.Patches
+namespace OpJosModREPO.godmode.Patches
 {
     [HarmonyPatch(typeof(PlayerAvatar))]
     internal class PlayerAvaterPatch
