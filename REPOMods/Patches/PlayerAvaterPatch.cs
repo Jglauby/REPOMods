@@ -79,8 +79,18 @@ namespace OpJosModREPO.IAmDucky.Patches
                 return;
             }
 
-            mls.LogMessage("Player revived, releasing duck control.");
-            GeneralUtil.ReleaseDuckControlToPlayer();
+            if (PublicVars.CanSpawnDuck == false && PublicVars.DuckDied == false)//have spawned a duck, and its alive
+            { 
+                mls.LogMessage("Player revived while duck is spawned and alive");
+                GeneralUtil.ReattatchCameraToPlayer();
+                GeneralUtil.RemoveSpawnedControllableDuck();
+                PublicVars.DuckDied = true; //any other death needs to just readjust camera on respawn... thats why we set this to true
+            }
+            else if (PublicVars.CanSpawnDuck == false && PublicVars.DuckDied == true)
+            {
+                mls.LogMessage("Player revived while duck was spawned and died");
+                GeneralUtil.ReattatchCameraToPlayer();
+            }
         }
 
         [HarmonyPatch("LoadingLevelAnimationCompleted")]

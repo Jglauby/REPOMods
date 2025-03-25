@@ -127,15 +127,29 @@ namespace REPOMods
             }
         }
 
-        public static void ReleaseDuckControlToPlayer()
+        public static void RemoveSpawnedControllableDuck()
         {
-            DuckPlayerController existingDuckController = GameObject.FindObjectOfType<DuckPlayerController>();
-            if (existingDuckController == null)
+            // Now safely destroy the duck controller
+            DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
+            if (duckController != null)
             {
-                mls.LogMessage("returning from release duck control function, as there is no duck controller");
-                return;
+                GameObject.Destroy(duckController);
+                mls.LogInfo("Duck controller destroyed.");
             }
 
+            // Kill the duck after camera is restored
+            PlayerController pc = PlayerController.instance;
+            EnemyDuck closestDuck = FindClosestDuck(pc.transform.position);
+            if (closestDuck != null)
+            {
+                EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(closestDuck.enemy, "Health");
+                ReflectionUtils.InvokeMethod(healthComponent, "Death", new object[] { Vector3.zero });
+                mls.LogMessage("Killed controlled duck");
+            }
+        }
+
+        public static void ReattatchCameraToPlayer()
+        {
             PlayerController pc = PlayerController.instance;
 
             Camera mainCam = Camera.main ?? GameObject.FindObjectOfType<Camera>();
@@ -168,23 +182,6 @@ namespace REPOMods
 
             if (pc.cameraGameObjectLocal != null)
                 pc.cameraGameObjectLocal.SetActive(true);
-
-            // Now safely destroy the duck controller
-            DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
-            if (duckController != null)
-            {
-                GameObject.Destroy(duckController);
-                mls.LogInfo("Duck controller destroyed.");
-            }
-
-            // Kill the duck after camera is restored
-            EnemyDuck closestDuck = FindClosestDuck(pc.transform.position);
-            if (closestDuck != null)
-            {
-                EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(closestDuck.enemy, "Health");
-                ReflectionUtils.InvokeMethod(healthComponent, "Death", new object[] { Vector3.zero });
-                mls.LogMessage("Killed controlled duck");
-            }
 
             // Restore camera aim
             DelayUtility.RunAfterDelay(0.25f, () =>
