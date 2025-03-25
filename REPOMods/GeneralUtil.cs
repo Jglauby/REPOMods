@@ -152,23 +152,15 @@ namespace REPOMods
                 mls.LogWarning("No main camera found when trying to move back to player.");
             }
 
-            // Now safely destroy the duck controller
-            DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
-            if (duckController != null)
-            {
-                GameObject.Destroy(duckController);
-                mls.LogInfo("Duck controller destroyed.");
-            }
-
-            // Destroy the duck object itself
+            // Now safely kill the duck
             EnemyDuck closestDuck = FindClosestDuck(pc.transform.position);
             if (closestDuck != null)
             {
-                GameObject.Destroy(closestDuck.gameObject);
-                mls.LogInfo("Duck destroyed.");
+                EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(closestDuck.enemy, "Health");
+                ReflectionUtils.InvokeMethod(healthComponent, "Death", new object[] { Vector3.zero });
+                mls.LogMessage("killed controlled duck");
             }
 
-            // Delay to ensure everything gets restored smoothly
             DelayUtility.RunAfterDelay(0.25f, () =>
             {
                 pc.enabled = true;
@@ -179,11 +171,11 @@ namespace REPOMods
                 pc.playerAvatar = PlayerAvatar.instance.gameObject;
                 pc.playerAvatarScript = PlayerAvatar.instance;
                 PlayerAvatar.instance.playerTransform = pc.transform;
-
+                
                 PlayerAvatar.instance.gameObject.SetActive(true);
                 PlayerAvatar.instance.playerAvatarVisuals?.gameObject.SetActive(true);
                 PlayerAvatar.instance.playerAvatarVisuals.transform.position = PlayerAvatar.instance.transform.position;
-
+                
                 ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "isDisabled", false);
                 ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "deadSet", false);
                 ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "spectating", false);
