@@ -12,14 +12,17 @@ namespace OpJosModREPO.godmode.Patches
             mls = logSource;
         }
 
-        [HarmonyPatch("Update")]
-        [HarmonyPostfix]
-        static void UpdatePatch(PlayerAvatar __instance)
+        [HarmonyPatch("PlayerDeath")]
+        [HarmonyPrefix]
+        static bool PlayerDeathPatch(PlayerAvatar __instance)
         {
-            if (SemiFunc.InputDown(InputKey.Jump))
+            if (__instance.GetInstanceID() == PlayerAvatar.instance.GetInstanceID())
             {
-                mls.LogMessage("Jump pressed");
+                mls.LogInfo("Don't kill player");
+                return false;
             }
+
+            return true;
         }
     }
 }
