@@ -138,11 +138,13 @@ namespace REPOMods
                 mainCam.enabled = true;
                 mainCam.gameObject.SetActive(true);
 
+                // Restore camera parent and transform
                 if (pc.cameraGameObject != null)
                 {
-                    mainCam.transform.SetParent(pc.cameraGameObject.transform, false);
+                    mainCam.transform.SetParent(pc.cameraGameObject.transform);
                     mainCam.transform.localPosition = Vector3.zero;
                     mainCam.transform.localRotation = Quaternion.identity;
+                    mainCam.transform.localScale = Vector3.one;
                 }
 
                 mls.LogInfo("Camera moved back to player.");
@@ -152,35 +154,35 @@ namespace REPOMods
                 mls.LogWarning("No main camera found when trying to move back to player.");
             }
 
-            // Now safely kill the duck
+            pc.enabled = true;
+
+            if (pc.cameraGameObject != null)
+                pc.cameraGameObject.SetActive(true);
+
+            if (pc.cameraGameObjectLocal != null)
+                pc.cameraGameObjectLocal.SetActive(true);
+
+            // Now safely destroy the duck controller
+            DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
+            if (duckController != null)
+            {
+                GameObject.Destroy(duckController);
+                mls.LogInfo("Duck controller destroyed.");
+            }
+
+            // Kill the duck after camera is restored
             EnemyDuck closestDuck = FindClosestDuck(pc.transform.position);
             if (closestDuck != null)
             {
                 EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(closestDuck.enemy, "Health");
                 ReflectionUtils.InvokeMethod(healthComponent, "Death", new object[] { Vector3.zero });
-                mls.LogMessage("killed controlled duck");
+                mls.LogMessage("Killed controlled duck");
             }
 
+            // Restore camera aim
             DelayUtility.RunAfterDelay(0.25f, () =>
             {
-                pc.enabled = true;
-
-                pc.cameraGameObject?.SetActive(true);
-                pc.cameraGameObjectLocal?.SetActive(true);
-
-                pc.playerAvatar = PlayerAvatar.instance.gameObject;
-                pc.playerAvatarScript = PlayerAvatar.instance;
-                PlayerAvatar.instance.playerTransform = pc.transform;
-                
-                PlayerAvatar.instance.gameObject.SetActive(true);
-                PlayerAvatar.instance.playerAvatarVisuals?.gameObject.SetActive(true);
-                PlayerAvatar.instance.playerAvatarVisuals.transform.position = PlayerAvatar.instance.transform.position;
-                
-                ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "isDisabled", false);
-                ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "deadSet", false);
-                ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "spectating", false);
-
-                CameraAim.Instance.CameraAimSpawn(PlayerAvatar.instance.transform.eulerAngles.y);
+                CameraAim.Instance?.CameraAimSpawn(pc.transform.eulerAngles.y);
             });
         }
     }
