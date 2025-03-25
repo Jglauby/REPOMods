@@ -32,6 +32,7 @@ namespace OpJosModREPO.IAmDucky.Patches
                     ReflectionUtils.GetFieldValue<bool>(PlayerAvatar.instance, "deadSet"))//and player is dead
                 {
                     mls.LogInfo("Duck dying is duck being controlled, release control of duck");
+                    PublicVars.DuckDied = true;
                     GeneralUtil.ReleaseDuckControlToSpectate();
                 }
             }

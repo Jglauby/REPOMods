@@ -25,6 +25,13 @@ namespace OpJosModREPO.IAmDucky.Patches
                 return;
             }
 
+            if(PublicVars.CanSpawnDuck == false)
+            {
+                mls.LogInfo("Can't spawn duck again, returning.");
+                return;
+            }
+
+            PublicVars.CanSpawnDuck = false;
             mls.LogMessage("Player is dead, spawning duck");
 
             string duckPrefabPath = "Enemies/Enemy - Duck";
@@ -74,6 +81,20 @@ namespace OpJosModREPO.IAmDucky.Patches
 
             mls.LogMessage("Player revived, releasing duck control.");
             GeneralUtil.ReleaseDuckControlToPlayer();
+        }
+
+        [HarmonyPatch("LoadingLevelAnimationCompleted")]
+        [HarmonyPostfix]
+        static void LoadingLevelAnimationCompletedPatch(PlayerAvatar __instance)
+        {
+            if (__instance.GetInstanceID() != PlayerAvatar.instance.GetInstanceID())
+            {
+                return;
+            }
+
+            mls.LogMessage("New Level, allow being duck again");
+            PublicVars.CanSpawnDuck = true;
+            PublicVars.DuckDied = false;
         }
     }
 }

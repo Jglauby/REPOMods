@@ -129,6 +129,13 @@ namespace REPOMods
 
         public static void ReleaseDuckControlToPlayer()
         {
+            DuckPlayerController existingDuckController = GameObject.FindObjectOfType<DuckPlayerController>();
+            if (existingDuckController == null)
+            {
+                mls.LogMessage("returning from release duck control function, as there is no duck controller");
+                return;
+            }
+
             PlayerController pc = PlayerController.instance;
 
             Camera mainCam = Camera.main ?? GameObject.FindObjectOfType<Camera>();
