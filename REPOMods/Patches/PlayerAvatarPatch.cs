@@ -3,8 +3,9 @@ using HarmonyLib;
 using REPOMods;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using OpJosModREPO.BeeMovie.Patches;
 
-namespace OpJosModREPO.Tourettes.Patches
+namespace OpJosModREPO.BeeMovie.Patches
 {
     [HarmonyPatch(typeof(PlayerAvatar))]
     internal class PlayerAvatarPatch
@@ -15,11 +16,6 @@ namespace OpJosModREPO.Tourettes.Patches
             mls = logSource;
         }
 
-        private static float nextExecutionTime = 0f;
-        private static System.Random rng = new System.Random();
-
-        public static bool isSpeakingBee = false;
-
         [HarmonyPatch("Update")]
         [HarmonyPostfix]
         static void UpdatePatch(PlayerAvatar __instance)
@@ -27,18 +23,10 @@ namespace OpJosModREPO.Tourettes.Patches
             if (__instance.GetInstanceID() != PlayerAvatar.instance.GetInstanceID())
                 return;
 
-            if (Time.time > nextExecutionTime && __instance.isActiveAndEnabled && isSpeakingBee == false)
+            if (Keyboard.current.bKey.wasPressedThisFrame)
             {
-                mls.LogInfo("said random phrase!");
-                Phrases.SpeakRandomPhrase(__instance);
-            
-                nextExecutionTime = Time.time + rng.Next(30, 5 * 60); //30, 5*60
-            }
-
-            if (Keyboard.current.pKey.wasPressedThisFrame)
-            {
-                mls.LogInfo("said random phrase!");
-                Phrases.SpeakRandomPhrase(__instance);
+                mls.LogInfo("starting bee script");
+                __instance.StartCoroutine(BeeMovie.PlayBeeMovie(__instance));
             }
         }
     }

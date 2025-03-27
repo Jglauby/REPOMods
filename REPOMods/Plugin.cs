@@ -1,15 +1,15 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using OpJosModREPO.Tourettes.Patches;
+using OpJosModREPO.BeeMovie.Patches;
 
-namespace OpJosModREPO.Tourettes
+namespace OpJosModREPO.BeeMovie
 {
     [BepInPlugin(modGUID, modName, modVersion)]
     public class OpJosModBase : BaseUnityPlugin
     {
-        private const string modGUID = "OpJosModREPO.Tourettes";
-        private const string modName = "Tourettes";
+        private const string modGUID = "OpJosModREPO.BeeMovie";
+        private const string modName = "BeeMovie";
         private const string modVersion = "1.0.0";
 
         private readonly Harmony harmoy = new Harmony(modGUID);

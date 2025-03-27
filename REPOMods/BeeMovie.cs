@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using OpJosModREPO.Tourettes.Patches;
+using OpJosModREPO.BeeMovie.Patches;
 
-namespace REPOMods
+namespace OpJosModREPO.BeeMovie
 {
     public class BeeMovie
     {
@@ -27,7 +27,7 @@ namespace REPOMods
                 __instance.ChatMessageSend(chunk, false);
                 index += length;
 
-                yield return new WaitForSeconds(600);
+                yield return new WaitForSeconds(60 * 60);//wait an hour until next part lmfao
             }
 
             PlayerAvatarPatch.isSpeakingBee = false;
