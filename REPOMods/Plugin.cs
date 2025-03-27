@@ -25,7 +25,7 @@ namespace OpJosModREPO.modname
             mls = BepInEx.Logging.Logger.CreateLogSource(modGUID);
             mls.LogInfo($"{modName} has started!");
 
-            PlayerAvaterPatch.SetLogSource(mls);
+            PlayerAvatarPatch.SetLogSource(mls);
             harmoy.PatchAll();
         }
     }

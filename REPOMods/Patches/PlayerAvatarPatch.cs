@@ -4,7 +4,7 @@ using HarmonyLib;
 namespace OpJosModREPO.modname.Patches
 {
     [HarmonyPatch(typeof(PlayerAvatar))]
-    internal class PlayerAvaterPatch
+    internal class PlayerAvatarPatch
     {
         private static ManualLogSource mls;
         public static void SetLogSource(ManualLogSource logSource)
