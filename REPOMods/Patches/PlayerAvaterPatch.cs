@@ -20,7 +20,7 @@ namespace OpJosModREPO.IAmDucky.Patches
         [HarmonyPostfix]
         static void PlayerDeathPatch(PlayerAvatar __instance)
         {
-            if(PublicVars.CanSpawnDuck == false)
+            if (PublicVars.CanSpawnDuck == false)
             {
                 mls.LogInfo("Can't spawn duck again, returning.");
                 return;
