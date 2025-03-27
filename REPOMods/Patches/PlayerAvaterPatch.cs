@@ -16,15 +16,10 @@ namespace OpJosModREPO.IAmDucky.Patches
             mls = logSource;
         }
 
-        [HarmonyPatch("SetSpectate")]
+        [HarmonyPatch("PlayerDeath")]
         [HarmonyPostfix]
-        static void SetSpectatePatch(PlayerAvatar __instance)
+        static void PlayerDeathPatch(PlayerAvatar __instance)
         {
-            if (__instance.GetInstanceID() != PlayerAvatar.instance.GetInstanceID())
-            {
-                return;
-            }
-
             if(PublicVars.CanSpawnDuck == false)
             {
                 mls.LogInfo("Can't spawn duck again, returning.");
@@ -64,7 +59,7 @@ namespace OpJosModREPO.IAmDucky.Patches
                 GeneralUtil.MoveDuckToPos(__instance.transform.position);
             });
 
-            DelayUtility.RunAfterDelay(30f, () =>
+            DelayUtility.RunAfterDelay(15f, () =>
             {
                 GeneralUtil.ControlClosestDuck(__instance.gameObject.transform.position);
             });
