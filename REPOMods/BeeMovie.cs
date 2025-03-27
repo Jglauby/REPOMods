@@ -27,7 +27,7 @@ namespace REPOMods
                 __instance.ChatMessageSend(chunk, false);
                 index += length;
 
-                yield return new WaitForSeconds(600);
+                yield return new WaitForSeconds(60 * 60);//one hour delay
             }
 
             PlayerAvatarPatch.isSpeakingBee = false;
