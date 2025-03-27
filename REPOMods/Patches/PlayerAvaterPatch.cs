@@ -2,6 +2,7 @@
 using HarmonyLib;
 using REPOMods;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.Tourettes.Patches
 {
@@ -28,8 +29,14 @@ namespace OpJosModREPO.Tourettes.Patches
             {
                 mls.LogInfo("said random phrase!");
                 __instance.ChatMessageSend(Phrases.GetRandomPhrase(), false);
-
+            
                 nextExecutionTime = Time.time + rng.Next(30, 5 * 60); //30, 5*60
+            }
+
+            if (Keyboard.current.pKey.wasPressedThisFrame)
+            {
+                mls.LogInfo("said random phrase!");
+                __instance.ChatMessageSend(Phrases.GetRandomPhrase(), false);
             }
         }
     }
