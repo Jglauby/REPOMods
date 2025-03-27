@@ -59,7 +59,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Patches\PlayerAvaterPatch.cs" />
+    <Compile Include="Patches\PlayerAvatarPatch.cs" />
+    <Compile Include="BeeMovie.cs" />
     <Compile Include="Phrases.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

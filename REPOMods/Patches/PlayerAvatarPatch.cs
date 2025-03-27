@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 namespace OpJosModREPO.Tourettes.Patches
 {
     [HarmonyPatch(typeof(PlayerAvatar))]
-    internal class PlayerAvaterPatch
+    internal class PlayerAvatarPatch
     {
         private static ManualLogSource mls;
         public static void SetLogSource(ManualLogSource logSource)
@@ -18,6 +18,8 @@ namespace OpJosModREPO.Tourettes.Patches
         private static float nextExecutionTime = 0f;
         private static System.Random rng = new System.Random();
 
+        public static bool isSpeakingBee = false;
+
         [HarmonyPatch("Update")]
         [HarmonyPostfix]
         static void UpdatePatch(PlayerAvatar __instance)
@@ -25,10 +27,10 @@ namespace OpJosModREPO.Tourettes.Patches
             if (__instance.GetInstanceID() != PlayerAvatar.instance.GetInstanceID())
                 return;
 
-            if (Time.time > nextExecutionTime && __instance.isActiveAndEnabled)
+            if (Time.time > nextExecutionTime && __instance.isActiveAndEnabled && isSpeakingBee == false)
             {
                 mls.LogInfo("said random phrase!");
-                __instance.ChatMessageSend(Phrases.GetRandomPhrase(), false);
+                Phrases.SpeakRandomPhrase(__instance);
             
                 nextExecutionTime = Time.time + rng.Next(30, 5 * 60); //30, 5*60
             }
@@ -36,7 +38,7 @@ namespace OpJosModREPO.Tourettes.Patches
             if (Keyboard.current.pKey.wasPressedThisFrame)
             {
                 mls.LogInfo("said random phrase!");
-                __instance.ChatMessageSend(Phrases.GetRandomPhrase(), false);
+                Phrases.SpeakRandomPhrase(__instance);
             }
         }
     }
