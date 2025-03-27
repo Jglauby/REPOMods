@@ -15,8 +15,6 @@ namespace OpJosModREPO.BeeMovie
 
         public static IEnumerator PlayBeeMovie(PlayerAvatar __instance)
         {
-            PlayerAvatarPatch.isSpeakingBee = true;
-
             int totalLength = script.Length;
             int index = 0;
 
@@ -29,8 +27,6 @@ namespace OpJosModREPO.BeeMovie
 
                 yield return new WaitForSeconds(60 * 60);//wait an hour until next part lmfao
             }
-
-            PlayerAvatarPatch.isSpeakingBee = false;
         }
     }
 }

@@ -1,9 +1,6 @@
 ﻿using BepInEx.Logging;
 using HarmonyLib;
-using REPOMods;
-using UnityEngine;
 using UnityEngine.InputSystem;
-using OpJosModREPO.BeeMovie.Patches;
 
 namespace OpJosModREPO.BeeMovie.Patches
 {
