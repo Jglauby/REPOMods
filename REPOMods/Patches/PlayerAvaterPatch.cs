@@ -22,7 +22,7 @@ namespace OpJosModREPO.IAmDucky.Patches
         {
             if (PublicVars.CanSpawnDuck == false)
             {
-                mls.LogInfo("Can't spawn duck again, returning.");
+                mls.LogInfo("Can't spawn duck again, set to spectate");
                 return;
             }
 

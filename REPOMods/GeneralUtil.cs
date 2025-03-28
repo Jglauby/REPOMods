@@ -72,7 +72,11 @@ namespace REPOMods
                     duckAI.currentState = EnemyDuck.State.Idle;  // Prevent AI from overriding movement
                 }
 
-                //enemy has some teleport funciton, try using that
+                EnemyRigidbody rb = closestDuck.GetComponent<EnemyRigidbody>();
+                if (rb != null)
+                {
+                    rb.enabled = false; // prevent SetChaseTarget
+                }
 
                 NavMeshAgent agent = closestDuck.GetComponent<NavMeshAgent>();
                 if (agent != null)
