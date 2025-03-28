@@ -197,10 +197,8 @@ namespace OpJosModREPO.IAmDucky
 
         public static void ReleaseDuckControlToSpectate()
         {
-            // Step 1: Move camera back to player temporarily
             ReattatchCameraToPlayer();
 
-            // Step 2: Destroy the duck controller
             DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
             if (duckController != null)
             {
@@ -208,33 +206,27 @@ namespace OpJosModREPO.IAmDucky
                 mls.LogInfo("Duck controller destroyed.");
             }
 
-            // Step 3: Trigger spectate mode
             if (PlayerAvatar.instance != null)
             {
                 mls.LogInfo("Calling SetSpectate to enter true spectator mode...");
                 PlayerAvatar.instance.SetSpectate();
 
-                // Step 4: Let SpectateCamera fully initialize
                 DelayUtility.RunAfterDelay(0.25f, () =>
                 {
                     SpectateCamera cam = SpectateCamera.instance;
                     if (cam != null)
                     {
-                        // Force the camera into spectate state if it hasn't entered already
                         bool isInNormal = ReflectionUtils.InvokeMethod<bool>(cam, "CheckState", new object[] { Enum.Parse(typeof(SpectateCamera.State), "Normal") });
-                        mls.LogInfo($"SpectateCamera state after UpdatePlayer: Normal = {isInNormal}");
 
                         Transform spectatePoint = PlayerAvatar.instance?.spectatePoint;
                         if (spectatePoint != null)
                         {
-                            mls.LogInfo($"Spectate target point: {spectatePoint.position}");
                             if (!isInNormal)
                             {
                                 ReflectionUtils.InvokeMethod(cam, "UpdateState", new object[] { Enum.Parse(typeof(SpectateCamera.State), "Normal") });
                                 mls.LogWarning("SpectateCamera was not in Normal state — forcing it.");
                             }
 
-                            // Step 5: Force reattach and reset camera transform
                             Camera mainCam = ReflectionUtils.GetFieldValue<Camera>(cam, "MainCamera");
                             Transform followTransform = cam.normalTransformDistance;
 
@@ -248,10 +240,6 @@ namespace OpJosModREPO.IAmDucky
                                 mainCam.gameObject.SetActive(true);
                                 mainCam.clearFlags = CameraClearFlags.Skybox;
                                 mainCam.backgroundColor = Color.black;
-
-                                mls.LogInfo("Forced camera pivot/zoom for spectate.");
-                                mls.LogInfo($"MainCamera local position: {mainCam.transform.localPosition}");
-                                mls.LogInfo($"SpectateCamera world position: {cam.transform.position}");
                             }
                             else
                             {
