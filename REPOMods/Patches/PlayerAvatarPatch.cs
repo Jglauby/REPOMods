@@ -1,6 +1,8 @@
 ﻿using BepInEx.Logging;
 using HarmonyLib;
+using OpJosModREPO.IAmDucky.Networking;
 using OpJosModREPO.Util;
+using Photon.Pun;
 using REPOMods;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,41 +30,20 @@ namespace OpJosModREPO.IAmDucky.Patches
             }
 
             PublicVars.CanSpawnDuck = false;
-            mls.LogMessage("Player is dead, spawning duck");
-
-            string duckPrefabPath = "Enemies/Enemy - Duck";
-
-            GameObject duckPrefab = Resources.Load<GameObject>(duckPrefabPath);
-            if (duckPrefab == null)
+            if (PhotonNetwork.IsMasterClient)
             {
-                mls.LogError($"Duck prefab not found at path: {duckPrefabPath}");
-                return;
+                mls.LogMessage("Player is dead, spawning duck as host");
+                GeneralUtil.SpawnDuckAt(__instance.transform.position);
+            }
+            else
+            {
+                mls.LogMessage("Player is dead, sending spawn duck request to host");
+                DuckSpawnerNetwork.Instance.RequestDuckSpawn(__instance.transform.position);
             }
 
-            var spawnPos = __instance.transform.position;
-
-            mls.LogMessage($"Spawning duck at {spawnPos}");
-
-            // Spawn the duck at the chosen spawn location
-            EnemySetup duckSetup = ScriptableObject.CreateInstance<EnemySetup>();
-            duckSetup.spawnObjects = new List<GameObject> { duckPrefab };
-
-            RunManager.instance.EnemiesSpawnedRemoveStart();
-            ReflectionUtils.InvokeMethod(LevelGenerator.Instance, "EnemySpawn", new object[] { duckSetup, spawnPos });
-            RunManager.instance.EnemiesSpawnedRemoveEnd();
-
-            EnemyDirector.instance.DebugResult();
-            mls.LogInfo("Duck spawned successfully.");
-
-            // Move the duck to the player after delay
-            DelayUtility.RunAfterDelay(5f, () =>
+            DelayUtility.RunAfterDelay(20f, () =>
             {
-                GeneralUtil.MoveDuckToPos(__instance.transform.position);
-            });
-
-            DelayUtility.RunAfterDelay(15f, () =>
-            {
-                GeneralUtil.ControlClosestDuck(__instance.gameObject.transform.position);
+                GeneralUtil.ControlClosestDuck(__instance.transform.position);
             });
         }
 
@@ -101,6 +82,32 @@ namespace OpJosModREPO.IAmDucky.Patches
             mls.LogMessage("New Level, allow being duck again");
             PublicVars.CanSpawnDuck = true;
             PublicVars.DuckDied = false;
+
+            //setup duck spawner network
+            if (DuckSpawnerNetwork.Instance == null)
+            {
+                GameObject netObj = new GameObject("DuckSpawnerNetwork");
+                var spawner = netObj.AddComponent<DuckSpawnerNetwork>();
+
+                PhotonView view = netObj.AddComponent<PhotonView>();
+
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    // Only the MasterClient is allowed to allocate a ViewID
+                    view.ViewID = 1738;
+                    mls.LogInfo($"[HOST] Allocated ViewID for DuckSpawnerNetwork: {view.ViewID}");
+                }
+                else
+                {
+                    // Use a hardcoded fallback ViewID (must match what host allocated)
+                    view.ViewID = 1738;
+                    mls.LogInfo($"[CLIENT] Using known ViewID for DuckSpawnerNetwork: {view.ViewID}");
+                }
+
+                GameObject.DontDestroyOnLoad(netObj);
+
+                mls.LogInfo("DuckSpawnerNetwork initialized");
+            }
         }
     }
 }

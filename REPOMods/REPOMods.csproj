@@ -87,6 +87,7 @@
     <Compile Include="DelayUtility.cs" />
     <Compile Include="DuckPlayerController.cs" />
     <Compile Include="GeneralUtil.cs" />
+    <Compile Include="Networking\DuckSpawnerNetwork.cs" />
     <Compile Include="Patches\EnemyPatch.cs" />
     <Compile Include="Patches\PlayerAvatarPatch.cs" />
     <Compile Include="Plugin.cs" />

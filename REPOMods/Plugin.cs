@@ -1,8 +1,11 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
+using OpJosModREPO.IAmDucky.Networking;
 using OpJosModREPO.IAmDucky.Patches;
-using REPOMods;
+using Photon.Pun;
+using System.Collections;
+using UnityEngine;
 
 namespace OpJosModREPO.IAmDucky
 {
