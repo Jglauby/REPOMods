@@ -8,7 +8,7 @@ using UnityEngine;
 namespace OpJosModREPO.IAmDucky.Patches
 {
     [HarmonyPatch(typeof(PlayerAvatar))]
-    internal class PlayerAvaterPatch
+    internal class PlayerAvatarPatch
     {
         private static ManualLogSource mls;
         public static void SetLogSource(ManualLogSource logSource)
@@ -23,6 +23,7 @@ namespace OpJosModREPO.IAmDucky.Patches
             if (PublicVars.CanSpawnDuck == false)
             {
                 mls.LogInfo("Can't spawn duck again, set to spectate");
+                GeneralUtil.ReleaseDuckControlToSpectate();
                 return;
             }
 

@@ -2,6 +2,7 @@
 using OpJosModREPO.IAmDucky;
 using OpJosModREPO.Util;
 using Photon.Realtime;
+using REPOMods;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace REPOMods
+namespace OpJosModREPO.IAmDucky
 {
     public static class GeneralUtil
     {
@@ -196,46 +197,77 @@ namespace REPOMods
 
         public static void ReleaseDuckControlToSpectate()
         {
-            Camera mainCam = Camera.main ?? GameObject.FindObjectOfType<Camera>();
+            // Step 1: Move camera back to player temporarily
+            ReattatchCameraToPlayer();
 
-            if (mainCam != null)
-            {
-                mainCam.tag = "MainCamera";
-                mainCam.enabled = true;
-                mainCam.gameObject.SetActive(true);
-
-                // Unparent and position the camera in a nice spot to spectate
-                mainCam.transform.SetParent(null); // No parent
-                mainCam.transform.position = new Vector3(0, 10, -10); // Or some fallback/default position
-                mainCam.transform.rotation = Quaternion.Euler(30f, 0f, 0f); // Slight top-down view
-
-                // Optionally look at a spot (like the duck's last position)
-                EnemyDuck duck = FindClosestDuck(mainCam.transform.position);
-                if (duck != null)
-                {
-                    Vector3 duckPos = duck.transform.position;
-                    mainCam.transform.position = duckPos + new Vector3(0, 8f, -8f);
-                    mainCam.transform.LookAt(duckPos + Vector3.up * 1f);
-                }
-
-                // Disable any follow/aim scripts
-                CameraAim camAim = mainCam.GetComponent<CameraAim>();
-                if (camAim != null)
-                    camAim.enabled = false;
-
-                mls.LogInfo("Camera switched to spectator mode.");
-            }
-            else
-            {
-                mls.LogWarning("No camera found to use for spectating.");
-            }
-
-            // Destroy Duck Controller if it exists
+            // Step 2: Destroy the duck controller
             DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
             if (duckController != null)
             {
                 GameObject.Destroy(duckController);
                 mls.LogInfo("Duck controller destroyed.");
+            }
+
+            // Step 3: Trigger spectate mode
+            if (PlayerAvatar.instance != null)
+            {
+                mls.LogInfo("Calling SetSpectate to enter true spectator mode...");
+                PlayerAvatar.instance.SetSpectate();
+
+                // Step 4: Let SpectateCamera fully initialize
+                DelayUtility.RunAfterDelay(0.25f, () =>
+                {
+                    SpectateCamera cam = SpectateCamera.instance;
+                    if (cam != null)
+                    {
+                        // Force the camera into spectate state if it hasn't entered already
+                        bool isInNormal = ReflectionUtils.InvokeMethod<bool>(cam, "CheckState", new object[] { Enum.Parse(typeof(SpectateCamera.State), "Normal") });
+                        mls.LogInfo($"SpectateCamera state after UpdatePlayer: Normal = {isInNormal}");
+
+                        Transform spectatePoint = PlayerAvatar.instance?.spectatePoint;
+                        if (spectatePoint != null)
+                        {
+                            mls.LogInfo($"Spectate target point: {spectatePoint.position}");
+                            if (!isInNormal)
+                            {
+                                ReflectionUtils.InvokeMethod(cam, "UpdateState", new object[] { Enum.Parse(typeof(SpectateCamera.State), "Normal") });
+                                mls.LogWarning("SpectateCamera was not in Normal state — forcing it.");
+                            }
+
+                            // Step 5: Force reattach and reset camera transform
+                            Camera mainCam = ReflectionUtils.GetFieldValue<Camera>(cam, "MainCamera");
+                            Transform followTransform = cam.normalTransformDistance;
+
+                            if (mainCam != null && followTransform != null)
+                            {
+                                mainCam.transform.SetParent(followTransform);
+                                mainCam.transform.localPosition = Vector3.zero;
+                                mainCam.transform.localRotation = Quaternion.identity;
+                                mainCam.tag = "MainCamera";
+                                mainCam.enabled = true;
+                                mainCam.gameObject.SetActive(true);
+                                mainCam.clearFlags = CameraClearFlags.Skybox;
+                                mainCam.backgroundColor = Color.black;
+
+                                mls.LogInfo("Forced camera pivot/zoom for spectate.");
+                                mls.LogInfo($"MainCamera local position: {mainCam.transform.localPosition}");
+                                mls.LogInfo($"SpectateCamera world position: {cam.transform.position}");
+                            }
+                            else
+                            {
+                                mls.LogWarning("Missing MainCamera or follow transform during spectate setup.");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        mls.LogWarning("SpectateCamera.instance was null.");
+                    }
+                });
+            }
+            else
+            {
+                mls.LogWarning("PlayerAvatar.instance was null when trying to spectate.");
             }
         }
     }
