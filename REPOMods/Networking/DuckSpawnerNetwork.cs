@@ -26,5 +26,4 @@ namespace OpJosModREPO.IAmDucky.Networking
             photonView.RPC("RPC_RequestSpawnDuck", RpcTarget.MasterClient, position);
         }
     }
-
 }
