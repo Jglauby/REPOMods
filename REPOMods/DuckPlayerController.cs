@@ -160,7 +160,7 @@ namespace OpJosModREPO.IAmDucky
                                 Vector3 hurtDir = (enemy.transform.position - thisDuck.transform.position).normalized;
 
                                 // Call internal method "Hurt"
-                                healthComponent.Hurt(20, hurtDir);
+                                healthComponent.Hurt(25, hurtDir);
                             }
                             else
                             {

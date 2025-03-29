@@ -1,6 +1,7 @@
 ﻿using BepInEx.Logging;
 using OpJosModREPO.IAmDucky;
 using OpJosModREPO.Util;
+using Photon.Pun;
 using Photon.Realtime;
 using REPOMods;
 using System;
@@ -279,7 +280,7 @@ namespace OpJosModREPO.IAmDucky
             mls.LogInfo("Duck spawned successfully.");
 
             // Move the duck to the player after delay
-            DelayUtility.RunAfterDelay(7f, () =>
+            DelayUtility.RunAfterDelay(10f, () =>
             {
                 GeneralUtil.MoveDuckToPos(spawnPos);
             });
