@@ -13,12 +13,12 @@ namespace OpJosModREPO.IAmDucky.Networking
         }
 
         [PunRPC]
-        public void RPC_RequestSpawnDuck(Vector3 position)
+        public void RPC_RequestSpawnDuck(Vector3 position, PhotonMessageInfo info)
         {
             if (!PhotonNetwork.IsMasterClient)
                 return;
 
-            GeneralUtil.SpawnDuckAt(position);
+            GeneralUtil.SpawnDuckAt(position, info.Sender.ActorNumber);
         }
 
         public void RequestDuckSpawn(Vector3 position)

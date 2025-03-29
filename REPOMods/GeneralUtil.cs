@@ -259,7 +259,7 @@ namespace OpJosModREPO.IAmDucky
             }
         }
 
-        public static void SpawnDuckAt(Vector3 spawnPos)
+        public static void SpawnDuckAt(Vector3 spawnPos, int? actorNumber = null)
         {
             mls.LogMessage($"Spawning duck at {spawnPos}");
 
@@ -274,10 +274,8 @@ namespace OpJosModREPO.IAmDucky
             EnemySetup duckSetup = ScriptableObject.CreateInstance<EnemySetup>();
             duckSetup.spawnObjects = new List<GameObject> { duckPrefab };
 
-            //RunManager.instance.EnemiesSpawnedRemoveStart();
+            //GameObject duck = PhotonNetwork.Instantiate("Enemies/Enemy - Duck", position, rotation);
             ReflectionUtils.InvokeMethod(LevelGenerator.Instance, "EnemySpawn", new object[] { duckSetup, spawnPos });
-            //RunManager.instance.EnemiesSpawnedRemoveEnd();
-            //EnemyDirector.instance.DebugResult();
             mls.LogInfo("Duck spawned successfully.");
 
             // Move the duck to the player after delay

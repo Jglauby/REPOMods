@@ -1,5 +1,6 @@
 ﻿using BepInEx.Logging;
 using OpJosModREPO.Util;
+using Photon.Pun;
 using REPOMods;
 using System;
 using System.Collections.Generic;
@@ -134,6 +135,8 @@ namespace OpJosModREPO.IAmDucky
                     ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.AttackStart });
                 }
             }
+
+            //add a leave duck button
         }
 
         private void attackNearbyEnemies()
