@@ -1,4 +1,5 @@
 ﻿using BepInEx.Logging;
+using OpJosModREPO.IAmDucky.Networking;
 using OpJosModREPO.Util;
 using Photon.Pun;
 using REPOMods;
@@ -30,11 +31,34 @@ namespace OpJosModREPO.IAmDucky
         public Vector3 cameraOffset = new Vector3(0, 1.5f, -1.5f); 
         public float cameraSmoothSpeed = 10f;
 
-        private EnemyDuck thisDuck = null;
+        public EnemyDuck thisDuck = null;
+        private int? controlActorNumber;
         private float attackCooldown;
 
-        void Start()
+        private bool isYourDuck = false; //if false means you are host, no client has this controller if it isn't for them
+        private bool isHost = false;
+
+        private float syncTimer = 0f;
+        private float syncInterval = 0.5f;
+
+        public void Setup(int? actorNumber, EnemyDuck duck)
         {
+            controlActorNumber = actorNumber;
+            thisDuck = duck;
+            isHost = PhotonNetwork.IsMasterClient;
+
+            if (PhotonNetwork.LocalPlayer.ActorNumber == controlActorNumber || controlActorNumber == null) //is your duck
+            {
+                isYourDuck = true;
+                PlayerController.instance.enabled = false;
+                Camera.main.transform.SetParent(duck.gameObject.transform);
+                Camera.main.transform.localPosition = new Vector3(0, 1, -2);
+                Camera.main.transform.localRotation = Quaternion.identity;
+
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+
             rb = GetComponent<Rigidbody>();
             cameraTransform = Camera.main.transform; // Get the main camera
 
@@ -47,13 +71,39 @@ namespace OpJosModREPO.IAmDucky
                 rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
                 rb.useGravity = true;
             }
+        }
 
-            Cursor.lockState = CursorLockMode.Locked; // Hide cursor and lock to center
-            Cursor.visible = false;
+        public void UpdateMovement(Vector3 movement)
+        {
+            moveDirection = movement;
+        }
+
+        void Start()
+        {
         }
 
         void Update()
         {
+            if (!isYourDuck)
+                return;
+
+            Vector2 moveInput = Keyboard.current != null
+                ? new Vector2(Keyboard.current.aKey.isPressed ? -1 : Keyboard.current.dKey.isPressed ? 1 : 0,
+                    Keyboard.current.sKey.isPressed ? -1 : Keyboard.current.wKey.isPressed ? 1 : 0)
+                : Vector2.zero;
+
+            moveDirection = transform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y).normalized);
+
+            if (!isHost)
+            {
+                syncTimer += Time.deltaTime;
+                if (syncTimer >= syncInterval)
+                {
+                    DuckSpawnerNetwork.Instance.SendDuckMovement(moveDirection, thisDuck.transform.position);
+                    syncTimer = 0f;
+                }
+            }
+
             // Handle mouse look
             float mouseX = Mouse.current.delta.x.ReadValue() * mouseSensitivity;
             float mouseY = Mouse.current.delta.y.ReadValue() * mouseSensitivity;
@@ -64,29 +114,16 @@ namespace OpJosModREPO.IAmDucky
             transform.Rotate(Vector3.up * mouseX); // Rotate duck
             cameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0, 0); // Rotate camera
 
-            // Get movement input
-            Vector2 moveInput = Keyboard.current != null
-                ? new Vector2(Keyboard.current.aKey.isPressed ? -1 : Keyboard.current.dKey.isPressed ? 1 : 0,
-                              Keyboard.current.sKey.isPressed ? -1 : Keyboard.current.wKey.isPressed ? 1 : 0)
-                : Vector2.zero;
-
-            moveDirection = transform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y).normalized);
-
-            handleInput();
+            handleInput();          
         }
 
         void FixedUpdate()
         {
-            // Apply movement
-            rb.AddForce(new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.z * moveSpeed), ForceMode.Acceleration);
+            if (isYourDuck || isHost)
+                rb.AddForce(new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.z * moveSpeed), ForceMode.Acceleration);
 
-            // Directly set the camera position behind the duck
-            cameraTransform.position = transform.position + transform.TransformDirection(cameraOffset);
-
-            if (thisDuck == null)
-            {
-                thisDuck = GeneralUtil.FindClosestDuck(cameraTransform.position);
-            }
+            if (isYourDuck)
+                cameraTransform.position = transform.position + transform.TransformDirection(cameraOffset);
 
             if (attackCooldown > 0f)
                 attackCooldown -= Time.fixedDeltaTime;

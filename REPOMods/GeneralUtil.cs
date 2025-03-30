@@ -41,6 +41,19 @@ namespace OpJosModREPO.IAmDucky
             return cloestDuck;
         }
 
+        public static DuckPlayerController FindDuckController(EnemyDuck duck)
+        {
+            foreach (var controller in GameObject.FindObjectsOfType<DuckPlayerController>())
+            {
+                if (controller.thisDuck.GetInstanceID() == duck.GetInstanceID())
+                {
+                    return controller;
+                }
+            }
+
+            return null;
+        }
+
         public static List<Enemy> FindCloseEnemies(Vector3 pos, float range)
         {
             List<Enemy> result = new List<Enemy>();
@@ -94,30 +107,23 @@ namespace OpJosModREPO.IAmDucky
             }
         }
 
-        public static void ControlClosestDuck(Vector3 pos)
+        public static void ControlClosestDuck(Vector3 pos, int? actorNumber = null)
         {
-            GameObject closestDuck = FindClosestDuck(pos)?.gameObject;
+            EnemyDuck closestDuck = FindClosestDuck(pos);
 
             if (closestDuck != null)
             {
-                mls.LogInfo($"Found closest duck at {closestDuck.transform.position}, transferring control to player.");
-
-                // Disable Player's control & collision
-                PlayerController.instance.enabled = false;
+                mls.LogInfo($"Found closest duck at {closestDuck.gameObject.transform.position}, transferring control to player.");
 
                 // Transfer control: Add PlayerController to Duck
-                DuckPlayerController duckPlayerController = closestDuck.GetComponent<DuckPlayerController>();
+                DuckPlayerController duckPlayerController = closestDuck.gameObject.GetComponent<DuckPlayerController>();
                 if (duckPlayerController == null)
                 {
-                    duckPlayerController = closestDuck.AddComponent<DuckPlayerController>();
+                    duckPlayerController = closestDuck.gameObject.AddComponent<DuckPlayerController>();
                 }
+                duckPlayerController.Setup(actorNumber, closestDuck);
 
-                // Set the player camera to follow the duck
-                Camera.main.transform.SetParent(closestDuck.transform);
-                Camera.main.transform.localPosition = new Vector3(0, 1, -2); // Adjust position
-                Camera.main.transform.localRotation = Quaternion.identity;
-
-                NavMeshAgent agent = closestDuck.GetComponent<NavMeshAgent>();
+                NavMeshAgent agent = closestDuck.gameObject.GetComponent<NavMeshAgent>();
                 if (agent != null)
                 {
                     agent.isStopped = true;  // Stop AI pathfinding
@@ -283,6 +289,12 @@ namespace OpJosModREPO.IAmDucky
             DelayUtility.RunAfterDelay(10f, () =>
             {
                 GeneralUtil.MoveDuckToPos(spawnPos);
+            });
+            
+            //take over the duck
+            DelayUtility.RunAfterDelay(20f, () =>
+            {
+                GeneralUtil.ControlClosestDuck(spawnPos, actorNumber);
             });
         }
     }
