@@ -5,6 +5,7 @@ using Photon.Pun;
 using REPOMods;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -39,7 +40,9 @@ namespace OpJosModREPO.IAmDucky
         private bool isHost = false;
 
         private float syncTimer = 0f;
-        private float syncInterval = 0.5f;
+        private float syncInterval = 0.25f;
+
+        private float recievedMouseX;
 
         public void Setup(int? actorNumber, EnemyDuck duck)
         {
@@ -73,9 +76,10 @@ namespace OpJosModREPO.IAmDucky
             }
         }
 
-        public void UpdateMovement(Vector3 movement)
+        public void UpdateMovementAndRotation(Vector3 movement, float mouseX)
         {
             moveDirection = movement;
+            recievedMouseX = mouseX;
         }
 
         void Start()
@@ -99,7 +103,8 @@ namespace OpJosModREPO.IAmDucky
                 syncTimer += Time.deltaTime;
                 if (syncTimer >= syncInterval)
                 {
-                    DuckSpawnerNetwork.Instance.SendDuckMovement(moveDirection, thisDuck.transform.position);
+                    float mouse = Mouse.current.delta.x.ReadValue() * mouseSensitivity;
+                    DuckSpawnerNetwork.Instance.SendDuckMovement(moveDirection, mouse, thisDuck.transform.position);
                     syncTimer = 0f;
                 }
             }
@@ -111,7 +116,7 @@ namespace OpJosModREPO.IAmDucky
             cameraPitch -= mouseY;
             cameraPitch = Mathf.Clamp(cameraPitch, -60f, 60f); // Prevent flipping
 
-            transform.Rotate(Vector3.up * mouseX); // Rotate duck
+            recievedMouseX = mouseX;
             cameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0, 0); // Rotate camera
 
             handleInput();          
@@ -120,7 +125,10 @@ namespace OpJosModREPO.IAmDucky
         void FixedUpdate()
         {
             if (isYourDuck || isHost)
+            {
                 rb.AddForce(new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.z * moveSpeed), ForceMode.Acceleration);
+                transform.Rotate(Vector3.up * recievedMouseX); // Rotate duck
+            }
 
             if (isYourDuck)
                 cameraTransform.position = transform.position + transform.TransformDirection(cameraOffset);
