@@ -41,6 +41,28 @@ namespace OpJosModREPO.IAmDucky
             return cloestDuck;
         }
 
+        public static EnemyDuck FindClosestDuckWithoutController(Vector3 pos)
+        {
+            EnemyDuck cloestDuck = null;
+            float closestDistance = float.MaxValue;
+
+            foreach (var enemy in GameObject.FindObjectsOfType<EnemyDuck>())
+            {
+                if (FindDuckController(enemy) != null) //has a controller skip it
+                    continue;
+
+                float distance = Vector3.Distance(enemy.gameObject.transform.position, pos);
+
+                if (distance < closestDistance)
+                {
+                    cloestDuck = enemy;
+                    closestDistance = distance;
+                }
+            }
+
+            return cloestDuck;
+        }
+
         public static DuckPlayerController FindDuckController(EnemyDuck duck)
         {
             foreach (var controller in GameObject.FindObjectsOfType<DuckPlayerController>())
@@ -86,9 +108,14 @@ namespace OpJosModREPO.IAmDucky
 
         public static void MoveDuckToPos(Vector3 pos) 
         {
-            GameObject closestDuck = GeneralUtil.FindClosestDuck(pos)?.gameObject;
+            GameObject closestDuck = GeneralUtil.FindClosestDuckWithoutController(pos)?.gameObject;
+            if (closestDuck == null)
+            {
 
-            if (closestDuck != null)
+                mls.LogError("No duck found without a controller to teleport.");
+                return;
+            }
+            else
             {
                 mls.LogMessage($"Found closest duck at {closestDuck.transform.position}, moving it to player.");
 
@@ -113,10 +140,6 @@ namespace OpJosModREPO.IAmDucky
                 }
 
                 mls.LogMessage($"Duck moving towards {closestDuck.transform.position}");
-            }
-            else
-            {
-                mls.LogError("No duck found to teleport.");
             }
         }
 
