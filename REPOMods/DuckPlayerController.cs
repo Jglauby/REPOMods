@@ -40,7 +40,7 @@ namespace OpJosModREPO.IAmDucky
         private bool isHost = false;
 
         private float syncTimer = 0f;
-        private float syncInterval = 0.1f;
+        private float syncInterval = 0.4f;
 
         private float recievedMouseX;
         private bool shouldJump = false;

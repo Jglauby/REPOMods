@@ -41,7 +41,7 @@ namespace OpJosModREPO.IAmDucky.Patches
                 mls.LogInfo($"[CLIENT] Sending duck spawn request. My actor number: {PhotonNetwork.LocalPlayer.ActorNumber}");
                 DuckSpawnerNetwork.Instance.RequestDuckSpawn(__instance.transform.position);
 
-                DelayUtility.RunAfterDelay(20f, () =>
+                DelayUtility.RunAfterDelay(25f, () =>
                 {
                     GeneralUtil.ControlClosestDuck(__instance.transform.position, PhotonNetwork.LocalPlayer.ActorNumber);
                 });

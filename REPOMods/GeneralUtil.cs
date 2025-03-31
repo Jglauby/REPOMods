@@ -305,7 +305,7 @@ namespace OpJosModREPO.IAmDucky
             });
             
             //take over the duck
-            DelayUtility.RunAfterDelay(20f, () =>
+            DelayUtility.RunAfterDelay(25f, () =>
             {
                 GeneralUtil.ControlClosestDuck(spawnPos, actorNumber);
             });
