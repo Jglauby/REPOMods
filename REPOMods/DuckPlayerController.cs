@@ -111,7 +111,7 @@ namespace OpJosModREPO.IAmDucky
                 if (syncTimer >= syncInterval)
                 {
                     float mouse = Mouse.current.delta.x.ReadValue() * mouseSensitivity;
-                    DuckSpawnerNetwork.Instance.SendDuckMovement(moveDirection, mouse, thisDuck.transform.position, shouldJump);
+                    DuckSpawnerNetwork.Instance.SendDuckMovement(moveDirection, mouse, controlActorNumber, shouldJump);
                     shouldJump = false;
                     syncTimer = 0f;
                 }
