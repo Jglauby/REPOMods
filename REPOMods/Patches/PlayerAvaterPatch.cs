@@ -28,7 +28,6 @@ namespace OpJosModREPO.RainbowPlayer.Patches
 
             if (Time.time - lastRan > delay)
             {
-                mls.LogMessage("ChangingColor");
                 lastRan = Time.time;
                 try
                 {
