@@ -182,8 +182,6 @@ namespace OpJosModREPO.IAmDucky
 
             if (Keyboard.current.eKey.wasPressedThisFrame)
             {
-                thisDuck = GeneralUtil.FindClosestDuck(cameraTransform.position);
-
                 if (thisDuck.currentState == EnemyDuck.State.AttackStart)
                 {
                     mls.LogInfo("Stopping duck attack mode");
