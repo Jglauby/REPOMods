@@ -22,6 +22,9 @@ namespace OpJosModREPO.IAmDucky.Patches
         [HarmonyPostfix]
         static void PlayerDeathPatch(PlayerAvatar __instance)
         {
+            if (!PhotonNetwork.IsMasterClient)
+                return;
+
             if (PublicVars.CanSpawnDuck == false)
             {
                 mls.LogInfo("Can't spawn duck again, set to spectate");
@@ -52,6 +55,9 @@ namespace OpJosModREPO.IAmDucky.Patches
         [HarmonyPostfix]
         static void ReviveRPCPatch(PlayerAvatar __instance)
         {
+            if (!PhotonNetwork.IsMasterClient)
+                return;
+
             int actorNumber = __instance.photonView.OwnerActorNr;
 
             mls.LogInfo($"handling player respawn {actorNumber}");
@@ -88,6 +94,9 @@ namespace OpJosModREPO.IAmDucky.Patches
         [HarmonyPostfix]
         static void LoadingLevelAnimationCompletedPatch(PlayerAvatar __instance)
         {
+            if (!PhotonNetwork.IsMasterClient)
+                return;
+
             if (__instance.GetInstanceID() != PlayerAvatar.instance.GetInstanceID())
             {
                 return;
