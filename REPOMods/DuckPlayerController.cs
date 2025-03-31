@@ -40,9 +40,10 @@ namespace OpJosModREPO.IAmDucky
         private bool isHost = false;
 
         private float syncTimer = 0f;
-        private float syncInterval = 0.25f;
+        private float syncInterval = 0.1f;
 
         private float recievedMouseX;
+        private bool shouldJump = false;
 
         public void Setup(int? actorNumber, EnemyDuck duck)
         {
@@ -76,10 +77,15 @@ namespace OpJosModREPO.IAmDucky
             }
         }
 
-        public void UpdateMovementAndRotation(Vector3 movement, float mouseX)
+        public void UpdateMovementAndRotation(Vector3 movement, float mouseX, bool jump)
         {
             moveDirection = movement;
             recievedMouseX = mouseX;
+
+            if (jump)
+            {
+                TriggerJump();
+            }
         }
 
         void Start()
@@ -98,13 +104,15 @@ namespace OpJosModREPO.IAmDucky
 
             moveDirection = transform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y).normalized);
 
+            shouldJump = Keyboard.current.spaceKey.wasPressedThisFrame == true ? true : shouldJump;
             if (!isHost)
             {
                 syncTimer += Time.deltaTime;
                 if (syncTimer >= syncInterval)
                 {
                     float mouse = Mouse.current.delta.x.ReadValue() * mouseSensitivity;
-                    DuckSpawnerNetwork.Instance.SendDuckMovement(moveDirection, mouse, thisDuck.transform.position);
+                    DuckSpawnerNetwork.Instance.SendDuckMovement(moveDirection, mouse, thisDuck.transform.position, shouldJump);
+                    shouldJump = false;
                     syncTimer = 0f;
                 }
             }
@@ -131,34 +139,22 @@ namespace OpJosModREPO.IAmDucky
             }
 
             if (isYourDuck)
+            {
                 cameraTransform.position = transform.position + transform.TransformDirection(cameraOffset);
 
-            if (attackCooldown > 0f)
-                attackCooldown -= Time.fixedDeltaTime;
+                if (attackCooldown > 0f)
+                    attackCooldown -= Time.fixedDeltaTime;
 
-            if (attackCooldown <= 0f)
-            {
-                attackNearbyEnemies();
-                attackCooldown = 0.75f;
+                if (attackCooldown <= 0f)
+                {
+                    attackNearbyEnemies();
+                    attackCooldown = 0.75f;
+                }
             }
         }
 
         private void handleInput()
         {
-            if (Keyboard.current.spaceKey.wasPressedThisFrame)
-            {
-                EnemyDuck thisDuck = GeneralUtil.FindClosestDuck(cameraTransform.position);
-                if (thisDuck == null) return;
-
-                Enemy enemy = thisDuck.enemy;
-                if (enemy == null) return;
-
-                object enemyJump = ReflectionUtils.GetFieldValue<object>(enemy, "Jump");
-                if (enemyJump == null) return;
-
-                ReflectionUtils.InvokeMethod(enemyJump, "StuckTrigger", new object[] { Vector3.up });
-            }
-
             if (Keyboard.current.cKey.wasPressedThisFrame)
             {
                 mls.LogInfo("Reseting control of duck");
@@ -215,6 +211,20 @@ namespace OpJosModREPO.IAmDucky
                     }
                 }
             }
+        }
+
+        private void TriggerJump()
+        {
+            EnemyDuck thisDuck = GeneralUtil.FindClosestDuck(cameraTransform.position);
+            if (thisDuck == null) return;
+
+            Enemy enemy = thisDuck.enemy;
+            if (enemy == null) return;
+
+            object enemyJump = ReflectionUtils.GetFieldValue<object>(enemy, "Jump");
+            if (enemyJump == null) return;
+
+            ReflectionUtils.InvokeMethod(enemyJump, "StuckTrigger", new object[] { Vector3.up });
         }
     }
 }
