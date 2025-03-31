@@ -27,7 +27,7 @@ namespace OpJosModREPO.IAmDucky.Patches
             DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
             if (duckController != null)
             {
-                EnemyDuck duck = GeneralUtil.FindClosestDuck(duckController.cameraTransform.position);
+                EnemyDuck duck = duckController.thisDuck;
                 if (enemy.GetInstanceID() == duck.enemy.GetInstanceID() && 
                     ReflectionUtils.GetFieldValue<bool>(PlayerAvatar.instance, "deadSet"))//and player is dead
                 {

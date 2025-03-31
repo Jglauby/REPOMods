@@ -54,6 +54,19 @@ namespace OpJosModREPO.IAmDucky
             return null;
         }
 
+        public static DuckPlayerController FindDuckController(int? actorNumber)
+        {
+            foreach (var controller in GameObject.FindObjectsOfType<DuckPlayerController>())
+            {
+                if (controller.controlActorNumber == actorNumber)
+                {
+                    return controller;
+                }
+            }
+
+            return null;
+        }
+
         public static List<Enemy> FindCloseEnemies(Vector3 pos, float range)
         {
             List<Enemy> result = new List<Enemy>();
@@ -139,24 +152,24 @@ namespace OpJosModREPO.IAmDucky
             }
         }
 
-        public static void RemoveSpawnedControllableDuck()
+        public static void RemoveSpawnedControllableDuck(DuckPlayerController duckController)
         {
             // Now safely destroy the duck controller
-            DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
             if (duckController != null)
             {
                 GameObject.Destroy(duckController);
                 mls.LogInfo("Duck controller destroyed.");
             }
 
-            // Kill the duck after camera is restored
-            PlayerController pc = PlayerController.instance;
-            EnemyDuck closestDuck = FindClosestDuck(pc.transform.position);
-            if (closestDuck != null)
+            if (PhotonNetwork.IsMasterClient)
             {
-                EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(closestDuck.enemy, "Health");
-                ReflectionUtils.InvokeMethod(healthComponent, "Death", new object[] { Vector3.zero });
-                mls.LogMessage("Killed controlled duck");
+                PlayerController pc = PlayerController.instance;
+                if (duckController.thisDuck != null)
+                {
+                    EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(duckController.thisDuck.enemy, "Health");
+                    ReflectionUtils.InvokeMethod(healthComponent, "Death", new object[] { Vector3.zero });
+                    mls.LogMessage("Killed controlled duck");
+                }
             }
         }
 

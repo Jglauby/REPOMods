@@ -33,7 +33,7 @@ namespace OpJosModREPO.IAmDucky
         public float cameraSmoothSpeed = 10f;
 
         public EnemyDuck thisDuck = null;
-        private int? controlActorNumber;
+        public int? controlActorNumber;
         private float attackCooldown;
 
         private bool isYourDuck = false; //if false means you are host, no client has this controller if it isn't for them
@@ -192,7 +192,7 @@ namespace OpJosModREPO.IAmDucky
                         Vector3 toEnemy = (enemy.transform.position - thisDuck.transform.position).normalized;
                         float angle = Vector3.Angle(thisDuck.transform.forward, toEnemy);
 
-                        if (angle < 50f)
+                        if (angle < 50f || !PhotonNetwork.IsMasterClient) //dont care about direction if not host
                         {
                             EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(enemy, "Health");
                             if (healthComponent != null)
