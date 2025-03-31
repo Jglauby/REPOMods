@@ -42,5 +42,19 @@ namespace OpJosModREPO.IAmDucky.Networking
         {
             photonView.RPC("RPC_SendDuckMovement", RpcTarget.MasterClient, movement, mouseX, duckPos, jump);
         }
+
+        [PunRPC]
+        public void RPC_ResetDuckControl(Vector3 loc, int actorNumber)
+        {
+            if (!PhotonNetwork.IsMasterClient)
+                return;
+
+            GeneralUtil.ControlClosestDuck(loc, actorNumber);
+        }
+
+        public void ResetDuckControl(Vector3 loc, int actorNumber)
+        {
+            photonView.RPC("RPC_ResetDuckControl", RpcTarget.MasterClient, loc, actorNumber);
+        }
     }
 }

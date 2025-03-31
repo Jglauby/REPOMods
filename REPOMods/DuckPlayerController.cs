@@ -155,6 +155,9 @@ namespace OpJosModREPO.IAmDucky
 
         private void handleInput()
         {
+            if (controlActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)//dont listen to keys if not your duck
+                return;
+
             if (Keyboard.current.spaceKey.wasPressedThisFrame && PhotonNetwork.IsMasterClient)
             {
                 TriggerJump();
@@ -163,7 +166,14 @@ namespace OpJosModREPO.IAmDucky
             if (Keyboard.current.cKey.wasPressedThisFrame)
             {
                 mls.LogInfo("Reseting control of duck");
-                //GeneralUtil.ControlClosestDuck(cameraTransform.position);
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    GeneralUtil.ControlClosestDuck(cameraTransform.position, 1);
+                }
+                else
+                {
+                    DuckSpawnerNetwork.Instance.ResetDuckControl(cameraTransform.position, controlActorNumber);
+                }
             }
 
             if (Keyboard.current.eKey.wasPressedThisFrame)
