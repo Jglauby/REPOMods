@@ -215,7 +215,6 @@ namespace OpJosModREPO.IAmDucky
 
         private void TriggerJump()
         {
-            EnemyDuck thisDuck = GeneralUtil.FindClosestDuck(cameraTransform.position);
             if (thisDuck == null) return;
 
             Enemy enemy = thisDuck.enemy;
