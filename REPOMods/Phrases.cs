@@ -54,6 +54,7 @@ namespace REPOMods
             "All's well that ends... not as bad as it could've",
             "Cursed to put my hands on everything",
             "No traps, please ...",
+            "Do you know what else is massive?",
             "Blood comes easier these days....",
         };
         private static readonly Random rng = new Random();
