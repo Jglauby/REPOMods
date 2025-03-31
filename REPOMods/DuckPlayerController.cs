@@ -33,7 +33,7 @@ namespace OpJosModREPO.IAmDucky
         public float cameraSmoothSpeed = 10f;
 
         public EnemyDuck thisDuck = null;
-        public int? controlActorNumber;
+        public int controlActorNumber;
         private float attackCooldown;
 
         private bool isYourDuck = false; //if false means you are host, no client has this controller if it isn't for them
@@ -45,13 +45,13 @@ namespace OpJosModREPO.IAmDucky
         private float recievedMouseX;
         private bool shouldJump = false;
 
-        public void Setup(int? actorNumber, EnemyDuck duck)
+        public void Setup(int actorNumber, EnemyDuck duck)
         {
             controlActorNumber = actorNumber;
             thisDuck = duck;
             isHost = PhotonNetwork.IsMasterClient;
 
-            if (PhotonNetwork.LocalPlayer.ActorNumber == controlActorNumber || controlActorNumber == null) //is your duck
+            if (PhotonNetwork.LocalPlayer.ActorNumber == controlActorNumber) //is your duck
             {
                 isYourDuck = true;
                 PlayerController.instance.enabled = false;
@@ -155,10 +155,15 @@ namespace OpJosModREPO.IAmDucky
 
         private void handleInput()
         {
+            if (Keyboard.current.spaceKey.wasPressedThisFrame && PhotonNetwork.IsMasterClient)
+            {
+                TriggerJump();
+            }
+
             if (Keyboard.current.cKey.wasPressedThisFrame)
             {
                 mls.LogInfo("Reseting control of duck");
-                GeneralUtil.ControlClosestDuck(cameraTransform.position);
+                //GeneralUtil.ControlClosestDuck(cameraTransform.position);
             }
 
             if (Keyboard.current.eKey.wasPressedThisFrame)

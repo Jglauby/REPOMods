@@ -33,7 +33,7 @@ namespace OpJosModREPO.IAmDucky.Patches
             if (PhotonNetwork.IsMasterClient)
             {
                 mls.LogMessage("Player is dead, spawning duck as host");
-                GeneralUtil.SpawnDuckAt(__instance.transform.position);
+                GeneralUtil.SpawnDuckAt(__instance.transform.position, 1);
             }
             else
             {

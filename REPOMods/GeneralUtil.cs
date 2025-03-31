@@ -120,7 +120,7 @@ namespace OpJosModREPO.IAmDucky
             }
         }
 
-        public static void ControlClosestDuck(Vector3 pos, int? actorNumber = null)
+        public static void ControlClosestDuck(Vector3 pos, int actorNumber)
         {
             EnemyDuck closestDuck = FindClosestDuck(pos);
 
@@ -279,7 +279,7 @@ namespace OpJosModREPO.IAmDucky
             }
         }
 
-        public static void SpawnDuckAt(Vector3 spawnPos, int? actorNumber = null)
+        public static void SpawnDuckAt(Vector3 spawnPos, int actorNumber)
         {
             mls.LogMessage($"Spawning duck at {spawnPos}");
 
