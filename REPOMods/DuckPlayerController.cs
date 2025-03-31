@@ -134,8 +134,12 @@ namespace OpJosModREPO.IAmDucky
         {
             if (isYourDuck || isHost)
             {
-                rb.AddForce(new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.z * moveSpeed), ForceMode.Acceleration);
                 transform.Rotate(Vector3.up * recievedMouseX); // Rotate duck
+            }
+
+            if (isHost)
+            {
+                rb.AddForce(new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.z * moveSpeed), ForceMode.Acceleration);
             }
 
             if (isYourDuck)
