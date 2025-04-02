@@ -36,9 +36,9 @@ namespace OpJosModREPO.IAmDucky
         private bool isHost = false;
 
         private float syncTimer = 0f;
-        private float syncInterval = 0.4f;
+        private float syncInterval = 0.375f;
 
-        private float recievedMouseX;
+        private Vector3 targetLookDirection;
         private bool shouldJump = false;
 
         public void Setup(int actorNumber, EnemyDuck duck)
@@ -73,10 +73,10 @@ namespace OpJosModREPO.IAmDucky
             }
         }
 
-        public void UpdateMovementAndRotation(Vector3 movement, float mouseX, bool jump)
+        public void UpdateMovementAndRotation(Vector3 movement, Vector3 camForward, bool jump)
         {
             moveDirection = movement;
-            recievedMouseX = mouseX;
+            targetLookDirection = camForward;
 
             if (jump)
             {
@@ -107,7 +107,7 @@ namespace OpJosModREPO.IAmDucky
             cameraPitch -= mouseY;
             cameraPitch = Mathf.Clamp(cameraPitch, -60f, 60f); // Prevent flipping
 
-            recievedMouseX = mouseX;
+            transform.Rotate(Vector3.up * mouseX); // Rotate duck
             cameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0, 0); // Rotate camera
 
             handleInput();          
@@ -117,7 +117,11 @@ namespace OpJosModREPO.IAmDucky
         {
             if (isYourDuck || isHost)
             {
-                transform.Rotate(Vector3.up * recievedMouseX); // Rotate duck
+                if (targetLookDirection != Vector3.zero)
+                {
+                    Quaternion targetRot = Quaternion.LookRotation(targetLookDirection);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 10f);
+                }
             }
 
             if (isHost)
@@ -173,14 +177,19 @@ namespace OpJosModREPO.IAmDucky
                 }
             }
 
-            //add a leave duck button
+            if (Keyboard.current.kKey.wasPressedThisFrame)
+            {
+                EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(thisDuck.enemy, "Health");
+                ReflectionUtils.InvokeMethod(healthComponent, "Death", new object[] { Vector3.zero });
+                mls.LogMessage("Killed controlled duck");
+            }
         }
 
         private void attackNearbyEnemies()
         {
             if (thisDuck.currentState == EnemyDuck.State.AttackStart)
             {
-                List<Enemy> closeEnemies = GeneralUtil.FindCloseEnemies(thisDuck.transform.position, 2f);
+                List<Enemy> closeEnemies = GeneralUtil.FindCloseEnemies(thisDuck.transform.position, 2.25f);
                 foreach (var enemy in closeEnemies)
                 {
                     if (enemy != null && enemy.GetInstanceID() != thisDuck.enemy.GetInstanceID())//not controlled duck
@@ -188,7 +197,7 @@ namespace OpJosModREPO.IAmDucky
                         Vector3 toEnemy = (enemy.transform.position - thisDuck.transform.position).normalized;
                         float angle = Vector3.Angle(thisDuck.transform.forward, toEnemy);
 
-                        if (angle < 50f || !PhotonNetwork.IsMasterClient) //dont care about direction if not host
+                        if (angle < 50f)
                         {
                             EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(enemy, "Health");
                             if (healthComponent != null)
