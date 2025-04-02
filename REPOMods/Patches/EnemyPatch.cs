@@ -23,6 +23,9 @@ namespace OpJosModREPO.IAmDucky.Patches
         [HarmonyPrefix]
         static void DeathRPCPatch(EnemyHealth __instance)
         {
+            if (!PhotonNetwork.IsMasterClient)
+                return;
+
             Enemy enemy = ReflectionUtils.GetFieldValue<Enemy>(__instance, "enemy");
             EnemyDuck duck = enemy.GetComponent<EnemyDuck>();
             if (duck == null) return; //not duck that died

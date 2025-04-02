@@ -1,11 +1,7 @@
 ﻿using BepInEx.Logging;
-using OpJosModREPO.IAmDucky.Networking;
 using OpJosModREPO.Util;
 using Photon.Pun;
-using REPOMods;
-using System;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -107,19 +103,6 @@ namespace OpJosModREPO.IAmDucky
 
             moveDirection = transform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y).normalized);
 
-            shouldJump = Keyboard.current.spaceKey.wasPressedThisFrame == true ? true : shouldJump;
-            if (!isHost)
-            {
-                syncTimer += Time.deltaTime;
-                if (syncTimer >= syncInterval)
-                {
-                    float mouse = Mouse.current.delta.x.ReadValue() * mouseSensitivity;
-                    DuckSpawnerNetwork.Instance.SendDuckMovement(moveDirection, mouse, controlActorNumber, shouldJump);
-                    shouldJump = false;
-                    syncTimer = 0f;
-                }
-            }
-
             // Handle mouse look
             float mouseX = Mouse.current.delta.x.ReadValue() * mouseSensitivity;
             float mouseY = Mouse.current.delta.y.ReadValue() * mouseSensitivity;
@@ -176,10 +159,6 @@ namespace OpJosModREPO.IAmDucky
                 if (PhotonNetwork.IsMasterClient)
                 {
                     GeneralUtil.ControlClosestDuck(cameraTransform.position, 1);
-                }
-                else
-                {
-                    DuckSpawnerNetwork.Instance.ResetDuckControl(cameraTransform.position, controlActorNumber);
                 }
             }
 
