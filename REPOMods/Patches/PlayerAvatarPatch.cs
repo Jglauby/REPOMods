@@ -67,7 +67,7 @@ namespace OpJosModREPO.IAmDucky.Patches
             {
                 GeneralUtil.RemoveSpawnedControllableDuck(duckController);
             }
-            else
+            else if (actorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
             {//local and its this person duck controller
                 if (PublicVars.CanSpawnDuck == false && PublicVars.DuckDied == false)//have spawned a duck, and its alive
                 {
