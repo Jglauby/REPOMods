@@ -201,7 +201,12 @@ namespace OpJosModREPO.IAmDucky
                 }
             }
 
-            //add a leave duck button
+            if (Keyboard.current.kKey.wasPressedThisFrame)
+            {
+                EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(thisDuck.enemy, "Health");
+                ReflectionUtils.InvokeMethod(healthComponent, "Death", new object[] { Vector3.zero });
+                mls.LogMessage("Killed controlled duck");
+            }
         }
 
         private void attackNearbyEnemies()
