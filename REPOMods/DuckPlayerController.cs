@@ -53,10 +53,6 @@ namespace OpJosModREPO.IAmDucky
 
             if (PhotonNetwork.LocalPlayer.ActorNumber == controlActorNumber) //is your duck
             {
-                //if (SpectateCamera.instance != null)
-                //    SpectateCamera.instance.StopSpectate();
-                //ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "spectating", false);
-
                 isYourDuck = true;
                 PlayerController.instance.enabled = false;
                 Camera.main.transform.SetParent(duck.gameObject.transform);
