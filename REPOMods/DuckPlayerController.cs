@@ -201,7 +201,7 @@ namespace OpJosModREPO.IAmDucky
         {
             if (thisDuck.currentState == EnemyDuck.State.AttackStart)
             {
-                List<Enemy> closeEnemies = GeneralUtil.FindCloseEnemies(thisDuck.transform.position, 2f);
+                List<Enemy> closeEnemies = GeneralUtil.FindCloseEnemies(thisDuck.transform.position, 2.5f);
                 foreach (var enemy in closeEnemies)
                 {
                     if (enemy != null && enemy.GetInstanceID() != thisDuck.enemy.GetInstanceID())//not controlled duck
