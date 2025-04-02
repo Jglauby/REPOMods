@@ -24,17 +24,21 @@ namespace OpJosModREPO.IAmDucky.Patches
         static void DeathPatch(EnemyHealth __instance)
         {
             Enemy enemy = ReflectionUtils.GetFieldValue<Enemy>(__instance, "enemy");
-            DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
-            if (duckController != null)
+            EnemyDuck duck = enemy.GetComponent<EnemyDuck>();
+            if (duck == null) return; //not duck that died
+
+            DuckPlayerController ducksController = GeneralUtil.FindDuckController(duck);
+
+            if (PhotonNetwork.LocalPlayer.ActorNumber == ducksController.controlActorNumber) //is your duck
             {
-                EnemyDuck duck = duckController.thisDuck;
-                if (enemy.GetInstanceID() == duck.enemy.GetInstanceID() && 
-                    ReflectionUtils.GetFieldValue<bool>(PlayerAvatar.instance, "deadSet"))//and player is dead
-                {
-                    mls.LogInfo("Duck dying is duck being controlled, release control of duck");
-                    PublicVars.DuckDied = true;
-                    GeneralUtil.ReleaseDuckControlToSpectate();
-                }
+                mls.LogInfo("Duck dying is duck being controlled, release control of duck");
+                PublicVars.DuckDied = true;
+                GeneralUtil.ReleaseDuckControlToSpectate();
+            }
+            else if (PhotonNetwork.IsMasterClient) //destory relevant controller if host
+            {
+                GameObject.Destroy(ducksController);
+                mls.LogInfo($"Player{ducksController.controlActorNumber}'s Duck controller destroyed.");
             }
         }
     }

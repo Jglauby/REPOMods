@@ -1,11 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using OpJosModREPO.IAmDucky.Networking;
 using OpJosModREPO.IAmDucky.Patches;
-using Photon.Pun;
-using System.Collections;
-using UnityEngine;
 
 namespace OpJosModREPO.IAmDucky
 {
@@ -14,7 +10,7 @@ namespace OpJosModREPO.IAmDucky
     {
         private const string modGUID = "OpJosModREPO.IAmDucky";
         private const string modName = "IAmDucky";
-        private const string modVersion = "1.1.1";
+        private const string modVersion = "1.1.2";
 
         private readonly Harmony harmoy = new Harmony(modGUID);
         private static OpJosModBase Instance;
