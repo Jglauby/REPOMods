@@ -19,9 +19,9 @@ namespace OpJosModREPO.IAmDucky.Patches
             mls = logSource;
         }
 
-        [HarmonyPatch("Death")]
+        [HarmonyPatch("DeathRPC")]
         [HarmonyPrefix]
-        static void DeathPatch(EnemyHealth __instance)
+        static void DeathRPCPatch(EnemyHealth __instance)
         {
             Enemy enemy = ReflectionUtils.GetFieldValue<Enemy>(__instance, "enemy");
             EnemyDuck duck = enemy.GetComponent<EnemyDuck>();
