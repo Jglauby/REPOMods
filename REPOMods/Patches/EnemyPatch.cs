@@ -19,25 +19,26 @@ namespace OpJosModREPO.IAmDucky.Patches
             mls = logSource;
         }
 
-        [HarmonyPatch("Death")]
+        [HarmonyPatch("DeathRPC")]
         [HarmonyPrefix]
-        static void DeathPatch(EnemyHealth __instance)
+        static void DeathRPCPatch(EnemyHealth __instance)
         {
-            if (PhotonNetwork.IsMasterClient)
-            { 
-                Enemy enemy = ReflectionUtils.GetFieldValue<Enemy>(__instance, "enemy");
-                DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
-                if (duckController != null)
-                {
-                    EnemyDuck duck = duckController.thisDuck;
-                    if (enemy.GetInstanceID() == duck.enemy.GetInstanceID() &&
-                        ReflectionUtils.GetFieldValue<bool>(PlayerAvatar.instance, "deadSet"))//and player is dead
-                    {
-                        mls.LogInfo("Duck dying is duck being controlled, release control of duck");
-                        PublicVars.DuckDied = true;
-                        GeneralUtil.ReleaseDuckControlToSpectate();
-                    }
-                }
+            Enemy enemy = ReflectionUtils.GetFieldValue<Enemy>(__instance, "enemy");
+            EnemyDuck duck = enemy.GetComponent<EnemyDuck>();
+            if (duck == null) return; //not duck that died
+
+            DuckPlayerController ducksController = GeneralUtil.FindDuckController(duck);
+
+            if (PhotonNetwork.LocalPlayer.ActorNumber == ducksController.controlActorNumber) //is your duck
+            {
+                mls.LogInfo("Duck dying is duck being controlled, release control of duck");
+                PublicVars.DuckDied = true;
+                GeneralUtil.ReleaseDuckControlToSpectate();
+            }
+            else if (PhotonNetwork.IsMasterClient) //destory relevant controller if host
+            {
+                GameObject.Destroy(ducksController);
+                mls.LogInfo($"Player{ducksController.controlActorNumber}'s Duck controller destroyed.");
             }
         }
     }

@@ -40,7 +40,7 @@ namespace OpJosModREPO.IAmDucky
         private bool isHost = false;
 
         private float syncTimer = 0f;
-        private float syncInterval = 0.1f;
+        private float syncInterval = 0.4f;
 
         private float recievedMouseX;
         private bool shouldJump = false;
@@ -53,6 +53,9 @@ namespace OpJosModREPO.IAmDucky
 
             if (PhotonNetwork.LocalPlayer.ActorNumber == controlActorNumber) //is your duck
             {
+                SpectateCamera.instance.StopSpectate();
+                ReflectionUtils.SetFieldValue(PlayerAvatar.instance, "spectating", false);
+
                 isYourDuck = true;
                 PlayerController.instance.enabled = false;
                 Camera.main.transform.SetParent(duck.gameObject.transform);
@@ -111,7 +114,7 @@ namespace OpJosModREPO.IAmDucky
                 if (syncTimer >= syncInterval)
                 {
                     float mouse = Mouse.current.delta.x.ReadValue() * mouseSensitivity;
-                    DuckSpawnerNetwork.Instance.SendDuckMovement(moveDirection, mouse, thisDuck.transform.position, shouldJump);
+                    DuckSpawnerNetwork.Instance.SendDuckMovement(moveDirection, mouse, controlActorNumber, shouldJump);
                     shouldJump = false;
                     syncTimer = 0f;
                 }
@@ -182,8 +185,6 @@ namespace OpJosModREPO.IAmDucky
 
             if (Keyboard.current.eKey.wasPressedThisFrame)
             {
-                thisDuck = GeneralUtil.FindClosestDuck(cameraTransform.position);
-
                 if (thisDuck.currentState == EnemyDuck.State.AttackStart)
                 {
                     mls.LogInfo("Stopping duck attack mode");
