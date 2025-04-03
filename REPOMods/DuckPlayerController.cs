@@ -23,7 +23,7 @@ namespace OpJosModREPO.IAmDucky
         private Rigidbody rb;
 
         private Vector3 moveDirection;
-        public float moveSpeed = 4f;
+        public float moveSpeed = 6f;
         public float turnSpeed = 3f;
         public float jumpForce = 0.5f;
         public Transform cameraTransform;
@@ -149,7 +149,21 @@ namespace OpJosModREPO.IAmDucky
                 erb.DisableFollowPosition(0.5f, 50f);
                 rb.AddForce(new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.z * moveSpeed), ForceMode.Acceleration);
 
+                if (moveDirection.x == 0 && moveDirection.z == 0)
+                {
+                    Vector3 velocity = rb.velocity;
+                    Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z);
+
+                    // Dampen the horizontal speed gradually (like friction)
+                    horizontalVelocity = Vector3.Lerp(horizontalVelocity, Vector3.zero, Time.fixedDeltaTime * 5f);
+
+                    // Apply the damped velocity back
+                    rb.velocity = new Vector3(horizontalVelocity.x, velocity.y, horizontalVelocity.z);
+                }
+
+                //sticks object camera is on to rigidbody thats moving
                 thisDuck.gameObject.transform.position = rb.transform.position;
+
 
                 //if (slowFall)
                 //{
