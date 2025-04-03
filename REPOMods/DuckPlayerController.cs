@@ -101,6 +101,17 @@ namespace OpJosModREPO.IAmDucky
 
             moveDirection = transform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y).normalized);
 
+            // Handle mouse look
+            float mouseX = Mouse.current.delta.x.ReadValue() * mouseSensitivity;
+            float mouseY = Mouse.current.delta.y.ReadValue() * mouseSensitivity;
+
+            cameraPitch -= mouseY;
+            cameraPitch = Mathf.Clamp(cameraPitch, -60f, 60f); // Prevent flipping
+
+            transform.Rotate(Vector3.up * mouseX); // Rotate duck
+            cameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0, 0); // Rotate camera
+
+            //send move data to host rpc
             shouldJump = Keyboard.current.spaceKey.wasPressedThisFrame == true ? true : shouldJump;
             if (!isHost)
             {
@@ -117,17 +128,7 @@ namespace OpJosModREPO.IAmDucky
                 }
             }
 
-            // Handle mouse look
-            float mouseX = Mouse.current.delta.x.ReadValue() * mouseSensitivity;
-            float mouseY = Mouse.current.delta.y.ReadValue() * mouseSensitivity;
-
-            cameraPitch -= mouseY;
-            cameraPitch = Mathf.Clamp(cameraPitch, -60f, 60f); // Prevent flipping
-
-            transform.Rotate(Vector3.up * mouseX); // Rotate duck
-            cameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0, 0); // Rotate camera
-
-            handleInput();          
+            handleInput();
         }
 
         void FixedUpdate()
