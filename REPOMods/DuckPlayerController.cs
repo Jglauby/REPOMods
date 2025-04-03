@@ -19,12 +19,12 @@ namespace OpJosModREPO.IAmDucky
             mls = logSource;
         }
 
+        private EnemyRigidbody erb;
         private Rigidbody rb;
+
         private Vector3 moveDirection;
-        public float moveSpeed = 5f;
+        public float moveSpeed = 3f;
         public float turnSpeed = 3f;
-        public float jumpForce = 80f;
-        public float gravity = 9.8f;
         public Transform cameraTransform;
         public float mouseSensitivity = 0.25f;
         private float cameraPitch = 0f;
@@ -51,11 +51,14 @@ namespace OpJosModREPO.IAmDucky
             thisDuck = duck;
             isHost = PhotonNetwork.IsMasterClient;
 
+            erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisDuck.enemy, "Rigidbody");
+            rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
+
             if (PhotonNetwork.LocalPlayer.ActorNumber == controlActorNumber) //is your duck
             {
                 isYourDuck = true;
                 PlayerController.instance.enabled = false;
-                Camera.main.transform.SetParent(duck.gameObject.transform);
+                Camera.main.transform.SetParent(rb.transform);
                 Camera.main.transform.localPosition = new Vector3(0, 1, -2);
                 Camera.main.transform.localRotation = Quaternion.identity;
 
@@ -63,18 +66,7 @@ namespace OpJosModREPO.IAmDucky
                 Cursor.visible = false;
             }
 
-            rb = GetComponent<Rigidbody>();
             cameraTransform = Camera.main.transform; // Get the main camera
-
-            if (rb == null)
-            {
-                rb = gameObject.AddComponent<Rigidbody>();  // Ensure the duck has a Rigidbody
-                rb.mass = 5f;
-                rb.drag = 1.25f;
-                rb.angularDrag = 0.5f;
-                rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-                rb.useGravity = true;
-            }
         }
 
         public void UpdateMovementAndRotation(Vector3 movement, Vector3 camForward, bool jump)
@@ -146,13 +138,12 @@ namespace OpJosModREPO.IAmDucky
 
             if (isHost)
             {
+                erb.DisableFollowPosition(0.5f, 50f);
                 rb.AddForce(new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.z * moveSpeed), ForceMode.Acceleration);
             }
 
             if (isYourDuck)
             {
-                cameraTransform.position = transform.position + transform.TransformDirection(cameraOffset);
-
                 if (attackCooldown > 0f)
                     attackCooldown -= Time.fixedDeltaTime;
 
