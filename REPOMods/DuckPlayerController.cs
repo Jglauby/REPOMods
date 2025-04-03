@@ -30,7 +30,7 @@ namespace OpJosModREPO.IAmDucky
         public float mouseSensitivity = 0.25f;
         private float cameraPitch = 0f;
 
-        public Vector3 cameraOffset = new Vector3(0, 1.5f, -1.5f); 
+        public Vector3 cameraOffset = new Vector3(0, 2f, -1f); 
         public float cameraSmoothSpeed = 15f;
 
         public EnemyDuck thisDuck = null;
@@ -65,7 +65,7 @@ namespace OpJosModREPO.IAmDucky
                 PlayerController.instance.enabled = false;
                 Camera.main.transform.SetParent(duck.gameObject.transform);
 
-                Camera.main.transform.localPosition = new Vector3(0, 2f, -3);
+                Camera.main.transform.localPosition = cameraOffset;
                 Camera.main.transform.localRotation = Quaternion.identity;
 
                 Cursor.lockState = CursorLockMode.Locked;
@@ -153,7 +153,7 @@ namespace OpJosModREPO.IAmDucky
 
             if (isYourDuck)
             {
-                cameraTransform.position = new Vector3(cameraTransform.position.x, rb.transform.position.y + 1, cameraTransform.position.z);
+                cameraTransform.position = new Vector3(cameraTransform.position.x, rb.transform.position.y + cameraOffset.y, cameraTransform.position.z);
 
                 if (attackCooldown > 0f)
                     attackCooldown -= Time.fixedDeltaTime;
