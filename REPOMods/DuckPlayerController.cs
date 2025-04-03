@@ -25,12 +25,12 @@ namespace OpJosModREPO.IAmDucky
         private Vector3 moveDirection;
         public float moveSpeed = 4f;
         public float turnSpeed = 3f;
-        //public float jumpForce = 0.5f;
+        public float jumpForce = 0.5f;
         public Transform cameraTransform;
         public float mouseSensitivity = 0.25f;
         private float cameraPitch = 0f;
 
-        public Vector3 cameraOffset = new Vector3(0, 2f, -1f); 
+        public Vector3 cameraOffset = new Vector3(0, 1.75f, -1.75f); 
         public float cameraSmoothSpeed = 15f;
 
         public EnemyDuck thisDuck = null;
@@ -45,6 +45,7 @@ namespace OpJosModREPO.IAmDucky
 
         private Vector3 targetLookDirection;
         private bool shouldJump = false;
+        private bool slowFall = false;
 
         public void Setup(int actorNumber, EnemyDuck duck)
         {
@@ -55,7 +56,7 @@ namespace OpJosModREPO.IAmDucky
             erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisDuck.enemy, "Rigidbody");
             rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
 
-            rb.drag = 50f;
+            rb.drag = 5000f;
             rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             rb.useGravity = true;
 
@@ -149,6 +150,11 @@ namespace OpJosModREPO.IAmDucky
                 rb.AddForce(new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.z * moveSpeed), ForceMode.Acceleration);
 
                 thisDuck.gameObject.transform.position = rb.transform.position;
+
+                //if (slowFall)
+                //{
+                //    rb.AddForce(Physics.gravity * .01f, ForceMode.Acceleration);
+                //}
             }
 
             if (isYourDuck)
@@ -255,7 +261,7 @@ namespace OpJosModREPO.IAmDucky
             if (enemyJump == null) return;
 
             ReflectionUtils.InvokeMethod(enemyJump, "StuckTrigger", new object[] { Vector3.up });
-            //rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
 }
