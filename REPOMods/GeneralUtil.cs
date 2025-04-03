@@ -177,12 +177,14 @@ namespace OpJosModREPO.IAmDucky
 
         public static void RemoveSpawnedControllableDuck(DuckPlayerController duckController)
         {
-            // Now safely destroy the duck controller
-            if (duckController != null)
+            if (duckController == null)
             {
-                GameObject.Destroy(duckController);
-                mls.LogInfo("Duck controller destroyed.");
+                mls.LogWarning("Duck controller is null, cannot destroy.");
+                return;
             }
+
+            GameObject.Destroy(duckController);
+            mls.LogInfo("Duck controller destroyed.");
 
             if (PhotonNetwork.IsMasterClient)
             {

@@ -53,18 +53,19 @@ namespace OpJosModREPO.IAmDucky.Patches
         static void ReviveRPCPatch(PlayerAvatar __instance)
         {
             int actorNumber = __instance.photonView.OwnerActorNr;
+            if (actorNumber != PhotonNetwork.LocalPlayer.ActorNumber || !PhotonNetwork.IsMasterClient)
+            {
+                mls.LogWarning($"ReviveRPC called not for you but for:{actorNumber}, and you are not host. do nothing");
+                return;
+            }
 
             mls.LogInfo($"handling player respawn {actorNumber}");
             DuckPlayerController duckController = GeneralUtil.FindDuckController(actorNumber);
-            if (duckController == null)
-            {
-                mls.LogWarning($"No duck controller found for actor {actorNumber}");
-                return;
-            }
 
             //host and not this person duck controller
             if (PhotonNetwork.IsMasterClient && actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
             {
+                mls.LogMessage("removing duck controller for player that is not you, and you are host: " + actorNumber);
                 GeneralUtil.RemoveSpawnedControllableDuck(duckController);
             }
             else if (actorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
