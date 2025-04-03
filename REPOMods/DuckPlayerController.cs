@@ -65,7 +65,7 @@ namespace OpJosModREPO.IAmDucky
                 PlayerController.instance.enabled = false;
                 Camera.main.transform.SetParent(duck.gameObject.transform);
 
-                Camera.main.transform.localPosition = new Vector3(0, 1f, -2);
+                Camera.main.transform.localPosition = new Vector3(0, 2f, -3);
                 Camera.main.transform.localRotation = Quaternion.identity;
 
                 Cursor.lockState = CursorLockMode.Locked;
@@ -147,11 +147,14 @@ namespace OpJosModREPO.IAmDucky
             {
                 erb.DisableFollowPosition(0.5f, 50f);
                 rb.AddForce(new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.z * moveSpeed), ForceMode.Acceleration);
+
                 thisDuck.gameObject.transform.position = rb.transform.position;
             }
 
             if (isYourDuck)
             {
+                cameraTransform.position = new Vector3(cameraTransform.position.x, rb.transform.position.y + 1, cameraTransform.position.z);
+
                 if (attackCooldown > 0f)
                     attackCooldown -= Time.fixedDeltaTime;
 
