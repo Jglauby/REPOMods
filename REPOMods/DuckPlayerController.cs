@@ -63,11 +63,9 @@ namespace OpJosModREPO.IAmDucky
             {
                 isYourDuck = true;
                 PlayerController.instance.enabled = false;
+                Camera.main.transform.SetParent(duck.gameObject.transform);
 
-                if (isHost)
-                    Camera.main.transform.SetParent(rb.transform);
-
-                Camera.main.transform.localPosition = new Vector3(0, 0.5f, -1);
+                Camera.main.transform.localPosition = new Vector3(0, 1f, -2);
                 Camera.main.transform.localRotation = Quaternion.identity;
 
                 Cursor.lockState = CursorLockMode.Locked;
@@ -125,15 +123,6 @@ namespace OpJosModREPO.IAmDucky
                     camForward.y = 0f;
                     camForward.Normalize();
 
-                    //set move direction based on camera forward
-                    Vector3 camRight = cameraTransform.right;
-                    camRight.y = 0;
-                    camRight.Normalize();
-
-                    Vector3 inputDir = (camRight * moveInput.x + camForward * moveInput.y).normalized;
-                    moveDirection = inputDir;
-                    //-------------------
-
                     DuckSpawnerNetwork.Instance.SendDuckMovement(moveDirection, camForward, controlActorNumber, shouldJump);
                     shouldJump = false;
                     syncTimer = 0f;
@@ -158,6 +147,7 @@ namespace OpJosModREPO.IAmDucky
             {
                 erb.DisableFollowPosition(0.5f, 50f);
                 rb.AddForce(new Vector3(moveDirection.x * moveSpeed, 0, moveDirection.z * moveSpeed), ForceMode.Acceleration);
+                thisDuck.gameObject.transform.position = rb.transform.position;
             }
 
             if (isYourDuck)
@@ -170,20 +160,6 @@ namespace OpJosModREPO.IAmDucky
                     attackNearbyEnemies();
                     attackCooldown = 0.75f;
                 }
-            }
-        }
-
-        void LateUpdate()
-        {
-            if (isYourDuck && !isHost)
-            {
-                // Calculate desired camera position
-                Vector3 desiredPosition = rb.transform.position + rb.transform.TransformVector(cameraOffset);
-
-                // Smoothly move the camera to that position
-                cameraTransform.position = Vector3.Lerp(cameraTransform.position, desiredPosition, cameraSmoothSpeed * Time.deltaTime);
-
-                //cameraTransform.position = desiredPosition;
             }
         }
 
