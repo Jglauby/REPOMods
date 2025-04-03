@@ -23,8 +23,9 @@ namespace OpJosModREPO.IAmDucky
         private Rigidbody rb;
 
         private Vector3 moveDirection;
-        public float moveSpeed = 3f;
+        public float moveSpeed = 4f;
         public float turnSpeed = 3f;
+        //public float jumpForce = 0.5f;
         public Transform cameraTransform;
         public float mouseSensitivity = 0.25f;
         private float cameraPitch = 0f;
@@ -53,6 +54,10 @@ namespace OpJosModREPO.IAmDucky
 
             erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisDuck.enemy, "Rigidbody");
             rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
+
+            rb.drag = 50f;
+            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            rb.useGravity = true;
 
             if (PhotonNetwork.LocalPlayer.ActorNumber == controlActorNumber) //is your duck
             {
@@ -244,6 +249,7 @@ namespace OpJosModREPO.IAmDucky
             if (enemyJump == null) return;
 
             ReflectionUtils.InvokeMethod(enemyJump, "StuckTrigger", new object[] { Vector3.up });
+            //rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
 }
