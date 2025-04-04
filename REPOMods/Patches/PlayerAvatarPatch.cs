@@ -53,35 +53,33 @@ namespace OpJosModREPO.IAmDucky.Patches
         static void ReviveRPCPatch(PlayerAvatar __instance)
         {
             int actorNumber = __instance.photonView.OwnerActorNr;
-            if (actorNumber != PhotonNetwork.LocalPlayer.ActorNumber || !PhotonNetwork.IsMasterClient)
-            {
-                mls.LogWarning($"ReviveRPC called not for you but for:{actorNumber}, and you are not host. do nothing");
-                return;
-            }
 
-            mls.LogInfo($"handling player respawn {actorNumber}");
-            DuckPlayerController duckController = GeneralUtil.FindDuckController(actorNumber);
-
-            //host and not this person duck controller
-            if (PhotonNetwork.IsMasterClient && actorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
+            if (actorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
             {
-                mls.LogMessage("removing duck controller for player that is not you, and you are host: " + actorNumber);
-                GeneralUtil.RemoveSpawnedControllableDuck(duckController);
-            }
-            else if (actorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
-            {//local and its this person duck controller
-                if (PublicVars.CanSpawnDuck == false && PublicVars.DuckDied == false)//have spawned a duck, and its alive
+                mls.LogInfo($"Handling local player respawn: {actorNumber}");
+
+                var duckController = GeneralUtil.FindDuckController(actorNumber);
+
+                if (!PublicVars.CanSpawnDuck && !PublicVars.DuckDied)
                 {
                     mls.LogMessage("Player revived while duck is spawned and alive");
                     GeneralUtil.ReattatchCameraToPlayer();
                     GeneralUtil.RemoveSpawnedControllableDuck(duckController);
-                    PublicVars.DuckDied = true; //any other death needs to just readjust camera on respawn... thats why we set this to true
+                    PublicVars.DuckDied = true;
                 }
-                else if (PublicVars.CanSpawnDuck == false && PublicVars.DuckDied == true)
+                else if (!PublicVars.CanSpawnDuck && PublicVars.DuckDied)
                 {
                     mls.LogMessage("Player revived while duck was spawned and died");
                     GeneralUtil.ReattatchCameraToPlayer();
                 }
+
+                PublicVars.DuckCleanupInProgress = false;
+            }
+            else if (PhotonNetwork.IsMasterClient)
+            {
+                mls.LogInfo($"[HOST] Cleaning up duck for revived player: {actorNumber}");
+                var duckController = GeneralUtil.FindDuckController(actorNumber);
+                GeneralUtil.RemoveSpawnedControllableDuck(duckController);
             }
         }
 
@@ -97,6 +95,7 @@ namespace OpJosModREPO.IAmDucky.Patches
             mls.LogMessage("New Level, allow being duck again");
             PublicVars.CanSpawnDuck = true;
             PublicVars.DuckDied = false;
+            PublicVars.DuckCleanupInProgress = false;
 
             //setup duck spawner network
             if (DuckSpawnerNetwork.Instance == null)

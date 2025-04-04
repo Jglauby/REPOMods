@@ -27,8 +27,13 @@ namespace OpJosModREPO.IAmDucky.Patches
             EnemyDuck duck = enemy.GetComponent<EnemyDuck>();
             if (duck == null) return; //not duck that died
 
-            DuckPlayerController ducksController = GeneralUtil.FindDuckController(duck);
+            if (PublicVars.DuckCleanupInProgress)
+            {
+                mls.LogInfo("Duck cleanup already in progress — skipping DeathRPC patch.");
+                return;
+            }
 
+            DuckPlayerController ducksController = GeneralUtil.FindDuckController(duck);
             if (PhotonNetwork.LocalPlayer.ActorNumber == ducksController.controlActorNumber && ReflectionUtils.GetFieldValue<bool>(PlayerAvatar.instance, "deadSet")) //is your duck
             {
                 mls.LogInfo("Duck dying is duck being controlled, release control of duck");
