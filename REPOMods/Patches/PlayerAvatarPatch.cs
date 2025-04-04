@@ -25,10 +25,16 @@ namespace OpJosModREPO.TTSPranks.Patches
             if (__instance.GetInstanceID() != PlayerAvatar.instance.GetInstanceID())
                 return;
 
-            if (Keyboard.current.pKey.wasPressedThisFrame)
+            if (Keyboard.current.fKey.wasPressedThisFrame)
             {
                 mls.LogInfo("Activated Flash Bang");
                 PlayerAvatar.instance.ChatMessageSend(Pranks.FlashBang, false);
+            }
+
+            if (Keyboard.current.pKey.wasPressedThisFrame)
+            {
+                mls.LogInfo("Activated Domain Expansion");
+                PlayerAvatar.instance.ChatMessageSend(Pranks.DomainExpansion, false);
             }
         }
     }
