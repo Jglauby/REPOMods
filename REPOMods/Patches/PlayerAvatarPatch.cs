@@ -4,7 +4,7 @@ using REPOMods;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace OpJosModREPO.Tourettes.Patches
+namespace OpJosModREPO.TTSPranks.Patches
 {
     [HarmonyPatch(typeof(PlayerAvatar))]
     internal class PlayerAvatarPatch

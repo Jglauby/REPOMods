@@ -1,15 +1,15 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using OpJosModREPO.Tourettes.Patches;
+using OpJosModREPO.TTSPranks.Patches;
 
-namespace OpJosModREPO.Tourettes
+namespace OpJosModREPO.TTSPranks
 {
     [BepInPlugin(modGUID, modName, modVersion)]
     public class OpJosModBase : BaseUnityPlugin
     {
-        private const string modGUID = "OpJosModREPO.Tourettes";
-        private const string modName = "Tourettes";
+        private const string modGUID = "OpJosModREPO.TTSPranks";
+        private const string modName = "TTSPranks";
         private const string modVersion = "1.0.0";
 
         private readonly Harmony harmoy = new Harmony(modGUID);

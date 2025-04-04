@@ -1,4 +1,4 @@
-﻿using OpJosModREPO.Tourettes.Patches;
+﻿using OpJosModREPO.TTSPranks.Patches;
 using System;
 using System.Collections.Generic;
 
@@ -61,19 +61,10 @@ namespace REPOMods
 
         public static void SpeakRandomPhrase(PlayerAvatar __instance)
         {
-            int beePosition = rng.Next(phraseList.Count + 1);
-            if (beePosition == phraseList.Count)
-            {
-                //play whole bee script
-                __instance.StartCoroutine(BeeMovie.PlayBeeMovie(__instance));
-            }
-            else
-            {
-                //just play random phrase
-                PlayerAvatarPatch.isSpeakingBee = false;
-                string phrase = phraseList[rng.Next(phraseList.Count)];
-                __instance.ChatMessageSend(phrase, false);
-            }
+            //just play random phrase
+            PlayerAvatarPatch.isSpeakingBee = false;
+            string phrase = phraseList[rng.Next(phraseList.Count)];
+            __instance.ChatMessageSend(phrase, false);
         }
     }
 }
