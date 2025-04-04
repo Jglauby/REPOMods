@@ -36,6 +36,18 @@ namespace OpJosModREPO.TTSPranks.Patches
                 mls.LogInfo("Activated Domain Expansion");
                 PlayerAvatar.instance.ChatMessageSend(Pranks.DomainExpansion, false);
             }
+
+            if (Keyboard.current.hKey.wasPressedThisFrame)
+            {
+                mls.LogInfo("Heart Eyes");
+                PlayerAvatar.instance.ChatMessageSend(Pranks.HeartEyes, false);
+            }
+
+            if (Keyboard.current.qKey.wasPressedThisFrame)
+            {
+                mls.LogInfo("Question Ping");
+                PlayerAvatar.instance.ChatMessageSend(Pranks.QuestionPing, false);
+            }
         }
     }
 }
