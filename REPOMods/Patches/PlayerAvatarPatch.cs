@@ -91,32 +91,6 @@ namespace OpJosModREPO.IAmDucky.Patches
             PublicVars.CanSpawnDuck = true;
             PublicVars.DuckDied = false;
             PublicVars.DuckCleanupInProgress = false;
-
-            //setup duck spawner network
-            if (DuckSpawnerNetwork.Instance == null)
-            {
-                GameObject netObj = new GameObject("DuckSpawnerNetwork");
-                var spawner = netObj.AddComponent<DuckSpawnerNetwork>();
-
-                PhotonView view = netObj.AddComponent<PhotonView>();
-
-                if (PhotonNetwork.IsMasterClient)
-                {
-                    // Only the MasterClient is allowed to allocate a ViewID
-                    view.ViewID = 1738;
-                    mls.LogInfo($"[HOST] Allocated ViewID for DuckSpawnerNetwork: {view.ViewID}");
-                }
-                else
-                {
-                    // Use a hardcoded fallback ViewID (must match what host allocated)
-                    view.ViewID = 1738;
-                    mls.LogInfo($"[CLIENT] Using known ViewID for DuckSpawnerNetwork: {view.ViewID}");
-                }
-
-                GameObject.DontDestroyOnLoad(netObj);
-
-                mls.LogInfo("DuckSpawnerNetwork initialized");
-            }
         }
     }
 }

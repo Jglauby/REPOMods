@@ -109,23 +109,6 @@ namespace OpJosModREPO.IAmDucky
             transform.Rotate(Vector3.up * mouseX); // Rotate duck
             cameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0, 0); // Rotate camera
 
-            //send move data to host rpc
-            shouldJump = Keyboard.current.spaceKey.wasPressedThisFrame == true ? true : shouldJump;
-            if (!isHost)
-            {
-                syncTimer += Time.deltaTime;
-                if (syncTimer >= syncInterval)
-                {
-                    Vector3 camForward = cameraTransform.forward;
-                    camForward.y = 0f;
-                    camForward.Normalize();
-
-                    DuckSpawnerNetwork.Instance.SendDuckMovement(moveDirection, camForward, controlActorNumber, shouldJump);
-                    shouldJump = false;
-                    syncTimer = 0f;
-                }
-            }
-
             handleInput();
         }
 
