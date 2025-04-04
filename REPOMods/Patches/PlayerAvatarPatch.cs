@@ -31,22 +31,22 @@ namespace OpJosModREPO.TTSPranks.Patches
                 Pranks.PlayPrank(Pranks.FlashBang, 2f);
             }
 
-            if (Keyboard.current.pKey.wasPressedThisFrame)
+            if (Keyboard.current.jKey.wasPressedThisFrame)
             {
                 mls.LogInfo("Activated Domain Expansion");
-                Pranks.PlayPrank(Pranks.DomainExpansion, 7f);
+                Pranks.PlayPrank(Pranks.DomainExpansion, 6f);
             }
 
             if (Keyboard.current.hKey.wasPressedThisFrame)
             {
                 mls.LogInfo("Heart Eyes");
-                Pranks.PlayPrank(Pranks.HeartEyes, 2f);
+                Pranks.PlayPrank(Pranks.HeartEyes, 1f);
             }
 
-            if (Keyboard.current.qKey.wasPressedThisFrame)
+            if (Keyboard.current.gKey.wasPressedThisFrame)
             {
                 mls.LogInfo("Question Ping");
-                Pranks.PlayPrank(Pranks.QuestionPing, 2f);
+                Pranks.PlayPrank(Pranks.QuestionPing, 1f);
             }
         }
     }
