@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigVariables.cs" />
     <Compile Include="DelayUtility.cs" />
     <Compile Include="Patches\PlayerAvatarPatch.cs" />
     <Compile Include="Pranks.cs" />

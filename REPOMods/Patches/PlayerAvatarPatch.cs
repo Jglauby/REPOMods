@@ -1,6 +1,8 @@
 ﻿using BepInEx.Logging;
 using HarmonyLib;
+using OPJosMod;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace OpJosModREPO.TTSPranks.Patches
 {
@@ -25,29 +27,42 @@ namespace OpJosModREPO.TTSPranks.Patches
             if (__instance.GetInstanceID() != PlayerAvatar.instance.GetInstanceID())
                 return;
 
-            if (Keyboard.current.fKey.wasPressedThisFrame)
+            try
             {
-                mls.LogInfo("Activated Flash Bang");
-                Pranks.PlayPrank(Pranks.FlashBang, 2f);
-            }
+                if (Keyboard.current[ConfigVariables.flashBangKey].wasPressedThisFrame)
+                {
+                    mls.LogInfo("Activated Flash Bang");
+                    Pranks.PlayPrank(Pranks.FlashBang, 2f);
+                }
+            } catch { }
 
-            if (Keyboard.current.jKey.wasPressedThisFrame)
+            try
             {
-                mls.LogInfo("Activated Domain Expansion");
-                Pranks.PlayPrank(Pranks.DomainExpansion, 6f);
-            }
+                if (Keyboard.current[ConfigVariables.domainExpansionKey].wasPressedThisFrame)
+                {
+                    mls.LogInfo("Activated Domain Expansion");
+                    Pranks.PlayPrank(Pranks.DomainExpansion, 6f);
+                }
+            } catch { }
 
-            if (Keyboard.current.hKey.wasPressedThisFrame)
+            try
             {
-                mls.LogInfo("Heart Eyes");
-                Pranks.PlayPrank(Pranks.HeartEyes, 1f);
-            }
+                if (Keyboard.current[ConfigVariables.heartEyesKey].wasPressedThisFrame)
+                {
+                    mls.LogInfo("Heart Eyes");
+                    Pranks.PlayPrank(Pranks.HeartEyes, 1f);
+                }
+            } catch { }
 
-            if (Keyboard.current.gKey.wasPressedThisFrame)
+            try
             {
-                mls.LogInfo("Question Ping");
-                Pranks.PlayPrank(Pranks.QuestionPing, 1f);
+                if (Keyboard.current[ConfigVariables.questionPingKey].wasPressedThisFrame)
+                {
+                    mls.LogInfo("Question Ping");
+                    Pranks.PlayPrank(Pranks.QuestionPing, 1f);
+                }
             }
+            catch { }
         }
     }
 }
