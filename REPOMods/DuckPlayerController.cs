@@ -23,7 +23,7 @@ namespace OpJosModREPO.IAmDucky
         private Rigidbody rb;
 
         private Vector3 moveDirection;
-        public float moveSpeed = 5f;
+        public float moveSpeed = 3f;
         public float turnSpeed = 3f;
         public float jumpForce = 0.5f;
         public Transform cameraTransform;
