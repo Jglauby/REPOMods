@@ -54,10 +54,36 @@ namespace OpJosModREPO.TTSPranks
                                         Key.J,
                                         "Button to display a quesiton mark");
 
+
+            var configFlashBangTime = Config.Bind("How long flash bang lasts",
+                                        "FlashBangTime",
+                                        2f,
+                                        "how long flash bang lasts in seconds");
+
+            var configDomainExpansionTime = Config.Bind("How long domain expansion lasts",
+                                        "DomainExpansionTime",
+                                        6f,
+                                        "How long screen stays black in seconds");
+
+            var configHeartEyesTime = Config.Bind("How long the heart eyes emoji stays up",
+                                        "HeartEyesTime",
+                                        1f,
+                                        "how long heart eyes emoji stays up in seconds");
+
+            var configQuesitonPingTime = Config.Bind("How long quesiton mark stays up",
+                                        "QuestionPingTime",
+                                        1f,
+                                        "How long question mark ping stays up in seconds");
+
             ConfigVariables.flashBangKey = configFlashBangButton.Value;
             ConfigVariables.domainExpansionKey = configDomainExpansionButton.Value;
             ConfigVariables.heartEyesKey = configHeartEyesButton.Value;
             ConfigVariables.questionPingKey = configQuesitonPingButton.Value;
+
+            ConfigVariables.flashBangTime = configFlashBangTime.Value;
+            ConfigVariables.domainExpansionTime = configDomainExpansionTime.Value;
+            ConfigVariables.heartEyesTime = configHeartEyesTime.Value;
+            ConfigVariables.questionPingTime = configQuesitonPingTime.Value;
 
             Config.Save();
         }

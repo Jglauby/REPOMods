@@ -32,7 +32,7 @@ namespace OpJosModREPO.TTSPranks.Patches
                 if (Keyboard.current[ConfigVariables.flashBangKey].wasPressedThisFrame)
                 {
                     mls.LogInfo("Activated Flash Bang");
-                    Pranks.PlayPrank(Pranks.FlashBang, 2f);
+                    Pranks.PlayPrank(Pranks.FlashBang, ConfigVariables.flashBangTime);
                 }
             } catch { }
 
@@ -41,7 +41,7 @@ namespace OpJosModREPO.TTSPranks.Patches
                 if (Keyboard.current[ConfigVariables.domainExpansionKey].wasPressedThisFrame)
                 {
                     mls.LogInfo("Activated Domain Expansion");
-                    Pranks.PlayPrank(Pranks.DomainExpansion, 6f);
+                    Pranks.PlayPrank(Pranks.DomainExpansion, ConfigVariables.domainExpansionTime);
                 }
             } catch { }
 
@@ -50,7 +50,7 @@ namespace OpJosModREPO.TTSPranks.Patches
                 if (Keyboard.current[ConfigVariables.heartEyesKey].wasPressedThisFrame)
                 {
                     mls.LogInfo("Heart Eyes");
-                    Pranks.PlayPrank(Pranks.HeartEyes, 1f);
+                    Pranks.PlayPrank(Pranks.HeartEyes, ConfigVariables.heartEyesTime);
                 }
             } catch { }
 
@@ -59,7 +59,7 @@ namespace OpJosModREPO.TTSPranks.Patches
                 if (Keyboard.current[ConfigVariables.questionPingKey].wasPressedThisFrame)
                 {
                     mls.LogInfo("Question Ping");
-                    Pranks.PlayPrank(Pranks.QuestionPing, 1f);
+                    Pranks.PlayPrank(Pranks.QuestionPing, ConfigVariables.questionPingTime);
                 }
             }
             catch { }
