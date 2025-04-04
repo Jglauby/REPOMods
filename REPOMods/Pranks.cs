@@ -11,5 +11,15 @@ namespace OpJosModREPO.TTSPranks
         public static string DomainExpansion = "<size=10000><mark=#000000>DOMAIN EXPANSION";
         public static string HeartEyes = "<size=400><sprite=2>";
         public static string QuestionPing = "<size=300><sprite=12>";
+
+        public static void PlayPrank(string prank, float time)
+        {
+            PlayerAvatar.instance.ChatMessageSend(prank, false);
+
+            DelayUtility.RunAfterDelay(time, () =>
+            {
+                PlayerAvatar.instance.ChatMessageSend("-", false);
+            });
+        }
     }
 }

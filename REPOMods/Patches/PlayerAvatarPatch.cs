@@ -28,25 +28,25 @@ namespace OpJosModREPO.TTSPranks.Patches
             if (Keyboard.current.fKey.wasPressedThisFrame)
             {
                 mls.LogInfo("Activated Flash Bang");
-                PlayerAvatar.instance.ChatMessageSend(Pranks.FlashBang, false);
+                Pranks.PlayPrank(Pranks.FlashBang, 2f);
             }
 
             if (Keyboard.current.pKey.wasPressedThisFrame)
             {
                 mls.LogInfo("Activated Domain Expansion");
-                PlayerAvatar.instance.ChatMessageSend(Pranks.DomainExpansion, false);
+                Pranks.PlayPrank(Pranks.DomainExpansion, 7f);
             }
 
             if (Keyboard.current.hKey.wasPressedThisFrame)
             {
                 mls.LogInfo("Heart Eyes");
-                PlayerAvatar.instance.ChatMessageSend(Pranks.HeartEyes, false);
+                Pranks.PlayPrank(Pranks.HeartEyes, 2f);
             }
 
             if (Keyboard.current.qKey.wasPressedThisFrame)
             {
                 mls.LogInfo("Question Ping");
-                PlayerAvatar.instance.ChatMessageSend(Pranks.QuestionPing, false);
+                Pranks.PlayPrank(Pranks.QuestionPing, 2f);
             }
         }
     }
