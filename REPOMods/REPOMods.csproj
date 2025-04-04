@@ -59,8 +59,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DelayUtility.cs" />
     <Compile Include="Patches\PlayerAvatarPatch.cs" />
-    <Compile Include="Phrases.cs" />
+    <Compile Include="Pranks.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

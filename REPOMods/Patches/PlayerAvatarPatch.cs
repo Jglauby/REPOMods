@@ -1,7 +1,5 @@
 ﻿using BepInEx.Logging;
 using HarmonyLib;
-using REPOMods;
-using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.TTSPranks.Patches
@@ -27,18 +25,10 @@ namespace OpJosModREPO.TTSPranks.Patches
             if (__instance.GetInstanceID() != PlayerAvatar.instance.GetInstanceID())
                 return;
 
-            if (Time.time > nextExecutionTime && __instance.isActiveAndEnabled && isSpeakingBee == false)
-            {
-                mls.LogInfo("said random phrase!");
-                Phrases.SpeakRandomPhrase(__instance);
-            
-                nextExecutionTime = Time.time + rng.Next(30, 5 * 60); //30, 5*60
-            }
-
             if (Keyboard.current.pKey.wasPressedThisFrame)
             {
-                mls.LogInfo("said random phrase!");
-                Phrases.SpeakRandomPhrase(__instance);
+                mls.LogInfo("Activated Flash Bang");
+                PlayerAvatar.instance.ChatMessageSend(Pranks.FlashBang, false);
             }
         }
     }
