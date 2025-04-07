@@ -1,5 +1,6 @@
 ﻿using BepInEx.Logging;
 using HarmonyLib;
+using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.modname.Patches
 {
@@ -16,7 +17,7 @@ namespace OpJosModREPO.modname.Patches
         [HarmonyPostfix]
         static void UpdatePatch(PlayerAvatar __instance)
         {
-            if (SemiFunc.InputDown(InputKey.Jump))
+            if (Keyboard.current.spaceKey.wasPressedThisFrame)
             {
                 mls.LogMessage("Jump pressed");
             }
