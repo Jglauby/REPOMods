@@ -193,18 +193,22 @@ namespace OpJosModREPO.IAmDucky
                 TriggerJump();
             }
 
-            if (Keyboard.current[ConfigVariables.resetControlKey].wasPressedThisFrame)
+            try
             {
-                mls.LogInfo("Reseting control of duck");
-                if (PhotonNetwork.IsMasterClient)
+                if (Keyboard.current[ConfigVariables.resetControlKey].wasPressedThisFrame)
                 {
-                    GeneralUtil.ControlClosestDuck(cameraTransform.position, 1);
-                }
-                else
-                {
-                    DuckSpawnerNetwork.Instance.ResetDuckControl(cameraTransform.position, controlActorNumber);
+                    mls.LogInfo("Reseting control of duck");
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+                        GeneralUtil.ControlClosestDuck(cameraTransform.position, 1);
+                    }
+                    else
+                    {
+                        DuckSpawnerNetwork.Instance.ResetDuckControl(cameraTransform.position, controlActorNumber);
+                    }
                 }
             }
+            catch { }
 
             try
             {
