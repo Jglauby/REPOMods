@@ -2,6 +2,7 @@
 using BepInEx.Logging;
 using HarmonyLib;
 using OpJosModREPO.IAmDucky.Patches;
+using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.IAmDucky
 {
@@ -10,7 +11,7 @@ namespace OpJosModREPO.IAmDucky
     {
         private const string modGUID = "OpJosModREPO.IAmDucky";
         private const string modName = "IAmDucky";
-        private const string modVersion = "1.2.1";
+        private const string modVersion = "1.3.0";
 
         private readonly Harmony harmoy = new Harmony(modGUID);
         private static OpJosModBase Instance;
@@ -24,12 +25,23 @@ namespace OpJosModREPO.IAmDucky
             }
             mls = BepInEx.Logging.Logger.CreateLogSource(modGUID);
             mls.LogInfo($"{modName} has started!");
+            setupConfig();
 
             PlayerAvatarPatch.SetLogSource(mls);
             EnemyHealthPatch.SetLogSource(mls);
             DuckPlayerController.SetLogSource(mls);
             GeneralUtil.SetLogSource(mls);
             harmoy.PatchAll();
+        }
+
+        private void setupConfig()
+        {
+            var configAttackToggleButton = Config.Bind("Attack Mode Toggle",
+                                        "AttackModeToggle",
+                                        Key.E,
+                                        "Button to toggle on and off duck's attack mode");
+
+            ConfigVariables.attackToggleKey = configAttackToggleButton.Value;
         }
     }
 }

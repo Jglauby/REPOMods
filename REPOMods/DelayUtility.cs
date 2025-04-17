@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace REPOMods
+namespace OpJosModREPO
 {
     public class DelayUtility : MonoBehaviour
     {

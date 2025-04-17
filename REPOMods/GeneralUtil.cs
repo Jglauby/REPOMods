@@ -1,14 +1,8 @@
 ﻿using BepInEx.Logging;
-using OpJosModREPO.IAmDucky;
 using OpJosModREPO.Util;
 using Photon.Pun;
-using Photon.Realtime;
-using REPOMods;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
