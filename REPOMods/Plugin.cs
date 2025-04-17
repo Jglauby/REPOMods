@@ -46,7 +46,14 @@ namespace OpJosModREPO.IAmDucky
                                         Key.C,
                                         "Button to reset control on duck in case things get wack.");
 
+            var configSelfDestructButton = Config.Bind("Self Destruct Button",
+                                        "SelfDestructButton",
+                                        Key.K,
+                                        "Button to self destruct the duck");
+
             ConfigVariables.attackToggleKey = configAttackToggleButton.Value;
+            ConfigVariables.resetControlKey = configResetControlOnDuckButton.Value;
+            ConfigVariables.selfDestructKey = configSelfDestructButton.Value;
         }
     }
 }

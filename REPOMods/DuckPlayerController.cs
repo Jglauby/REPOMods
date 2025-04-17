@@ -228,12 +228,16 @@ namespace OpJosModREPO.IAmDucky
             }
             catch { }
 
-            if (Keyboard.current.kKey.wasPressedThisFrame)
+            try
             {
-                EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(thisDuck.enemy, "Health");
-                ReflectionUtils.InvokeMethod(healthComponent, "Death", new object[] { Vector3.zero });
-                mls.LogMessage("Killed controlled duck");
+                if (Keyboard.current[ConfigVariables.selfDestructKey].wasPressedThisFrame)
+                {
+                    EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(thisDuck.enemy, "Health");
+                    ReflectionUtils.InvokeMethod(healthComponent, "Death", new object[] { Vector3.zero });
+                    mls.LogMessage("Killed controlled duck");
+                }
             }
+            catch { }
         }
 
         private void attackNearbyEnemies()

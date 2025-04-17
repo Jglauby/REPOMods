@@ -6,5 +6,6 @@ namespace OpJosModREPO
     {
         public static Key attackToggleKey;
         public static Key resetControlKey;
+        public static Key selfDestructKey;
     }
 }
