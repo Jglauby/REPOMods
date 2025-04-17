@@ -34,11 +34,11 @@ namespace OpJosModREPO.Tourettes.Patches
                 nextExecutionTime = Time.time + rng.Next(ConfigVariables.lowestDelay, ConfigVariables.highestDelay);
             }
 
-            if (Keyboard.current.pKey.wasPressedThisFrame)
-            {
-                mls.LogInfo("said random phrase!");
-                Phrases.SpeakRandomPhrase(__instance);
-            }
+            //if (Keyboard.current.pKey.wasPressedThisFrame)
+            //{
+            //    mls.LogInfo("said random phrase!");
+            //    Phrases.SpeakRandomPhrase(__instance);
+            //}
         }
     }
 }
