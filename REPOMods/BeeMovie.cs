@@ -1,10 +1,9 @@
-﻿using System;
+﻿using OpJosModREPO.Tourettes.Patches;
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using OpJosModREPO.Tourettes.Patches;
 
-namespace REPOMods
+namespace OpJosModREPO
 {
     public class BeeMovie
     {

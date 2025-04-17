@@ -2,65 +2,72 @@
 using System;
 using System.Collections.Generic;
 
-namespace REPOMods
+namespace OpJosModREPO
 {
     public class Phrases
     {
-        private static readonly List<string> phraseList = new List<string>
-        {
-            "Gosh Darn it",
-            "you are gay",
-            "FUCK!",
-            "SHIT FUCK",
-            "Oooo Fuckk meeeee",
-            "you're cute",
-            "ah shoot!",
-            "ballocks",
-            "poop gee ha ha",
-            "what are you talking about?",
-            "your mom gay",
-            "i love to goon",
-            "i just gooned all over myself",
-            "i am gay",
-            "i love massive milkers",
-            "i fear i might be a homosexual",
-            "go away i'm looks maxing",
-            "booo",
-            "haha boobies",
-            "eueueueueeueueue",
-            "yyyyyyyyyyyyyyyy",
-            "GAYyyybeeeeee",
-            "i'm coming",
-            "this week at jeremy franklin mitsubishi",
-            "its ya boi, uhhhhh. skinny penis",
-            "i sure hope it does!",
-            "These boots have seen everything..",
-            "i was hiddddiiiiinnngggggg",
-            "sup chubby",
-            "beeepp booopp beeep",
-            "I SAIDDDDD, whoever threw that paperrrr. your moms a HOE!",
-            "I shouldn't have wished to live in more interesting times",
-            "still me, despite everything",
-            "DEEENOOOOO STOOOPPPSSS",
-            "kaboom",
-            "later nerd",
-            "nahhh imma do my own thing",
-            "stand ready for my arrival worm",
-            "Is that blood? No... nevermind",
-            "I've got a lot on my mind... and, well, in it.",
-            "I wish I had a bag of holding",
-            "Better not be cursed",
-            "Still alive... so that's progress",
-            "All's well that ends... not as bad as it could've",
-            "Cursed to put my hands on everything",
-            "No traps, please ...",
-            "Do you know what else is massive?",
-            "Blood comes easier these days....",
-        };
+        private static readonly List<string> phraseList = new List<string>();
         private static readonly Random rng = new Random();
+
+        private static void setupPhrases()
+        {
+            phraseList.Add(ConfigVariables.phrase1);
+            phraseList.Add(ConfigVariables.phrase2);
+            phraseList.Add(ConfigVariables.phrase3);
+            phraseList.Add(ConfigVariables.phrase4);
+            phraseList.Add(ConfigVariables.phrase5);
+            phraseList.Add(ConfigVariables.phrase6);
+            phraseList.Add(ConfigVariables.phrase7);
+            phraseList.Add(ConfigVariables.phrase8);
+            phraseList.Add(ConfigVariables.phrase9);
+            phraseList.Add(ConfigVariables.phrase10);
+            phraseList.Add(ConfigVariables.phrase11);
+            phraseList.Add(ConfigVariables.phrase12);
+            phraseList.Add(ConfigVariables.phrase13);
+            phraseList.Add(ConfigVariables.phrase14);
+            phraseList.Add(ConfigVariables.phrase15);
+            phraseList.Add(ConfigVariables.phrase16);
+            phraseList.Add(ConfigVariables.phrase17);
+            phraseList.Add(ConfigVariables.phrase18);
+            phraseList.Add(ConfigVariables.phrase19);
+            phraseList.Add(ConfigVariables.phrase20);
+            phraseList.Add(ConfigVariables.phrase21);
+            phraseList.Add(ConfigVariables.phrase22);
+            phraseList.Add(ConfigVariables.phrase23);
+            phraseList.Add(ConfigVariables.phrase24);
+            phraseList.Add(ConfigVariables.phrase25);
+            phraseList.Add(ConfigVariables.phrase26);
+            phraseList.Add(ConfigVariables.phrase27);
+            phraseList.Add(ConfigVariables.phrase28);
+            phraseList.Add(ConfigVariables.phrase29);
+            phraseList.Add(ConfigVariables.phrase30);
+            phraseList.Add(ConfigVariables.phrase31);
+            phraseList.Add(ConfigVariables.phrase32);
+            phraseList.Add(ConfigVariables.phrase33);
+            phraseList.Add(ConfigVariables.phrase34);
+            phraseList.Add(ConfigVariables.phrase35);
+            phraseList.Add(ConfigVariables.phrase36);
+            phraseList.Add(ConfigVariables.phrase37);
+            phraseList.Add(ConfigVariables.phrase38);
+            phraseList.Add(ConfigVariables.phrase39);
+            phraseList.Add(ConfigVariables.phrase40);
+            phraseList.Add(ConfigVariables.phrase41);
+            phraseList.Add(ConfigVariables.phrase42);
+            phraseList.Add(ConfigVariables.phrase43);
+            phraseList.Add(ConfigVariables.phrase44);
+            phraseList.Add(ConfigVariables.phrase45);
+            phraseList.Add(ConfigVariables.phrase46);
+            phraseList.Add(ConfigVariables.phrase47);
+            phraseList.Add(ConfigVariables.phrase48);
+            phraseList.Add(ConfigVariables.phrase49);
+            phraseList.Add(ConfigVariables.phrase50);
+        }
 
         public static void SpeakRandomPhrase(PlayerAvatar __instance)
         {
+            if (phraseList.Count == 0)
+                setupPhrases();           
+
             int beePosition = rng.Next(phraseList.Count + 1);
             if (beePosition == phraseList.Count)
             {
