@@ -2,6 +2,8 @@
 {
     public static class ConfigVariables
     {
+        public static int lowestDelay;
+        public static int highestDelay;
         public static string phrase1;
         public static string phrase2;
         public static string phrase3;

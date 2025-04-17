@@ -31,7 +31,7 @@ namespace OpJosModREPO.Tourettes.Patches
                 mls.LogInfo("said random phrase!");
                 Phrases.SpeakRandomPhrase(__instance);
             
-                nextExecutionTime = Time.time + rng.Next(30, 5 * 60); //30, 5*60
+                nextExecutionTime = Time.time + rng.Next(ConfigVariables.lowestDelay, ConfigVariables.highestDelay);
             }
 
             if (Keyboard.current.pKey.wasPressedThisFrame)

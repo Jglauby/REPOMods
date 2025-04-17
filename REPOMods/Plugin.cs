@@ -32,6 +32,16 @@ namespace OpJosModREPO.Tourettes
 
         private void setupConfig()
         {
+            var configLowestDelay = Config.Bind("Lowest Delay",
+                            "LowestDelay",
+                            30,
+                            "soonest you may say another phrase in seconds");
+
+            var configHighestDelay = Config.Bind("Highest Delay",
+                            "HighestDelay",
+                            300,
+                            "longest amount of time before you say another phrase");
+
             var configPhrase1 = Config.Bind("Phrase 1",
                                         "Phrase1",
                                         "Gosh Darn it",
@@ -281,6 +291,9 @@ namespace OpJosModREPO.Tourettes
                                         "Phrase50",
                                         "I smell like beef",
                                         "one of the phrases you may blurt out");
+
+            ConfigVariables.lowestDelay = configLowestDelay.Value;
+            ConfigVariables.highestDelay = configHighestDelay.Value;
 
             ConfigVariables.phrase1 = configPhrase1.Value;
             ConfigVariables.phrase2 = configPhrase2.Value;
