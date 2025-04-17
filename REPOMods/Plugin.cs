@@ -41,6 +41,11 @@ namespace OpJosModREPO.IAmDucky
                                         Key.E,
                                         "Button to toggle on and off duck's attack mode");
 
+            var configResetControlOnDuckButton = Config.Bind("Reset Control On Duck Button",
+                                        "ResetControlButton",
+                                        Key.C,
+                                        "Button to reset control on duck in case things get wack.");
+
             ConfigVariables.attackToggleKey = configAttackToggleButton.Value;
         }
     }

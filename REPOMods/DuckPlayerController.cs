@@ -193,7 +193,7 @@ namespace OpJosModREPO.IAmDucky
                 TriggerJump();
             }
 
-            if (Keyboard.current.cKey.wasPressedThisFrame)
+            if (Keyboard.current[ConfigVariables.resetControlKey].wasPressedThisFrame)
             {
                 mls.LogInfo("Reseting control of duck");
                 if (PhotonNetwork.IsMasterClient)
