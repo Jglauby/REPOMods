@@ -219,7 +219,7 @@ namespace OpJosModREPO.IAmDucky
                         mls.LogInfo("Stopping duck attack mode");
                         ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.Idle });
                     }
-                    else
+                    else if (ConfigVariables.allowAttackToggle)
                     {
                         mls.LogInfo("Starting duck attack mode");
                         ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.AttackStart });

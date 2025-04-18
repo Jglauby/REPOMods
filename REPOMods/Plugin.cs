@@ -36,6 +36,11 @@ namespace OpJosModREPO.IAmDucky
 
         private void setupConfig()
         {
+            var configAllowAttackToggle = Config.Bind("Allow Attack Toggle",
+                                        "AllowAttackToggle",
+                                        false,
+                                        "Should the duck be able to manually start attack mode?");
+
             var configAttackToggleButton = Config.Bind("Attack Mode Toggle",
                                         "AttackModeToggle",
                                         Key.E,
@@ -51,6 +56,7 @@ namespace OpJosModREPO.IAmDucky
                                         Key.K,
                                         "Button to self destruct the duck");
 
+            ConfigVariables.allowAttackToggle = configAllowAttackToggle.Value;
             ConfigVariables.attackToggleKey = configAttackToggleButton.Value;
             ConfigVariables.resetControlKey = configResetControlOnDuckButton.Value;
             ConfigVariables.selfDestructKey = configSelfDestructButton.Value;
