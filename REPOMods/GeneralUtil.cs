@@ -83,6 +83,19 @@ namespace OpJosModREPO.IAmDucky
             return null;
         }
 
+        public static EnemyDuck FindDuck(int? actorNumber)
+        {
+            foreach (var controller in GameObject.FindObjectsOfType<DuckPlayerController>())
+            {
+                if (controller.controlActorNumber == actorNumber)
+                {
+                    return controller.thisDuck;
+                }
+            }
+
+            return null;
+        }
+
         public static List<Enemy> FindCloseEnemies(Vector3 pos, float range)
         {
             List<Enemy> result = new List<Enemy>();

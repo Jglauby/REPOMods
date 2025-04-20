@@ -55,5 +55,37 @@ namespace OpJosModREPO.IAmDucky.Networking
         {
             photonView.RPC("RPC_ResetDuckControl", RpcTarget.MasterClient, loc, actorNumber);
         }
+
+        [PunRPC]
+        public void RPC_EnableDuckAI(int actorNumber)
+        {
+            if (!PhotonNetwork.IsMasterClient)
+                return;
+
+            DuckPlayerController control = GeneralUtil.FindDuckController(actorNumber);
+            control.isInBlendMode = true;
+            GeneralUtil.EnableDuckEnemyAI(control.thisDuck);
+        }
+
+        public void EnableDuckAI(int actorNumber)
+        {
+            photonView.RPC("RPC_EnableDuckAI", RpcTarget.MasterClient, actorNumber);
+        }
+
+        [PunRPC]
+        public void RPC_BreakDuckAI(int actorNumber)
+        {
+            if (!PhotonNetwork.IsMasterClient)
+                return;
+
+            DuckPlayerController control = GeneralUtil.FindDuckController(actorNumber);
+            control.isInBlendMode = false;
+            GeneralUtil.BreakDuckEnemyAI(control.thisDuck);
+        }
+
+        public void BreakDuckAI(int actorNumber)
+        {
+            photonView.RPC("RPC_BreakDuckAI", RpcTarget.MasterClient, actorNumber);
+        }
     }
 }

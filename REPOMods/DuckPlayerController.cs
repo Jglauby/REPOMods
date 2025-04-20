@@ -25,6 +25,8 @@ namespace OpJosModREPO.IAmDucky
         public float jumpForce = 0.5f;
         public Transform cameraTransform;
         public float mouseSensitivity = 0.25f;
+        public bool isInBlendMode; //used for host, host controllers of other peoples ducks use this
+
         private float cameraPitch = 0f;
 
         public Vector3 cameraOffset = new Vector3(0, 1.75f, -1.75f); 
@@ -112,7 +114,7 @@ namespace OpJosModREPO.IAmDucky
 
             //send move data to host rpc
             shouldJump = Keyboard.current.spaceKey.wasPressedThisFrame == true ? true : shouldJump;
-            if (!isHost)
+            if (!isHost && !PublicVars.DuckInBlendMode)
             {
                 syncTimer += Time.deltaTime;
                 if (syncTimer >= syncInterval)
@@ -132,7 +134,7 @@ namespace OpJosModREPO.IAmDucky
 
         void FixedUpdate()
         {
-            if (PublicVars.DuckInBlendMode)
+            if (PublicVars.DuckInBlendMode || isInBlendMode)
                 return;
 
             if (isYourDuck || isHost)
@@ -249,18 +251,23 @@ namespace OpJosModREPO.IAmDucky
                     //toggle blend mode
                     if (PublicVars.DuckInBlendMode)
                     {
-                        PublicVars.DuckInBlendMode = false;
                         mls.LogInfo("Leaving Blend mode");
+                        PublicVars.DuckInBlendMode = false;
 
-                        GeneralUtil.BreakDuckEnemyAI(thisDuck);
+                        if (PhotonNetwork.IsMasterClient)
+                            GeneralUtil.BreakDuckEnemyAI(thisDuck);
+                        else
+                            DuckSpawnerNetwork.Instance.BreakDuckAI(controlActorNumber);
                     }
                     else
                     {
-                        PublicVars.DuckInBlendMode = true;
                         mls.LogInfo("Starting blend mode");
+                        PublicVars.DuckInBlendMode = true;
 
-                        GeneralUtil.EnableDuckEnemyAI(thisDuck);
-                        ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.Roam });
+                        if (PhotonNetwork.IsMasterClient)
+                            GeneralUtil.EnableDuckEnemyAI(thisDuck);
+                        else
+                            DuckSpawnerNetwork.Instance.EnableDuckAI(controlActorNumber);
                     }
                 }
             }
