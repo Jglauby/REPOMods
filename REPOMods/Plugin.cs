@@ -56,10 +56,16 @@ namespace OpJosModREPO.IAmDucky
                                         Key.K,
                                         "Button to self destruct the duck");
 
+            var configToggleBlendMode = Config.Bind("Toggle Blend Mode Button",
+                                        "ToggleBlendModeButton",
+                                        Key.B,
+                                        "Button to turn on duck AI to blend in as a normal duck");
+
             ConfigVariables.allowAttackToggle = configAllowAttackToggle.Value;
             ConfigVariables.attackToggleKey = configAttackToggleButton.Value;
             ConfigVariables.resetControlKey = configResetControlOnDuckButton.Value;
             ConfigVariables.selfDestructKey = configSelfDestructButton.Value;
+            ConfigVariables.toggleBlendModeKey = configToggleBlendMode.Value;
         }
     }
 }

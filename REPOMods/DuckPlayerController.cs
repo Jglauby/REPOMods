@@ -238,6 +238,29 @@ namespace OpJosModREPO.IAmDucky
                 }
             }
             catch { }
+
+            try
+            {
+                if (Keyboard.current[ConfigVariables.toggleBlendModeKey].wasPressedThisFrame)
+                {
+                    //toggle blend mode
+                    if (PublicVars.DuckInBlendMode)
+                    {
+                        PublicVars.DuckInBlendMode = false;
+                        mls.LogInfo("Leaving Blend mode");
+                        
+
+                    }
+                    else
+                    {
+                        PublicVars.DuckInBlendMode = true;
+                        mls.LogInfo("Starting blend mode");
+                        
+
+                    }
+                }
+            }
+            catch { }
         }
 
         private void attackNearbyEnemies()

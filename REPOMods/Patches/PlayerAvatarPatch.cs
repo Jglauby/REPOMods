@@ -93,6 +93,7 @@ namespace OpJosModREPO.IAmDucky.Patches
             PublicVars.CanSpawnDuck = true;
             PublicVars.DuckDied = false;
             PublicVars.DuckCleanupInProgress = false;
+            PublicVars.DuckInBlendMode = false;
 
             //setup duck spawner network
             if (DuckSpawnerNetwork.Instance == null)
