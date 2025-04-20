@@ -38,7 +38,7 @@ namespace OpJosModREPO.IAmDucky
         {
             var configAllowAttackToggle = Config.Bind("Allow Attack Toggle",
                                         "AllowAttackToggle",
-                                        false,
+                                        true,
                                         "Should the duck be able to manually start attack mode?");
 
             var configAttackToggleButton = Config.Bind("Attack Mode Toggle",
