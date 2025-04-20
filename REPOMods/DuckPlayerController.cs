@@ -132,6 +132,9 @@ namespace OpJosModREPO.IAmDucky
 
         void FixedUpdate()
         {
+            if (PublicVars.DuckInBlendMode)
+                return;
+
             if (isYourDuck || isHost)
             {
                 if (targetLookDirection != Vector3.zero)
@@ -248,15 +251,16 @@ namespace OpJosModREPO.IAmDucky
                     {
                         PublicVars.DuckInBlendMode = false;
                         mls.LogInfo("Leaving Blend mode");
-                        
 
+                        GeneralUtil.BreakDuckEnemyAI(thisDuck);
                     }
                     else
                     {
                         PublicVars.DuckInBlendMode = true;
                         mls.LogInfo("Starting blend mode");
-                        
 
+                        GeneralUtil.EnableDuckEnemyAI(thisDuck);
+                        ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.Roam });
                     }
                 }
             }

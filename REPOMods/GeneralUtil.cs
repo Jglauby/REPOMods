@@ -113,25 +113,13 @@ namespace OpJosModREPO.IAmDucky
             {
                 mls.LogMessage($"Found closest duck at {closestDuck.transform.position}, moving it to player.");
 
-                // Disable AI component
-                EnemyDuck duckAI = closestDuck.GetComponent<EnemyDuck>();
-                if (duckAI != null)
-                {
-                    duckAI.enabled = false;
-                    duckAI.currentState = EnemyDuck.State.Idle;  // Prevent AI from overriding movement
-                }
-
-                EnemyRigidbody rb = closestDuck.GetComponent<EnemyRigidbody>();
-                if (rb != null)
-                {
-                    rb.enabled = false; // prevent SetChaseTarget
-                }
-
                 NavMeshAgent agent = closestDuck.GetComponent<NavMeshAgent>();
                 if (agent != null)
                 {
                     agent.Warp(pos);
                 }
+
+                BreakDuckEnemyAI(closestDuck.GetComponent<EnemyDuck>());
 
                 mls.LogMessage($"Duck moving towards {closestDuck.transform.position}");
             }
@@ -153,13 +141,6 @@ namespace OpJosModREPO.IAmDucky
                 }
                 duckPlayerController.Setup(actorNumber, closestDuck);
 
-                NavMeshAgent agent = closestDuck.gameObject.GetComponent<NavMeshAgent>();
-                if (agent != null)
-                {
-                    agent.isStopped = true;  // Stop AI pathfinding
-                    agent.enabled = false;   // Disable NavMeshAgent
-                }
-
                 // Log the transfer
                 mls.LogInfo("Control transferred to the duck.");
             }
@@ -167,6 +148,70 @@ namespace OpJosModREPO.IAmDucky
             {
                 mls.LogInfo("No duck found to transfer control.");
             }
+        }
+
+        public static void BreakDuckEnemyAI(EnemyDuck duck)
+        {
+            if (duck == null)
+            {
+                mls.LogError("Duck is null, cannot break AI.");
+                return;
+            }
+
+            // Disable AI component
+            EnemyDuck duckAI = duck.GetComponent<EnemyDuck>();
+            if (duckAI != null)
+            {
+                duckAI.enabled = false;
+                duckAI.currentState = EnemyDuck.State.Idle;  // Prevent AI from overriding movement
+            }
+
+            EnemyRigidbody rb = duck.GetComponent<EnemyRigidbody>();
+            if (rb != null)
+            {
+                rb.enabled = false; // prevent SetChaseTarget
+            }
+
+            NavMeshAgent agent = duck.gameObject.GetComponent<NavMeshAgent>();
+            if (agent != null)
+            {
+                agent.isStopped = true;  // Stop AI pathfinding
+                agent.enabled = false;   // Disable NavMeshAgent
+            }
+
+            mls.LogInfo("Duck AI broken.");
+        }
+
+        public static void EnableDuckEnemyAI(EnemyDuck duck)
+        {
+            if (duck == null)
+            {
+                mls.LogError("Duck is null, cannot restore AI.");
+                return;
+            }
+
+            // Disable AI component
+            EnemyDuck duckAI = duck.GetComponent<EnemyDuck>();
+            if (duckAI != null)
+            {
+                duckAI.enabled = true;
+                duckAI.currentState = EnemyDuck.State.Roam;  // Prevent AI from overriding movement
+            }
+
+            EnemyRigidbody rb = duck.GetComponent<EnemyRigidbody>();
+            if (rb != null)
+            {
+                rb.enabled = true;
+            }
+
+            NavMeshAgent agent = duck.gameObject.GetComponent<NavMeshAgent>();
+            if (agent != null)
+            {
+                agent.isStopped = false;
+                agent.enabled = true;
+            }
+
+            mls.LogInfo("Duck AI restored.");
         }
 
         public static void RemoveSpawnedControllableDuck(DuckPlayerController duckController)
