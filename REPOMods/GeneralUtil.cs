@@ -115,8 +115,9 @@ namespace OpJosModREPO.IAmDucky
 
         public static void MoveDuckToPos(Vector3 pos) 
         {
-            GameObject closestDuck = GeneralUtil.FindClosestDuckWithoutController(pos)?.gameObject;
-            if (closestDuck == null)
+            EnemyDuck enemyDuck = GeneralUtil.FindClosestDuckWithoutController(pos);
+            GameObject duckGameObject = enemyDuck?.gameObject;
+            if (duckGameObject == null)
             {
 
                 mls.LogError("No duck found without a controller to teleport.");
@@ -124,17 +125,21 @@ namespace OpJosModREPO.IAmDucky
             }
             else
             {
-                mls.LogMessage($"Found closest duck at {closestDuck.transform.position}, moving it to player.");
+                mls.LogMessage($"Found closest duck at {duckGameObject.transform.position}, moving it to player.");
 
-                NavMeshAgent agent = closestDuck.GetComponent<NavMeshAgent>();
+                NavMeshAgent agent = duckGameObject.GetComponent<NavMeshAgent>();
                 if (agent != null)
                 {
                     agent.Warp(pos);
                 }
 
-                BreakDuckEnemyAI(closestDuck.GetComponent<EnemyDuck>());
+                //prevents duck from despawning
+                EnemyParent enemyParent = ReflectionUtils.GetFieldValue<EnemyParent>(enemyDuck.enemy, "EnemyParent");
+                enemyParent.SpawnedTimer = float.PositiveInfinity;
 
-                mls.LogMessage($"Duck moving towards {closestDuck.transform.position}");
+                BreakDuckEnemyAI(duckGameObject.GetComponent<EnemyDuck>());
+
+                mls.LogMessage($"Duck moving towards {duckGameObject.transform.position}");
             }
         }
 
