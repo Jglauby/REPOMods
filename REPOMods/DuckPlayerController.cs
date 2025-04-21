@@ -114,7 +114,7 @@ namespace OpJosModREPO.IAmDucky
 
             //send move data to host rpc
             shouldJump = Keyboard.current.spaceKey.wasPressedThisFrame == true ? true : shouldJump;
-            if (!isHost && !PublicVars.DuckInBlendMode)
+            if (!isHost)
             {
                 syncTimer += Time.deltaTime;
                 if (syncTimer >= syncInterval)
