@@ -61,11 +61,17 @@ namespace OpJosModREPO.IAmDucky
                                         Key.B,
                                         "Button to turn on duck AI to blend in as a normal duck");
 
+            var configDuckDamage = Config.Bind("Duck Damage to Enemies",
+                                        "DuckDamageToEnemies",
+                                        20,
+                                        "How much damage the duck does when attacking other enemies");
+
             ConfigVariables.allowAttackToggle = configAllowAttackToggle.Value;
             ConfigVariables.attackToggleKey = configAttackToggleButton.Value;
             ConfigVariables.resetControlKey = configResetControlOnDuckButton.Value;
             ConfigVariables.selfDestructKey = configSelfDestructButton.Value;
             ConfigVariables.toggleBlendModeKey = configToggleBlendMode.Value;
+            ConfigVariables.duckDamage = configDuckDamage.Value;
         }
     }
 }

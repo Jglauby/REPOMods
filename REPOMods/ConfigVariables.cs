@@ -9,5 +9,6 @@ namespace OpJosModREPO
         public static Key resetControlKey;
         public static Key selfDestructKey;
         public static Key toggleBlendModeKey;
+        public static int duckDamage;
     }
 }
