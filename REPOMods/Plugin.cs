@@ -71,6 +71,11 @@ namespace OpJosModREPO.IAmDucky
                                         true,
                                         "Should the duck be limited to 1 per level?");
 
+            var configMaxDucksPerLevel = Config.Bind("Max Ducks Per Level",
+                                        "MaxDucksPerLevel",
+                                        1,
+                                        "How many ducks can be spawned per level? per player");
+
             ConfigVariables.allowAttackToggle = configAllowAttackToggle.Value;
             ConfigVariables.attackToggleKey = configAttackToggleButton.Value;
             ConfigVariables.resetControlKey = configResetControlOnDuckButton.Value;
@@ -78,6 +83,7 @@ namespace OpJosModREPO.IAmDucky
             ConfigVariables.toggleBlendModeKey = configToggleBlendMode.Value;
             ConfigVariables.duckDamage = configDuckDamage.Value;
             ConfigVariables.limitDucksPerLevel = configLimitDucksPerLevel.Value;
+            ConfigVariables.maxDucksPerLevel = configMaxDucksPerLevel.Value;
         }
     }
 }

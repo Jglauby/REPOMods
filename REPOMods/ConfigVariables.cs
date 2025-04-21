@@ -11,5 +11,6 @@ namespace OpJosModREPO
         public static Key toggleBlendModeKey;
         public static int duckDamage;
         public static bool limitDucksPerLevel;
+        public static int maxDucksPerLevel;
     }
 }

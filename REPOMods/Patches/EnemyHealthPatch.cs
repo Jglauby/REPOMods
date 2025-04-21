@@ -40,7 +40,6 @@ namespace OpJosModREPO.IAmDucky.Patches
             if (PhotonNetwork.LocalPlayer.ActorNumber == ducksController.controlActorNumber && ReflectionUtils.GetFieldValue<bool>(PlayerAvatar.instance, "deadSet")) //is your duck
             {
                 mls.LogInfo("Duck dying is duck being controlled, release control of duck");
-                PublicVars.DuckDied = true;
                 GeneralUtil.ReleaseDuckControlToSpectate();
             }
             else if (PhotonNetwork.IsMasterClient) //destory relevant controller if host

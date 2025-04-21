@@ -2,8 +2,7 @@
 {
     public static class PublicVars
     {
-        public static bool CanSpawnDuck = true;
-        public static bool DuckDied = false;
+        public static int TimesSpawnedDuck = 0;
         public static bool DuckCleanupInProgress = false;
         public static bool DuckInBlendMode = false;
     }

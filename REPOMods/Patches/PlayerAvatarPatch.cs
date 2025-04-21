@@ -19,14 +19,14 @@ namespace OpJosModREPO.IAmDucky.Patches
         [HarmonyPostfix]
         static void PlayerDeathPatch(PlayerAvatar __instance)
         {
-            if (PublicVars.CanSpawnDuck == false)
+            if (ConfigVariables.limitDucksPerLevel && PublicVars.TimesSpawnedDuck >= ConfigVariables.maxDucksPerLevel)
             {
                 mls.LogInfo("Can't spawn duck again, set to spectate");
                 GeneralUtil.ReleaseDuckControlToSpectate();
                 return;
             }
 
-            PublicVars.CanSpawnDuck = false;
+            PublicVars.TimesSpawnedDuck += 1;
             if (PhotonNetwork.IsMasterClient)
             {
                 mls.LogMessage("Player is dead, spawning duck as host");
@@ -57,18 +57,8 @@ namespace OpJosModREPO.IAmDucky.Patches
 
                 var duckController = GeneralUtil.FindDuckController(actorNumber);
 
-                if (!PublicVars.CanSpawnDuck && !PublicVars.DuckDied)
-                {
-                    mls.LogMessage("Player revived while duck is spawned and alive");
-                    GeneralUtil.ReattatchCameraToPlayer();
-                    GeneralUtil.RemoveSpawnedControllableDuck(duckController);
-                    PublicVars.DuckDied = true;
-                }
-                else if (!PublicVars.CanSpawnDuck && PublicVars.DuckDied)
-                {
-                    mls.LogMessage("Player revived while duck was spawned and died");
-                    GeneralUtil.ReattatchCameraToPlayer();
-                }
+                GeneralUtil.ReattatchCameraToPlayer();
+                GeneralUtil.RemoveSpawnedControllableDuck(duckController);
 
                 PublicVars.DuckCleanupInProgress = false;
             }
@@ -90,8 +80,7 @@ namespace OpJosModREPO.IAmDucky.Patches
             }
 
             mls.LogMessage("New Level, allow being duck again");
-            PublicVars.CanSpawnDuck = true;
-            PublicVars.DuckDied = false;
+            PublicVars.TimesSpawnedDuck = 0;
             PublicVars.DuckCleanupInProgress = false;
             PublicVars.DuckInBlendMode = false;
 
