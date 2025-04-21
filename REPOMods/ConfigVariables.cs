@@ -10,5 +10,6 @@ namespace OpJosModREPO
         public static Key selfDestructKey;
         public static Key toggleBlendModeKey;
         public static int duckDamage;
+        public static bool limitDucksPerLevel;
     }
 }

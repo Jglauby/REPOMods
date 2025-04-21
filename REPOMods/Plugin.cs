@@ -66,12 +66,18 @@ namespace OpJosModREPO.IAmDucky
                                         20,
                                         "How much damage the duck does when attacking other enemies");
 
+            var configLimitDucksPerLevel = Config.Bind("Limit Ducks Per Level",
+                                        "LimitDucksPerLevel",
+                                        true,
+                                        "Should the duck be limited to 1 per level?");
+
             ConfigVariables.allowAttackToggle = configAllowAttackToggle.Value;
             ConfigVariables.attackToggleKey = configAttackToggleButton.Value;
             ConfigVariables.resetControlKey = configResetControlOnDuckButton.Value;
             ConfigVariables.selfDestructKey = configSelfDestructButton.Value;
             ConfigVariables.toggleBlendModeKey = configToggleBlendMode.Value;
             ConfigVariables.duckDamage = configDuckDamage.Value;
+            ConfigVariables.limitDucksPerLevel = configLimitDucksPerLevel.Value;
         }
     }
 }
