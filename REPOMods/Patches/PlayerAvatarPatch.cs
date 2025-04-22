@@ -61,6 +61,7 @@ namespace OpJosModREPO.IAmDucky.Patches
                 GeneralUtil.RemoveSpawnedControllableDuck(duckController);
 
                 PublicVars.DuckCleanupInProgress = false;
+                PublicVars.DuckInBlendMode = false; //ensures when duck spawns you dont spawn in blend mode
             }
             else if (PhotonNetwork.IsMasterClient)
             {

@@ -282,6 +282,12 @@ namespace OpJosModREPO.IAmDucky
                 mls.LogWarning("No main camera found when trying to move back to player.");
             }
 
+            if (SpectateCamera.instance != null)
+            {
+                SpectateCamera.instance.StopSpectate();
+                mls.LogInfo("Stopped spectate camera.");
+            }
+
             pc.enabled = true;
 
             if (pc.cameraGameObject != null)
