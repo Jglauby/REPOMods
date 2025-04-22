@@ -439,7 +439,12 @@ namespace OpJosModREPO.IAmDucky
                 }
 
                 DuckSpawnerNetwork.Instance.ControlDuck(spawnPos, actorNumber);
-            }, timeoutSeconds: 60f);
+            }, timeoutSeconds: 60f, onTimeout: () =>
+            {
+                mls.LogWarning("Duck never reached goal, attempting to control anyway...");
+                GeneralUtil.ControlClosestDuck(spawnPos, actorNumber);
+                DuckSpawnerNetwork.Instance.ControlDuck(spawnPos, actorNumber);
+            });
         }
     }
 }

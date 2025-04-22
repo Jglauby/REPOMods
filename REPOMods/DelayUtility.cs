@@ -51,12 +51,12 @@ namespace OpJosModREPO
             action?.Invoke();
         }
 
-        public static void RunUntil(Func<bool> condition, Action onSuccess, float timeoutSeconds = 10f)
+        public static void RunUntil(Func<bool> condition, Action onSuccess, float timeoutSeconds = 10f, Action onTimeout = null)
         {
-            Instance.StartCoroutine(RunUntilCoroutine(condition, onSuccess, timeoutSeconds));
+            Instance.StartCoroutine(RunUntilCoroutine(condition, onSuccess, timeoutSeconds, onTimeout));
         }
 
-        private static IEnumerator RunUntilCoroutine(Func<bool> condition, Action onSuccess, float timeout)
+        private static IEnumerator RunUntilCoroutine(Func<bool> condition, Action onSuccess, float timeout, Action onTimeout)
         {
             float timer = 0f;
             float checkInterval = 3f;
@@ -72,6 +72,8 @@ namespace OpJosModREPO
                 yield return new WaitForSeconds(checkInterval);
                 timer += checkInterval;
             }
+
+           onTimeout?.Invoke();
         }
     }
 }
