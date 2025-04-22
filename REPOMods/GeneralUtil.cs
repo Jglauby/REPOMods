@@ -145,8 +145,13 @@ namespace OpJosModREPO.IAmDucky
 
         public static void ControlClosestDuck(Vector3 pos, int actorNumber)
         {
-            EnemyDuck closestDuck = FindClosestDuck(pos);
+            if (!ReflectionUtils.GetFieldValue<bool>(PlayerAvatar.instance, "deadSet"))
+            {
+                mls.LogWarning("Player is not dead, cannot control duck.");
+                return;
+            }
 
+            EnemyDuck closestDuck = FindClosestDuck(pos);
             if (closestDuck != null)
             {
                 mls.LogInfo($"Found closest duck at {closestDuck.gameObject.transform.position}, transferring control to player.");
@@ -159,7 +164,6 @@ namespace OpJosModREPO.IAmDucky
                 }
                 duckPlayerController.Setup(actorNumber, closestDuck);
 
-                // Log the transfer
                 mls.LogInfo("Control transferred to the duck.");
             }
             else
