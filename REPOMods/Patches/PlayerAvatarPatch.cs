@@ -3,7 +3,7 @@ using HarmonyLib;
 using Photon.Pun;
 using UnityEngine;
 
-namespace OpJosModREPO.IAmDucky.Patches
+namespace OpJosModREPO.IAmDuckyHostOnly.Patches
 {
     [HarmonyPatch(typeof(PlayerAvatar))]
     internal class PlayerAvatarPatch

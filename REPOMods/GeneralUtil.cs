@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace OpJosModREPO.IAmDucky
+namespace OpJosModREPO.IAmDuckyHostOnly
 {
     public static class GeneralUtil
     {

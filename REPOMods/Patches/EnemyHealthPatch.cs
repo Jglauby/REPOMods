@@ -4,7 +4,7 @@ using OpJosModREPO.Util;
 using Photon.Pun;
 using UnityEngine;
 
-namespace OpJosModREPO.IAmDucky.Patches
+namespace OpJosModREPO.IAmDuckyHostOnly.Patches
 {
     [HarmonyPatch(typeof(EnemyHealth))]
     internal class EnemyHealthPatch

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace OpJosModREPO.IAmDucky
+namespace OpJosModREPO.IAmDuckyHostOnly
 {
     public class DuckPlayerController : MonoBehaviour
     {
