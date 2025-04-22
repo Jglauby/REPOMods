@@ -50,5 +50,28 @@ namespace OpJosModREPO
             yield return new WaitForSeconds(seconds);
             action?.Invoke();
         }
+
+        public static void RunUntil(Func<bool> condition, Action onSuccess, float timeoutSeconds = 10f)
+        {
+            Instance.StartCoroutine(RunUntilCoroutine(condition, onSuccess, timeoutSeconds));
+        }
+
+        private static IEnumerator RunUntilCoroutine(Func<bool> condition, Action onSuccess, float timeout)
+        {
+            float timer = 0f;
+            float checkInterval = 3f;
+
+            while (timer < timeout)
+            {
+                if (condition())
+                {
+                    onSuccess();
+                    yield break;
+                }
+
+                yield return new WaitForSeconds(checkInterval);
+                timer += checkInterval;
+            }
+        }
     }
 }

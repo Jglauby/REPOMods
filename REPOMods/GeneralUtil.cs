@@ -1,4 +1,5 @@
 ﻿using BepInEx.Logging;
+using OpJosModREPO.IAmDucky.Networking;
 using OpJosModREPO.Util;
 using Photon.Pun;
 using System;
@@ -127,17 +128,19 @@ namespace OpJosModREPO.IAmDucky
             {
                 mls.LogMessage($"Found closest duck at {duckGameObject.transform.position}, moving it to player.");
 
+                enemyDuck.enabled = false;
+                enemyDuck.currentState = EnemyDuck.State.Idle;
+                ReflectionUtils.SetFieldValue(enemyDuck, "playerTarget", null);
+
                 NavMeshAgent agent = duckGameObject.GetComponent<NavMeshAgent>();
                 if (agent != null)
                 {
-                    agent.Warp(pos);
+                    agent.SetDestination(pos);
                 }
 
                 //prevents duck from despawning
                 EnemyParent enemyParent = ReflectionUtils.GetFieldValue<EnemyParent>(enemyDuck.enemy, "EnemyParent");
                 enemyParent.SpawnedTimer = float.PositiveInfinity;
-
-                BreakDuckEnemyAI(duckGameObject.GetComponent<EnemyDuck>());
 
                 mls.LogMessage($"Duck moving towards {duckGameObject.transform.position}");
             }
@@ -145,7 +148,8 @@ namespace OpJosModREPO.IAmDucky
 
         public static void ControlClosestDuck(Vector3 pos, int actorNumber)
         {
-            if (!ReflectionUtils.GetFieldValue<bool>(PlayerAvatar.instance, "deadSet"))
+            //player is dead, and it is not the host setting up someone elses controller
+            if (!ReflectionUtils.GetFieldValue<bool>(PlayerAvatar.instance, "deadSet") && PhotonNetwork.LocalPlayer.ActorNumber == actorNumber)
             {
                 mls.LogWarning("Player is not dead, cannot control duck.");
                 return;
@@ -157,6 +161,7 @@ namespace OpJosModREPO.IAmDucky
                 mls.LogInfo($"Found closest duck at {closestDuck.gameObject.transform.position}, transferring control to player.");
 
                 // Transfer control: Add PlayerController to Duck
+                BreakDuckEnemyAI(closestDuck);
                 DuckPlayerController duckPlayerController = closestDuck.gameObject.GetComponent<DuckPlayerController>();
                 if (duckPlayerController == null)
                 {
@@ -174,6 +179,9 @@ namespace OpJosModREPO.IAmDucky
 
         public static void BreakDuckEnemyAI(EnemyDuck duck)
         {
+            if (!PhotonNetwork.IsMasterClient)
+                return;
+
             if (duck == null)
             {
                 mls.LogError("Duck is null, cannot break AI.");
@@ -217,7 +225,7 @@ namespace OpJosModREPO.IAmDucky
             if (duckAI != null)
             {
                 duckAI.enabled = true;
-                duckAI.currentState = EnemyDuck.State.Roam;  // Prevent AI from overriding movement
+                duckAI.currentState = EnemyDuck.State.Roam;
             }
 
             EnemyRigidbody rb = duck.GetComponent<EnemyRigidbody>();
@@ -400,17 +408,38 @@ namespace OpJosModREPO.IAmDucky
             ReflectionUtils.InvokeMethod(LevelGenerator.Instance, "EnemySpawn", new object[] { duckSetup, spawnPos });
             mls.LogInfo("Duck spawned successfully.");
 
+            EnemyDuck duck = null;
             // Move the duck to the player after delay
             DelayUtility.RunAfterDelay(10f, () =>
             {
+                duck = GeneralUtil.FindClosestDuckWithoutController(spawnPos);
                 GeneralUtil.MoveDuckToPos(spawnPos);
             });
-            
+
             //take over the duck
-            DelayUtility.RunAfterDelay(25f, () =>
+            DelayUtility.RunUntil(() =>
+            {
+                if (duck == null)
+                    return false;
+
+                var dist = Vector3.Distance(duck.transform.position, spawnPos);
+                mls.LogMessage($"Duck distance: {dist} from goal");
+                return dist < 1.5f;
+            }, () =>
             {
                 GeneralUtil.ControlClosestDuck(spawnPos, actorNumber);
-            });
+                Photon.Realtime.Player targetPlayer = PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber)
+                    ? PhotonNetwork.CurrentRoom.Players[actorNumber]
+                    : null;
+
+                if (targetPlayer == null)
+                {
+                    mls.LogError($"Target player with actor number {actorNumber} not found.");
+                    return;
+                }
+
+                DuckSpawnerNetwork.Instance.ControlDuck(spawnPos, actorNumber);
+            }, timeoutSeconds: 60f);
         }
     }
 }

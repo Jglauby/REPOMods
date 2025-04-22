@@ -203,14 +203,7 @@ namespace OpJosModREPO.IAmDucky
                 if (Keyboard.current[ConfigVariables.resetControlKey].wasPressedThisFrame)
                 {
                     mls.LogInfo("Reseting control of duck");
-                    if (PhotonNetwork.IsMasterClient)
-                    {
-                        GeneralUtil.ControlClosestDuck(cameraTransform.position, 1);
-                    }
-                    else
-                    {
-                        DuckSpawnerNetwork.Instance.ResetDuckControl(cameraTransform.position, controlActorNumber);
-                    }
+                    GeneralUtil.ControlClosestDuck(cameraTransform.position, controlActorNumber);
                 }
             }
             catch { }

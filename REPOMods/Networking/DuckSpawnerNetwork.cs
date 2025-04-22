@@ -87,5 +87,19 @@ namespace OpJosModREPO.IAmDucky.Networking
         {
             photonView.RPC("RPC_BreakDuckAI", RpcTarget.MasterClient, actorNumber);
         }
+
+        [PunRPC]
+        public void RPC_ControlDuck(Vector3 pos, int actorNumber)
+        {
+            if (PhotonNetwork.LocalPlayer.ActorNumber != actorNumber || PhotonNetwork.IsMasterClient)
+                return;
+
+            GeneralUtil.ControlClosestDuck(pos, actorNumber);
+        }
+
+        public void ControlDuck(Vector3 pos, int actorNumber)
+        {
+            photonView.RPC("RPC_ControlDuck", RpcTarget.All, pos, actorNumber);
+        }
     }
 }
