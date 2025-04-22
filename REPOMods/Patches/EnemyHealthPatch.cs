@@ -19,6 +19,9 @@ namespace OpJosModREPO.IAmDucky.Patches
         [HarmonyPrefix]
         static void DeathRPCPatch(EnemyHealth __instance)
         {
+            if (!PhotonNetwork.IsMasterClient)
+                return;
+
             Enemy enemy = ReflectionUtils.GetFieldValue<Enemy>(__instance, "enemy");
             if (enemy == null) return;
             EnemyDuck duck = enemy.GetComponent<EnemyDuck>();
@@ -41,11 +44,6 @@ namespace OpJosModREPO.IAmDucky.Patches
             {
                 mls.LogInfo("Duck dying is duck being controlled, release control of duck");
                 GeneralUtil.ReleaseDuckControlToSpectate();
-            }
-            else if (PhotonNetwork.IsMasterClient) //destory relevant controller if host
-            {
-                GameObject.Destroy(ducksController);
-                mls.LogInfo($"Player{ducksController.controlActorNumber}'s Duck controller destroyed.");
             }
         }
     }

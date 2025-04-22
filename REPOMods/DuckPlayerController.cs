@@ -1,5 +1,4 @@
 ﻿using BepInEx.Logging;
-using OpJosModREPO.IAmDucky.Networking;
 using OpJosModREPO.Util;
 using Photon.Pun;
 using System.Collections.Generic;
@@ -75,17 +74,6 @@ namespace OpJosModREPO.IAmDucky
             cameraTransform = Camera.main.transform; // Get the main camera
         }
 
-        public void UpdateMovementAndRotation(Vector3 movement, Vector3 camForward, bool jump)
-        {
-            moveDirection = movement;
-            targetLookDirection = camForward;
-
-            if (jump)
-            {
-                TriggerJump();
-            }
-        }
-
         void Start()
         {
         }
@@ -110,24 +98,7 @@ namespace OpJosModREPO.IAmDucky
             cameraPitch = Mathf.Clamp(cameraPitch, -60f, 60f); // Prevent flipping
 
             transform.Rotate(Vector3.up * mouseX); // Rotate duck
-            cameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0, 0); // Rotate camera
-
-            //send move data to host rpc
-            shouldJump = Keyboard.current.spaceKey.wasPressedThisFrame == true ? true : shouldJump;
-            if (!isHost)
-            {
-                syncTimer += Time.deltaTime;
-                if (syncTimer >= syncInterval)
-                {
-                    Vector3 camForward = cameraTransform.forward;
-                    camForward.y = 0f;
-                    camForward.Normalize();
-
-                    DuckSpawnerNetwork.Instance.SendDuckMovement(moveDirection, camForward, controlActorNumber, shouldJump);
-                    shouldJump = false;
-                    syncTimer = 0f;
-                }
-            }
+            cameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0, 0); // Rotate camera          
 
             handleInput();
         }
@@ -247,20 +218,14 @@ namespace OpJosModREPO.IAmDucky
                         mls.LogInfo("Leaving Blend mode");
                         PublicVars.DuckInBlendMode = false;
 
-                        if (PhotonNetwork.IsMasterClient)
-                            GeneralUtil.BreakDuckEnemyAI(thisDuck);
-                        else
-                            DuckSpawnerNetwork.Instance.BreakDuckAI(controlActorNumber);
+                        GeneralUtil.BreakDuckEnemyAI(thisDuck);
                     }
                     else
                     {
                         mls.LogInfo("Starting blend mode");
                         PublicVars.DuckInBlendMode = true;
 
-                        if (PhotonNetwork.IsMasterClient)
-                            GeneralUtil.EnableDuckEnemyAI(thisDuck);
-                        else
-                            DuckSpawnerNetwork.Instance.EnableDuckAI(controlActorNumber);
+                        GeneralUtil.EnableDuckEnemyAI(thisDuck);
                     }
                 }
             }
