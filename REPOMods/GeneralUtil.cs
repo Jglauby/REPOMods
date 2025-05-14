@@ -196,10 +196,15 @@ namespace OpJosModREPO.IAmDucky
                 duckAI.currentState = EnemyDuck.State.Idle;  // Prevent AI from overriding movement
             }
 
-            EnemyRigidbody rb = duck.GetComponent<EnemyRigidbody>();
-            if (rb != null)
+            EnemyRigidbody enemyrb = duck.GetComponent<EnemyRigidbody>();
+            if (enemyrb != null)
             {
-                rb.enabled = false; // prevent SetChaseTarget
+                enemyrb.enabled = false; // prevent SetChaseTarget
+                Rigidbody rb = ReflectionUtils.GetFieldValue<Rigidbody>(enemyrb, "rb");
+
+                rb.drag = 5000f;
+                rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+                rb.useGravity = true;
             }
 
             NavMeshAgent agent = duck.gameObject.GetComponent<NavMeshAgent>();
@@ -227,10 +232,14 @@ namespace OpJosModREPO.IAmDucky
                 duckAI.currentState = EnemyDuck.State.Roam;
             }
 
-            EnemyRigidbody rb = duck.GetComponent<EnemyRigidbody>();
-            if (rb != null)
+            EnemyRigidbody enemyrb = duck.GetComponent<EnemyRigidbody>();
+            if (enemyrb != null)
             {
-                rb.enabled = true;
+                enemyrb.enabled = true;
+                Rigidbody rb = ReflectionUtils.GetFieldValue<Rigidbody>(enemyrb, "rb");
+                rb.constraints = RigidbodyConstraints.FreezeAll;
+                rb.useGravity = false;
+                rb.drag = 0;
             }
 
             NavMeshAgent agent = duck.gameObject.GetComponent<NavMeshAgent>();
@@ -238,6 +247,7 @@ namespace OpJosModREPO.IAmDucky
             {
                 agent.isStopped = false;
                 agent.enabled = true;
+                agent.ResetPath();
             }
 
             mls.LogInfo("Duck AI restored.");

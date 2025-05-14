@@ -55,10 +55,6 @@ namespace OpJosModREPO.IAmDucky
             erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisDuck.enemy, "Rigidbody");
             rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
 
-            rb.drag = 5000f;
-            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-            rb.useGravity = true;
-
             if (PhotonNetwork.LocalPlayer.ActorNumber == controlActorNumber) //is your duck
             {
                 isYourDuck = true;
