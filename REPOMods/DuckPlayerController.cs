@@ -319,13 +319,19 @@ namespace OpJosModREPO.IAmDucky
 
             nightLight = new GameObject("DuckVisionLight");
             var light = nightLight.AddComponent<Light>();
-            light.type = LightType.Directional;
-            light.intensity = 2.5f;
-            light.color = Color.white;
-            light.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
-            GameObject.DontDestroyOnLoad(nightLight);
 
+            light.type = LightType.Directional;
+            light.intensity = 1.25f;
+            light.color = new Color(0.6f, 1f, 0.6f);
+
+            light.transform.rotation = Quaternion.Euler(60f, -40f, 0f);
+            light.shadows = LightShadows.Soft;
+            light.shadowStrength = 0.3f;
+            light.range = 20f;
+
+            GameObject.DontDestroyOnLoad(nightLight);
             nightLight.transform.SetParent(thisDuck.transform);
         }
+
     }
 }
