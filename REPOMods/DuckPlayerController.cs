@@ -46,6 +46,8 @@ namespace OpJosModREPO.IAmDucky
         private bool shouldJump = false;
         private bool slowFall = false;
 
+        private GameObject nightLight;
+
         public void Setup(int actorNumber, EnemyDuck duck)
         {
             controlActorNumber = actorNumber;
@@ -69,6 +71,7 @@ namespace OpJosModREPO.IAmDucky
             }
 
             cameraTransform = Camera.main.transform; // Get the main camera
+            AddGlobalLight();
         }
 
         public void UpdateMovementAndRotation(Vector3 movement, Vector3 camForward, bool jump)
@@ -308,6 +311,30 @@ namespace OpJosModREPO.IAmDucky
 
             ReflectionUtils.InvokeMethod(enemyJump, "StuckTrigger", new object[] { Vector3.up });
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+
+        private void AddGlobalLight()
+        {
+            if (nightLight != null) return;
+
+            nightLight = new GameObject("DuckVisionLight");
+            var light = nightLight.AddComponent<Light>();
+            light.type = LightType.Directional;
+            light.intensity = 2.5f;
+            light.color = Color.white;
+            light.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
+            GameObject.DontDestroyOnLoad(nightLight);
+
+            nightLight.transform.SetParent(thisDuck.transform);
+        }
+
+        private void RemoveGlobalLight()
+        {
+            if (nightLight != null)
+            {
+                GameObject.Destroy(nightLight);
+                nightLight = null;
+            }
         }
     }
 }
