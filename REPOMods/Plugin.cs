@@ -11,7 +11,7 @@ namespace OpJosModREPO.IAmDuckyHostOnly
     {
         private const string modGUID = "OpJosModREPO.IAmDuckyHostOnly";
         private const string modName = "IAmDuckyHostOnly";
-        private const string modVersion = "1.3.0";
+        private const string modVersion = "1.3.1";
 
         private readonly Harmony harmoy = new Harmony(modGUID);
         private static OpJosModBase Instance;
