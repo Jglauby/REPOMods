@@ -11,7 +11,7 @@ namespace OpJosModREPO.IAmDucky
     {
         private const string modGUID = "OpJosModREPO.IAmDucky";
         private const string modName = "IAmDucky";
-        private const string modVersion = "1.3.0";
+        private const string modVersion = "1.3.1";
 
         private readonly Harmony harmoy = new Harmony(modGUID);
         private static OpJosModBase Instance;
@@ -68,7 +68,7 @@ namespace OpJosModREPO.IAmDucky
 
             var configLimitDucksPerLevel = Config.Bind("Limit Ducks Per Level",
                                         "LimitDucksPerLevel",
-                                        true,
+                                        false,
                                         "Should the duck be limited to 1 per level?");
 
             var configMaxDucksPerLevel = Config.Bind("Max Ducks Per Level",

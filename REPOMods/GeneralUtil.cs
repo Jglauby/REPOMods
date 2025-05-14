@@ -220,7 +220,6 @@ namespace OpJosModREPO.IAmDucky
                 return;
             }
 
-            // Disable AI component
             EnemyDuck duckAI = duck.GetComponent<EnemyDuck>();
             if (duckAI != null)
             {
