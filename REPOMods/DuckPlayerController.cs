@@ -327,14 +327,5 @@ namespace OpJosModREPO.IAmDucky
 
             nightLight.transform.SetParent(thisDuck.transform);
         }
-
-        private void RemoveGlobalLight()
-        {
-            if (nightLight != null)
-            {
-                GameObject.Destroy(nightLight);
-                nightLight = null;
-            }
-        }
     }
 }

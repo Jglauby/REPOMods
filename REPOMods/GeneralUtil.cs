@@ -17,8 +17,6 @@ namespace OpJosModREPO.IAmDucky
             mls = logSource;
         }
 
-        public static GameObject tempLight;
-
         public static EnemyDuck FindClosestDuck(Vector3 pos)
         {
             EnemyDuck cloestDuck = null;
