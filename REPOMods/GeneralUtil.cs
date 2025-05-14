@@ -400,11 +400,17 @@ namespace OpJosModREPO.IAmDucky
                 return;
             }
 
-            EnemySetup duckSetup = ScriptableObject.CreateInstance<EnemySetup>();
-            duckSetup.spawnObjects = new List<GameObject> { duckPrefab };
+            GameObject gameObject = ((GameManager.instance.gameMode != 0) ? PhotonNetwork.InstantiateRoomObject("Enemies/" + duckPrefab.name, spawnPos, Quaternion.identity, 0)
+                : UnityEngine.Object.Instantiate(duckPrefab, spawnPos, Quaternion.identity));
+            EnemyParent component = gameObject.GetComponent<EnemyParent>();
 
-            //GameObject duck = PhotonNetwork.Instantiate("Enemies/Enemy - Duck", position, rotation);
-            ReflectionUtils.InvokeMethod(LevelGenerator.Instance, "EnemySpawn", new object[] { duckSetup, spawnPos });
+            if ((bool)component)
+            {
+                ReflectionUtils.SetFieldValue(component, "SetupDone", true);
+                gameObject.GetComponentInChildren<Enemy>().EnemyTeleported(spawnPos);
+                ReflectionUtils.SetFieldValue(LevelGenerator.Instance, "EnemiesSpawnTarget", ReflectionUtils.GetFieldValue<int>(LevelGenerator.Instance, "EnemiesSpawnTarget") + 1);
+                EnemyDirector.instance.FirstSpawnPointAdd(component);
+            }
             mls.LogInfo("Duck spawned successfully.");
 
             EnemyDuck duck = null;
