@@ -68,7 +68,7 @@ namespace OpJosModREPO.IAmDuckyHostOnly
 
             var configLimitDucksPerLevel = Config.Bind("Limit Ducks Per Level",
                                         "LimitDucksPerLevel",
-                                        true,
+                                        false,
                                         "Should the duck be limited to 1 per level?");
 
             var configMaxDucksPerLevel = Config.Bind("Max Ducks Per Level",

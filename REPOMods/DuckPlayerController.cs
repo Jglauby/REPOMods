@@ -45,6 +45,8 @@ namespace OpJosModREPO.IAmDuckyHostOnly
         private bool shouldJump = false;
         private bool slowFall = false;
 
+        private GameObject nightLight;
+
         public void Setup(int actorNumber, EnemyDuck duck)
         {
             controlActorNumber = actorNumber;
@@ -53,10 +55,6 @@ namespace OpJosModREPO.IAmDuckyHostOnly
 
             erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisDuck.enemy, "Rigidbody");
             rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
-
-            rb.drag = 5000f;
-            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-            rb.useGravity = true;
 
             if (PhotonNetwork.LocalPlayer.ActorNumber == controlActorNumber) //is your duck
             {
@@ -69,6 +67,7 @@ namespace OpJosModREPO.IAmDuckyHostOnly
 
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
+                AddGlobalLight();
             }
 
             cameraTransform = Camera.main.transform; // Get the main camera
@@ -277,6 +276,26 @@ namespace OpJosModREPO.IAmDuckyHostOnly
 
             ReflectionUtils.InvokeMethod(enemyJump, "StuckTrigger", new object[] { Vector3.up });
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+
+        private void AddGlobalLight()
+        {
+            if (nightLight != null) return;
+
+            nightLight = new GameObject("DuckVisionLight");
+            var light = nightLight.AddComponent<Light>();
+
+            light.type = LightType.Directional;
+            light.intensity = 1.25f;
+            light.color = new Color(0.6f, 1f, 0.6f);
+
+            light.transform.rotation = Quaternion.Euler(60f, -40f, 0f);
+            light.shadows = LightShadows.Soft;
+            light.shadowStrength = 0.3f;
+            light.range = 20f;
+
+            GameObject.DontDestroyOnLoad(nightLight);
+            nightLight.transform.SetParent(thisDuck.transform);
         }
     }
 }
