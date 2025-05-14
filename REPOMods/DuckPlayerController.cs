@@ -68,10 +68,10 @@ namespace OpJosModREPO.IAmDucky
 
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
+                AddGlobalLight();
             }
 
             cameraTransform = Camera.main.transform; // Get the main camera
-            AddGlobalLight();
         }
 
         public void UpdateMovementAndRotation(Vector3 movement, Vector3 camForward, bool jump)
@@ -332,6 +332,5 @@ namespace OpJosModREPO.IAmDucky
             GameObject.DontDestroyOnLoad(nightLight);
             nightLight.transform.SetParent(thisDuck.transform);
         }
-
     }
 }
