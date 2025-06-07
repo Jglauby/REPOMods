@@ -1,17 +1,17 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using OpJosModREPO.IAmDucky.Patches;
+using OpJosModREPO.IAmEnemy.Patches;
 using UnityEngine.InputSystem;
 
-namespace OpJosModREPO.IAmDucky
+namespace OpJosModREPO.IAmEnemy
 {
     [BepInPlugin(modGUID, modName, modVersion)]
     public class OpJosModBase : BaseUnityPlugin
     {
-        private const string modGUID = "OpJosModREPO.IAmDucky";
-        private const string modName = "IAmDucky";
-        private const string modVersion = "1.3.1";
+        private const string modGUID = "OpJosModREPO.IAmEnemy";
+        private const string modName = "IAmEnemy";
+        private const string modVersion = "0.8.0";
 
         private readonly Harmony harmoy = new Harmony(modGUID);
         private static OpJosModBase Instance;

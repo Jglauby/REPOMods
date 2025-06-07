@@ -1,7 +1,7 @@
 ﻿using Photon.Pun;
 using UnityEngine;
 
-namespace OpJosModREPO.IAmDucky.Networking
+namespace OpJosModREPO.IAmEnemy.Networking
 {
     public class DuckSpawnerNetwork : MonoBehaviourPun
     {

@@ -1,4 +1,4 @@
-﻿namespace OpJosModREPO
+﻿namespace OpJosModREPO.IAmEnemy
 {
     public static class PublicVars
     {

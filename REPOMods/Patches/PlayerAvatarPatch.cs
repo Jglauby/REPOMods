@@ -1,10 +1,10 @@
 ﻿using BepInEx.Logging;
 using HarmonyLib;
-using OpJosModREPO.IAmDucky.Networking;
+using OpJosModREPO.IAmEnemy.Networking;
 using Photon.Pun;
 using UnityEngine;
 
-namespace OpJosModREPO.IAmDucky.Patches
+namespace OpJosModREPO.IAmEnemy.Patches
 {
     [HarmonyPatch(typeof(PlayerAvatar))]
     internal class PlayerAvatarPatch

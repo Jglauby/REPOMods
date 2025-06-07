@@ -1,6 +1,6 @@
 ﻿using UnityEngine.InputSystem;
 
-namespace OpJosModREPO
+namespace OpJosModREPO.IAmEnemy
 {
     public static class ConfigVariables
     {

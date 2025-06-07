@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace OpJosModREPO.Util
+namespace OpJosModREPO.IAmEnemy.Util
 {
     public class ReflectionUtils
     {

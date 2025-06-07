@@ -1,13 +1,13 @@
 ﻿using BepInEx.Logging;
-using OpJosModREPO.IAmDucky.Networking;
-using OpJosModREPO.Util;
+using OpJosModREPO.IAmEnemy.Networking;
+using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace OpJosModREPO.IAmDucky
+namespace OpJosModREPO.IAmEnemy
 {
     public static class GeneralUtil
     {

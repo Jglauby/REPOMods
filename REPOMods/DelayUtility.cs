@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace OpJosModREPO
+namespace OpJosModREPO.IAmEnemy
 {
     public class DelayUtility : MonoBehaviour
     {
