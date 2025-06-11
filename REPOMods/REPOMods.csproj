@@ -85,7 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigVariables.cs" />
-    <Compile Include="DelayUtility.cs" />
+    <Compile Include="Utility\DelayUtility.cs" />
     <Compile Include="Controllers\DuckPlayerController.cs" />
     <Compile Include="GeneralUtil.cs" />
     <Compile Include="Networking\DuckSpawnerNetwork.cs" />
@@ -94,7 +94,7 @@
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublicVars.cs" />
-    <Compile Include="ReflectionUtils.cs" />
+    <Compile Include="Utility\ReflectionUtils.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
