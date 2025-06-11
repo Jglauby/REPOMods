@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
+using OpJosModREPO.Controllers.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Patches;
 using UnityEngine.InputSystem;
 

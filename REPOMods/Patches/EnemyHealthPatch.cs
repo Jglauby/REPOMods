@@ -1,5 +1,6 @@
 ﻿using BepInEx.Logging;
 using HarmonyLib;
+using OpJosModREPO.Controllers.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
 using UnityEngine;

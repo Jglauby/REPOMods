@@ -1,4 +1,5 @@
 ﻿using BepInEx.Logging;
+using OpJosModREPO.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Networking;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace OpJosModREPO.IAmEnemy
+namespace OpJosModREPO.Controllers.IAmEnemy
 {
     public class DuckPlayerController : MonoBehaviour
     {

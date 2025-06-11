@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using OpJosModREPO.Controllers.IAmEnemy;
+using Photon.Pun;
 using UnityEngine;
 
 namespace OpJosModREPO.IAmEnemy.Networking

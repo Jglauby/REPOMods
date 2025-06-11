@@ -1,4 +1,5 @@
 ﻿using BepInEx.Logging;
+using OpJosModREPO.Controllers.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Networking;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
