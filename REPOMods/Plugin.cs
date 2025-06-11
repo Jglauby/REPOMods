@@ -38,6 +38,11 @@ namespace OpJosModREPO.IAmEnemy
 
         private void setupConfig()
         {
+            var configWhatEnemySpawn = Config.Bind("What Enemy You Spawn As",
+                                        "WhatEnemySpawnAs",
+                                        EnemyTypes.Random,
+                                        "Which enemy do you want to spawn as?");
+
             var configAllowAttackToggle = Config.Bind("Allow Attack Toggle",
                                         "AllowAttackToggle",
                                         true,
@@ -78,6 +83,7 @@ namespace OpJosModREPO.IAmEnemy
                                         1,
                                         "How many ducks can be spawned per level? per player");
 
+            ConfigVariables.whatEnemyYouSpawnAs = configWhatEnemySpawn.Value;
             ConfigVariables.allowAttackToggle = configAllowAttackToggle.Value;
             ConfigVariables.attackToggleKey = configAttackToggleButton.Value;
             ConfigVariables.resetControlKey = configResetControlOnDuckButton.Value;

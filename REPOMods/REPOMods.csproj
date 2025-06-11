@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigVariables.cs" />
+    <Compile Include="EnemyTypes.cs" />
     <Compile Include="Utility\DelayUtility.cs" />
     <Compile Include="Controllers\DuckPlayerController.cs" />
     <Compile Include="Utility\GeneralUtil.cs" />

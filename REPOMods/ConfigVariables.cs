@@ -4,6 +4,7 @@ namespace OpJosModREPO.IAmEnemy
 {
     public static class ConfigVariables
     {
+        public static EnemyTypes whatEnemyYouSpawnAs;
         public static bool allowAttackToggle;
         public static Key attackToggleKey;
         public static Key resetControlKey;
