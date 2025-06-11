@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace OpJosModREPO.IAmEnemy
+namespace OpJosModREPO.IAmEnemy.Util
 {
     public static class GeneralUtil
     {

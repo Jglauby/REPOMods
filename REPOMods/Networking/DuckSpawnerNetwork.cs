@@ -1,4 +1,5 @@
 ﻿using OpJosModREPO.Controllers.IAmEnemy;
+using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
 using UnityEngine;
 

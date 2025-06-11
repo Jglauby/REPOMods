@@ -3,6 +3,7 @@ using BepInEx.Logging;
 using HarmonyLib;
 using OpJosModREPO.Controllers.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Patches;
+using OpJosModREPO.IAmEnemy.Util;
 using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.IAmEnemy

@@ -87,7 +87,7 @@
     <Compile Include="ConfigVariables.cs" />
     <Compile Include="Utility\DelayUtility.cs" />
     <Compile Include="Controllers\DuckPlayerController.cs" />
-    <Compile Include="GeneralUtil.cs" />
+    <Compile Include="Utility\GeneralUtil.cs" />
     <Compile Include="Networking\DuckSpawnerNetwork.cs" />
     <Compile Include="Patches\EnemyHealthPatch.cs" />
     <Compile Include="Patches\PlayerAvatarPatch.cs" />
