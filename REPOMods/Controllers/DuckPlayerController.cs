@@ -288,7 +288,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                                 Vector3 hurtDir = (enemy.transform.position - thisDuck.transform.position).normalized;
 
                                 // Call internal method "Hurt"
-                                healthComponent.Hurt(ConfigVariables.duckDamage, hurtDir);
+                                healthComponent.Hurt(20, hurtDir);
                             }
                             else
                             {

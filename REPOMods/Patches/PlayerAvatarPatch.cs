@@ -20,7 +20,7 @@ namespace OpJosModREPO.IAmEnemy.Patches
         [HarmonyPostfix]
         static void PlayerDeathPatch(PlayerAvatar __instance)
         {
-            if (ConfigVariables.limitDucksPerLevel && PublicVars.TimesSpawnedDuck >= ConfigVariables.maxDucksPerLevel)
+            if (ConfigVariables.limitEnemiesPerLevel && PublicVars.TimesSpawnedDuck >= ConfigVariables.maxEnemiesPerLevel)
             {
                 mls.LogInfo("Can't spawn duck again, set to spectate");
                 GeneralUtil.ReleaseDuckControlToSpectate();

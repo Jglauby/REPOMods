@@ -43,6 +43,16 @@ namespace OpJosModREPO.IAmEnemy
                                         EnemyTypes.Random,
                                         "Which enemy do you want to spawn as?");
 
+            var configLimitEnemiesPerLevel = Config.Bind("Limit Enemy Spawns Per Level",
+                            "LimitEnemySpawnPerLevel",
+                            false,
+                            "Should the player be limited on how many times they can be an enemy per level?");
+
+            var configMaxEnemiesPerLevel = Config.Bind("Max Enemies Per Level",
+                                        "MaxEnemiesPerLevel",
+                                        1,
+                                        "How many times a player can become an enemy? per player");
+
             var configAllowAttackToggle = Config.Bind("Allow Attack Toggle",
                                         "AllowAttackToggle",
                                         true,
@@ -68,30 +78,14 @@ namespace OpJosModREPO.IAmEnemy
                                         Key.B,
                                         "Button to turn on duck AI to blend in as a normal duck");
 
-            var configDuckDamage = Config.Bind("Duck Damage to Enemies",
-                                        "DuckDamageToEnemies",
-                                        20,
-                                        "How much damage the duck does when attacking other enemies");
-
-            var configLimitDucksPerLevel = Config.Bind("Limit Ducks Per Level",
-                                        "LimitDucksPerLevel",
-                                        false,
-                                        "Should the duck be limited to 1 per level?");
-
-            var configMaxDucksPerLevel = Config.Bind("Max Ducks Per Level",
-                                        "MaxDucksPerLevel",
-                                        1,
-                                        "How many ducks can be spawned per level? per player");
-
             ConfigVariables.whatEnemyYouSpawnAs = configWhatEnemySpawn.Value;
             ConfigVariables.allowAttackToggle = configAllowAttackToggle.Value;
             ConfigVariables.attackToggleKey = configAttackToggleButton.Value;
             ConfigVariables.resetControlKey = configResetControlOnDuckButton.Value;
             ConfigVariables.selfDestructKey = configSelfDestructButton.Value;
             ConfigVariables.toggleBlendModeKey = configToggleBlendMode.Value;
-            ConfigVariables.duckDamage = configDuckDamage.Value;
-            ConfigVariables.limitDucksPerLevel = configLimitDucksPerLevel.Value;
-            ConfigVariables.maxDucksPerLevel = configMaxDucksPerLevel.Value;
+            ConfigVariables.limitEnemiesPerLevel = configLimitEnemiesPerLevel.Value;
+            ConfigVariables.maxEnemiesPerLevel = configMaxEnemiesPerLevel.Value;
         }
     }
 }

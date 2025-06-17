@@ -10,8 +10,7 @@ namespace OpJosModREPO.IAmEnemy
         public static Key resetControlKey;
         public static Key selfDestructKey;
         public static Key toggleBlendModeKey;
-        public static int duckDamage;
-        public static bool limitDucksPerLevel;
-        public static int maxDucksPerLevel;
+        public static bool limitEnemiesPerLevel;
+        public static int maxEnemiesPerLevel;
     }
 }
