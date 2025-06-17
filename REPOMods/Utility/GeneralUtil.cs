@@ -5,6 +5,7 @@ using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -162,7 +163,7 @@ namespace OpJosModREPO.IAmEnemy.Util
                 mls.LogInfo($"Found closest duck at {closestDuck.gameObject.transform.position}, transferring control to player.");
 
                 // Transfer control: Add PlayerController to Duck
-                BreakDuckEnemyAI(closestDuck);
+                BreakEnemyAI(closestDuck.enemy);
                 DuckPlayerController duckPlayerController = closestDuck.gameObject.GetComponent<DuckPlayerController>();
                 if (duckPlayerController == null)
                 {
@@ -178,26 +179,40 @@ namespace OpJosModREPO.IAmEnemy.Util
             }
         }
 
-        public static void BreakDuckEnemyAI(EnemyDuck duck)
+        public static void BreakEnemyAI(Enemy enemy)
         {
             if (!PhotonNetwork.IsMasterClient)
                 return;
 
-            if (duck == null)
+            if (enemy == null)
             {
-                mls.LogError("Duck is null, cannot break AI.");
+                mls.LogError("enemy is null, cannot break AI.");
                 return;
             }
 
             // Disable AI component
-            EnemyDuck duckAI = duck.GetComponent<EnemyDuck>();
-            if (duckAI != null)
+            Component aiComponent = enemy.GetComponent(enemy.GetType());
+            if (aiComponent != null)
             {
-                duckAI.enabled = false;
-                duckAI.currentState = EnemyDuck.State.Idle;  // Prevent AI from overriding movement
+                ((MonoBehaviour)aiComponent).enabled = false;
+
+                try
+                {
+                    var stateField = enemy.GetType().GetField("currentState", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    if (stateField != null)
+                    {
+                        Type enumType = stateField.FieldType;
+                        object idleValue = Enum.Parse(enumType, "Idle");
+                        ReflectionUtils.SetFieldValue(enemy, "currentState", idleValue);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    mls.LogWarning($"Could not set currentState to Idle: {ex.Message}");
+                }
             }
 
-            EnemyRigidbody enemyrb = duck.GetComponent<EnemyRigidbody>();
+            EnemyRigidbody enemyrb = enemy.GetComponent<EnemyRigidbody>();
             if (enemyrb != null)
             {
                 enemyrb.enabled = false; // prevent SetChaseTarget
@@ -208,32 +223,46 @@ namespace OpJosModREPO.IAmEnemy.Util
                 rb.useGravity = true;
             }
 
-            NavMeshAgent agent = duck.gameObject.GetComponent<NavMeshAgent>();
+            NavMeshAgent agent = enemy.gameObject.GetComponent<NavMeshAgent>();
             if (agent != null)
             {
                 agent.isStopped = true;  // Stop AI pathfinding
                 agent.enabled = false;   // Disable NavMeshAgent
             }
 
-            mls.LogInfo("Duck AI broken.");
+            mls.LogInfo("Enemy AI broken.");
         }
 
-        public static void EnableDuckEnemyAI(EnemyDuck duck)
+        public static void EnableEnemyAI(Enemy enemy)
         {
-            if (duck == null)
+            if (enemy == null)
             {
-                mls.LogError("Duck is null, cannot restore AI.");
+                mls.LogError("enemy is null, cannot restore AI.");
                 return;
             }
 
-            EnemyDuck duckAI = duck.GetComponent<EnemyDuck>();
-            if (duckAI != null)
+            Component aiComponent = enemy.GetComponent(enemy.GetType());
+            if (aiComponent != null)
             {
-                duckAI.enabled = true;
-                duckAI.currentState = EnemyDuck.State.Roam;
+                ((MonoBehaviour)aiComponent).enabled = true;
+
+                try
+                {
+                    var stateField = enemy.GetType().GetField("currentState", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    if (stateField != null)
+                    {
+                        Type enumType = stateField.FieldType;
+                        object idleValue = Enum.Parse(enumType, "Roam");
+                        ReflectionUtils.SetFieldValue(enemy, "currentState", idleValue);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    mls.LogWarning($"Could not set currentState to Roam: {ex.Message}");
+                }
             }
 
-            EnemyRigidbody enemyrb = duck.GetComponent<EnemyRigidbody>();
+            EnemyRigidbody enemyrb = enemy.GetComponent<EnemyRigidbody>();
             if (enemyrb != null)
             {
                 enemyrb.enabled = true;
@@ -243,7 +272,7 @@ namespace OpJosModREPO.IAmEnemy.Util
                 rb.drag = 0;
             }
 
-            NavMeshAgent agent = duck.gameObject.GetComponent<NavMeshAgent>();
+            NavMeshAgent agent = enemy.gameObject.GetComponent<NavMeshAgent>();
             if (agent != null)
             {
                 agent.isStopped = false;
@@ -251,7 +280,7 @@ namespace OpJosModREPO.IAmEnemy.Util
                 agent.ResetPath();
             }
 
-            mls.LogInfo("Duck AI restored.");
+            mls.LogInfo("Enemy AI restored.");
         }
 
         public static void RemoveSpawnedControllableDuck(DuckPlayerController duckController)

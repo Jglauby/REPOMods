@@ -31,7 +31,7 @@ namespace OpJosModREPO.IAmEnemy
 
             PlayerAvatarPatch.SetLogSource(mls);
             EnemyHealthPatch.SetLogSource(mls);
-            DuckPlayerController.SetLogSource(mls);
+            EnemyControllerBase.SetLogSource(mls);
             GeneralUtil.SetLogSource(mls);
             harmoy.PatchAll();
         }

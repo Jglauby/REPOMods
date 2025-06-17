@@ -66,7 +66,7 @@ namespace OpJosModREPO.IAmEnemy.Networking
 
             DuckPlayerController control = GeneralUtil.FindDuckController(actorNumber);
             control.isInBlendMode = true;
-            GeneralUtil.EnableDuckEnemyAI(control.thisDuck);
+            GeneralUtil.EnableEnemyAI(control.thisDuck.enemy);
         }
 
         public void EnableDuckAI(int actorNumber)
@@ -82,7 +82,7 @@ namespace OpJosModREPO.IAmEnemy.Networking
 
             DuckPlayerController control = GeneralUtil.FindDuckController(actorNumber);
             control.isInBlendMode = false;
-            GeneralUtil.BreakDuckEnemyAI(control.thisDuck);
+            GeneralUtil.BreakEnemyAI(control.thisDuck.enemy);
         }
 
         public void BreakDuckAI(int actorNumber)
