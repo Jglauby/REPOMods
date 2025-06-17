@@ -13,7 +13,7 @@ namespace OpJosModREPO.IAmEnemy
     {
         private const string modGUID = "OpJosModREPO.IAmEnemy";
         private const string modName = "IAmEnemy";
-        private const string modVersion = "0.8.0";
+        private const string modVersion = "0.2.0";
 
         private readonly Harmony harmoy = new Harmony(modGUID);
         private static OpJosModBase Instance;
