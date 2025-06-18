@@ -55,7 +55,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Mentalist, typeof(Enemy) },
             { EnemyTypes.Banger, typeof(Enemy) },
             { EnemyTypes.Headman, typeof(Enemy) },
-            { EnemyTypes.Robe, typeof(Enemy) },
+            { EnemyTypes.Robe, typeof(EnemyRobe) },
             { EnemyTypes.Huntsman, typeof(EnemyHunter) },
             { EnemyTypes.Reaper, typeof(Enemy) },
             { EnemyTypes.Clown, typeof(Enemy) },
@@ -89,8 +89,7 @@ namespace OpJosModREPO.IAmEnemy
         private static readonly Dictionary<EnemyTypes, Type> enemyControllerTypes = new Dictionary<EnemyTypes, Type>()
         {
             { EnemyTypes.Duck, typeof(DuckPlayerController) },
-            // Add others as needed
-            // { EnemyTypes.Gnome, typeof(GnomePlayerController) },
+            { EnemyTypes.Robe, typeof(RobePlayerController) },
         };
 
         public static Type GetControllerType(EnemyTypes type)

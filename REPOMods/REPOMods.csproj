@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigVariables.cs" />
+    <Compile Include="Controllers\RobePlayerController.cs" />
     <Compile Include="Controllers\EnemyControllerBase.cs" />
     <Compile Include="EnemyMaps.cs" />
     <Compile Include="EnemyTypes.cs" />
