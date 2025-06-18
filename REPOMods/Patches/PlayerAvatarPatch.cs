@@ -24,7 +24,7 @@ namespace OpJosModREPO.IAmEnemy.Patches
             if (ConfigVariables.limitEnemiesPerLevel && PublicVars.TimesSpawnedEnemy >= ConfigVariables.maxEnemiesPerLevel)
             {
                 mls.LogInfo("Can't spawn duck again, set to spectate");
-                GeneralUtil.ReleaseDuckControlToSpectate();
+                GeneralUtil.ReleaseEnemyControlToSpectate();
                 return;
             }
 

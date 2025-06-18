@@ -448,22 +448,27 @@ namespace OpJosModREPO.IAmEnemy.Util
             });
         }
 
-        public static void ReleaseDuckControlToSpectate()
+        public static void ReleaseEnemyControlToSpectate()
         {
             if (PublicVars.EnemyCleanupInProgress)
             {
-                mls.LogInfo("Duck cleanup already in progress — skipping duplicate call of ReleaseDuckControlToSpectate");
+                mls.LogInfo("Enemy cleanup already in progress — skipping duplicate call of ReleaseEnemyControlToSpectate");
                 return;
             }
 
             PublicVars.EnemyCleanupInProgress = true;
             ReattatchCameraToPlayer();
 
-            DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
-            if (duckController != null)
+            // Look for and destroy *any* custom controller using the EnemyMaps
+            foreach (var kvp in EnemyMaps.ControllerTypes)
             {
-                GameObject.Destroy(duckController);
-                mls.LogInfo("Duck controller destroyed.");
+                Type controllerType = kvp.Value;
+                MonoBehaviour controllerInstance = GameObject.FindObjectOfType(controllerType) as MonoBehaviour;
+                if (controllerInstance != null)
+                {
+                    GameObject.Destroy(controllerInstance);
+                    mls.LogInfo($"Destroyed enemy controller of type {controllerType.Name}.");
+                }
             }
 
             if (PlayerAvatar.instance != null && ReflectionUtils.GetFieldValue<bool>(PlayerAvatar.instance, "deadSet"))

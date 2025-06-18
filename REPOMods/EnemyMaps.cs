@@ -85,6 +85,7 @@ namespace OpJosModREPO.IAmEnemy
             return null;
         }
 
+        public static IReadOnlyDictionary<EnemyTypes, Type> ControllerTypes => enemyControllerTypes;
         private static readonly Dictionary<EnemyTypes, Type> enemyControllerTypes = new Dictionary<EnemyTypes, Type>()
         {
             { EnemyTypes.Duck, typeof(DuckPlayerController) },
