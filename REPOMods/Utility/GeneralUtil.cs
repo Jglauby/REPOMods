@@ -220,7 +220,7 @@ namespace OpJosModREPO.IAmEnemy.Util
             Enemy closestEnemy = FindClosestEnemy(pos, enemyType);
             if (closestEnemy != null)
             {
-                mls.LogInfo($"Found closest duck at {closestEnemy.gameObject.transform.position}, transferring control to player.");
+                mls.LogInfo($"Found closest enemy at {closestEnemy.gameObject.transform.position}, transferring control to player.");
 
                 // Transfer control: Add PlayerController to enemy
                 BreakEnemyAI(closestEnemy);
@@ -250,11 +250,11 @@ namespace OpJosModREPO.IAmEnemy.Util
                 
                 ReflectionUtils.InvokeMethod(controller, "Setup", new object[] { actorNumber, specificEnemy });
 
-                mls.LogInfo("Control transferred to the duck.");
+                mls.LogInfo("Control transferred to the enemy.");
             }
             else
             {
-                mls.LogInfo("No duck found to transfer control.");
+                mls.LogInfo("No enemy found to transfer control.");
             }
         }
 
@@ -408,12 +408,12 @@ namespace OpJosModREPO.IAmEnemy.Util
         {
             if (enemyController == null)
             {
-                mls.LogWarning("Duck controller is null, cannot destroy.");
+                mls.LogWarning("enemy controller is null, cannot destroy.");
                 return;
             }
 
             GameObject.Destroy(enemyController);
-            mls.LogInfo("Duck controller destroyed.");
+            mls.LogInfo("enemy controller destroyed.");
 
             if (PhotonNetwork.IsMasterClient)
             {
@@ -422,7 +422,7 @@ namespace OpJosModREPO.IAmEnemy.Util
                 {
                     EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(enemyController.thisEnemyEnemy, "Health");
                     ReflectionUtils.InvokeMethod(healthComponent, "Death", new object[] { Vector3.zero });
-                    mls.LogMessage("Killed controlled duck");
+                    mls.LogMessage("Killed controlled enemy");
                 }
             }
         }
@@ -594,11 +594,11 @@ namespace OpJosModREPO.IAmEnemy.Util
                     return false;
 
                 var dist = Vector3.Distance(targetEnemy.transform.position, spawnPos);
-                mls.LogMessage($"Duck distance: {dist} from goal");
+                mls.LogMessage($"Enemy distance: {dist} from goal");
                 return dist < 1.5f;
             }, () =>
             {
-                GeneralUtil.ControlClosestEnemy(spawnPos, actorNumber, EnemyTypes.Duck);
+                ControlClosestEnemy(spawnPos, actorNumber, enemyType);
                 Photon.Realtime.Player targetPlayer = PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber)
                     ? PhotonNetwork.CurrentRoom.Players[actorNumber]
                     : null;
@@ -609,12 +609,12 @@ namespace OpJosModREPO.IAmEnemy.Util
                     return;
                 }
 
-                EnemySpawnerNetwork.Instance.ControlEnemy(spawnPos, actorNumber, EnemyTypes.Duck);
+                EnemySpawnerNetwork.Instance.ControlEnemy(spawnPos, actorNumber, enemyType);
             }, timeoutSeconds: 60f, onTimeout: () =>
             {
-                mls.LogWarning("Duck never reached goal, attempting to control anyway...");
-                GeneralUtil.ControlClosestEnemy(spawnPos, actorNumber, EnemyTypes.Duck);
-                EnemySpawnerNetwork.Instance.ControlEnemy(spawnPos, actorNumber, EnemyTypes.Duck);
+                mls.LogWarning("enemy never reached goal, attempting to control anyway...");
+                ControlClosestEnemy(spawnPos, actorNumber, enemyType);
+                EnemySpawnerNetwork.Instance.ControlEnemy(spawnPos, actorNumber, enemyType);
             });
         }
     }

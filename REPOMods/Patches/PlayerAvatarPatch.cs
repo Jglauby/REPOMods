@@ -58,7 +58,7 @@ namespace OpJosModREPO.IAmEnemy.Patches
                 GeneralUtil.RemoveSpawnedControllableEnemy(enemyController);
 
                 PublicVars.EnemyCleanupInProgress = false;
-                PublicVars.EnemyInBlendMode = false; //ensures when duck spawns you dont spawn in blend mode
+                PublicVars.EnemyInBlendMode = false; //ensures when enemy spawns you dont spawn in blend mode
             }
             else if (PhotonNetwork.IsMasterClient)
             {
