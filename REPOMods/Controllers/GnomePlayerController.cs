@@ -6,9 +6,9 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 {
     public class GnomePlayerController : EnemyControllerBase
     {
-        public EnemyGnomeDirector thisGnome = null;
+        public EnemyGnome thisGnome = null;
 
-        public void Setup(int actorNumber, EnemyGnomeDirector gnome)
+        public void Setup(int actorNumber, EnemyGnome gnome)
         {
             thisGnome = gnome;
             var enemy = ReflectionUtils.GetFieldValue<Enemy>(gnome, "enemy");
