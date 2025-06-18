@@ -26,7 +26,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Huntsman, "Enemies/Enemy - Hunter" },
             { EnemyTypes.Reaper, "Enemies/Enemy - Runner" },
             { EnemyTypes.Clown, "Enemies/Enemy - Beamer" },
-            { EnemyTypes.Trudge, "Enemies/Enemy - Trudge" }
+            { EnemyTypes.Trudge, "Enemies/Enemy - Slow Walker" }
         };
 
         public static string GetPrefabPath(EnemyTypes type)
@@ -59,7 +59,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Huntsman, typeof(EnemyHunter) },
             { EnemyTypes.Reaper, typeof(EnemyRunner) },
             { EnemyTypes.Clown, typeof(EnemyBeamer) },
-            { EnemyTypes.Trudge, typeof(Enemy) }
+            { EnemyTypes.Trudge, typeof(EnemySlowWalker) }
         };
 
         public static Type GetEnemyType(EnemyTypes type)
@@ -101,6 +101,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Baby, typeof(BabyPlayerController) },
             { EnemyTypes.Banger, typeof(BangerPlayerController) },
             { EnemyTypes.Bowtie, typeof(BowtiePlayerController) },
+            { EnemyTypes.Trudge, typeof(TrudgePlayerController) },
         };
 
         public static Type GetControllerType(EnemyTypes type)
