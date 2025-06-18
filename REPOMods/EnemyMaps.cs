@@ -20,7 +20,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Hidden, "Enemies/Enemy - Hidden" },
             { EnemyTypes.Bowtie, "Enemies/Enemy - Bowtie" },
             { EnemyTypes.Mentalist, "Enemies/Enemy - Mentalist" },
-            { EnemyTypes.Banger, "Enemies/Enemy - Banger" },
+            { EnemyTypes.Banger, "Enemies/Enemy - Bang" },
             { EnemyTypes.Headman, "Enemies/Enemy - Head" },
             { EnemyTypes.Robe, "Enemies/Enemy - Robe" },
             { EnemyTypes.Huntsman, "Enemies/Enemy - Hunter" },
@@ -53,7 +53,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Hidden, typeof(Enemy) },
             { EnemyTypes.Bowtie, typeof(EnemyBowtie) },
             { EnemyTypes.Mentalist, typeof(Enemy) },
-            { EnemyTypes.Banger, typeof(Enemy) },
+            { EnemyTypes.Banger, typeof(EnemyBang) },
             { EnemyTypes.Headman, typeof(EnemyHeadController) },
             { EnemyTypes.Robe, typeof(EnemyRobe) },
             { EnemyTypes.Huntsman, typeof(EnemyHunter) },
@@ -99,6 +99,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Headman, typeof(HeadManPlayerController) },
             { EnemyTypes.Huntsman, typeof(HuntsmanPlayerController) },
             { EnemyTypes.Baby, typeof(BabyPlayerController) },
+            { EnemyTypes.Banger, typeof(BangerPlayerController) },
         };
 
         public static Type GetControllerType(EnemyTypes type)
