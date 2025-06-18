@@ -94,6 +94,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Reaper, typeof(ReaperPlayerController) },
             { EnemyTypes.Clown, typeof(ClownPlayerController) },
             //{ EnemyTypes.Peeper, typeof(PeeperPlayerController) },
+            { EnemyTypes.Gnome, typeof(GnomePlayerController) },
         };
 
         public static Type GetControllerType(EnemyTypes type)
