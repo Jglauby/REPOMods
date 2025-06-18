@@ -117,7 +117,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                     camForward.y = 0f;
                     camForward.Normalize();
 
-                    DuckSpawnerNetwork.Instance.SendDuckMovement(moveDirection, camForward, controlActorNumber, shouldJump);
+                    EnemySpawnerNetwork.Instance.SendDuckMovement(moveDirection, camForward, controlActorNumber, shouldJump);
                     shouldJump = false;
                     syncTimer = 0f;
                 }
@@ -211,7 +211,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                         if (PhotonNetwork.IsMasterClient)
                             GeneralUtil.BreakEnemyAI(thisEnemyEnemy);
                         else
-                            DuckSpawnerNetwork.Instance.BreakDuckAI(controlActorNumber);
+                            EnemySpawnerNetwork.Instance.BreakDuckAI(controlActorNumber);
                     }
                     else
                     {
@@ -221,7 +221,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                         if (PhotonNetwork.IsMasterClient)
                             GeneralUtil.EnableEnemyAI(thisEnemyEnemy);
                         else
-                            DuckSpawnerNetwork.Instance.EnableDuckAI(controlActorNumber);
+                            EnemySpawnerNetwork.Instance.EnableDuckAI(controlActorNumber);
                     }
                 }
             }

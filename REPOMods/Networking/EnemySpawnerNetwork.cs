@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace OpJosModREPO.IAmEnemy.Networking
 {
-    public class DuckSpawnerNetwork : MonoBehaviourPun
+    public class EnemySpawnerNetwork : MonoBehaviourPun
     {
-        public static DuckSpawnerNetwork Instance;
+        public static EnemySpawnerNetwork Instance;
 
         void Awake()
         {
@@ -15,17 +15,17 @@ namespace OpJosModREPO.IAmEnemy.Networking
         }
 
         [PunRPC]
-        public void RPC_RequestSpawnDuck(Vector3 position, PhotonMessageInfo info)
+        public void RPC_RequestSpawnEnemy(Vector3 position, int enemyTypeInt, PhotonMessageInfo info)
         {
             if (!PhotonNetwork.IsMasterClient)
                 return;
 
-            GeneralUtil.SpawnDuckAt(position, info.Sender.ActorNumber);
+            GeneralUtil.SpawnEnemyAt(position, info.Sender.ActorNumber, (EnemyTypes)enemyTypeInt);
         }
 
-        public void RequestDuckSpawn(Vector3 position)
+        public void RequestSpawnEnemy(Vector3 position, EnemyTypes enemyType)
         {
-            photonView.RPC("RPC_RequestSpawnDuck", RpcTarget.MasterClient, position);
+            photonView.RPC("RPC_RequestSpawnEnemy", RpcTarget.MasterClient, position, (int)enemyType);
         }
 
         [PunRPC]

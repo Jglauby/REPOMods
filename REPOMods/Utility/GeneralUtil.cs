@@ -470,20 +470,20 @@ namespace OpJosModREPO.IAmEnemy.Util
             }
         }
 
-        public static void SpawnDuckAt(Vector3 spawnPos, int actorNumber)
+        public static void SpawnEnemyAt(Vector3 spawnPos, int actorNumber, EnemyTypes enemyType)
         {
-            mls.LogMessage($"Spawning duck at {spawnPos}");
+            mls.LogMessage($"Spawning enemy at {spawnPos}");
 
-            string duckPrefabPath = "Enemies/Enemy - Duck";
-            GameObject duckPrefab = Resources.Load<GameObject>(duckPrefabPath);
-            if (duckPrefab == null)
+            string enemyPrefabPath = EnemyPrefabMap.GetPrefabPath(enemyType);
+            GameObject enemyPrefab = Resources.Load<GameObject>(enemyPrefabPath);
+            if (enemyPrefab == null)
             {
-                mls.LogError($"Duck prefab not found at path: {duckPrefabPath}");
+                mls.LogError($"Enemy prefab not found at path: {enemyPrefab}");
                 return;
             }
 
-            GameObject gameObject = ((GameManager.instance.gameMode != 0) ? PhotonNetwork.InstantiateRoomObject("Enemies/" + duckPrefab.name, spawnPos, Quaternion.identity, 0)
-                : UnityEngine.Object.Instantiate(duckPrefab, spawnPos, Quaternion.identity));
+            GameObject gameObject = ((GameManager.instance.gameMode != 0) ? PhotonNetwork.InstantiateRoomObject("Enemies/" + enemyPrefab.name, spawnPos, Quaternion.identity, 0)
+                : UnityEngine.Object.Instantiate(enemyPrefab, spawnPos, Quaternion.identity));
             EnemyParent component = gameObject.GetComponent<EnemyParent>();
 
             if ((bool)component)
@@ -493,17 +493,17 @@ namespace OpJosModREPO.IAmEnemy.Util
                 ReflectionUtils.SetFieldValue(LevelGenerator.Instance, "EnemiesSpawnTarget", ReflectionUtils.GetFieldValue<int>(LevelGenerator.Instance, "EnemiesSpawnTarget") + 1);
                 EnemyDirector.instance.FirstSpawnPointAdd(component);
             }
-            mls.LogInfo("Duck spawned successfully.");
+            mls.LogInfo("Enemy spawned successfully.");
 
             EnemyDuck duck = null;
-            // Move the duck to the player after delay
+            // Move the enemy to the player after delay
             DelayUtility.RunAfterDelay(10f, () =>
             {
-                duck = GeneralUtil.FindClosestDuckWithoutController(spawnPos);
-                GeneralUtil.MoveDuckToPos(spawnPos);
+                duck = FindClosestDuckWithoutController(spawnPos);
+                MoveDuckToPos(spawnPos);
             });
 
-            //take over the duck
+            //take over the enemy
             DelayUtility.RunUntil(() =>
             {
                 if (duck == null)
@@ -525,12 +525,12 @@ namespace OpJosModREPO.IAmEnemy.Util
                     return;
                 }
 
-                DuckSpawnerNetwork.Instance.ControlDuck(spawnPos, actorNumber);
+                EnemySpawnerNetwork.Instance.ControlDuck(spawnPos, actorNumber);
             }, timeoutSeconds: 60f, onTimeout: () =>
             {
                 mls.LogWarning("Duck never reached goal, attempting to control anyway...");
                 GeneralUtil.ControlClosestDuck(spawnPos, actorNumber);
-                DuckSpawnerNetwork.Instance.ControlDuck(spawnPos, actorNumber);
+                EnemySpawnerNetwork.Instance.ControlDuck(spawnPos, actorNumber);
             });
         }
     }

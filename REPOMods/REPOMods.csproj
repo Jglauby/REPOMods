@@ -86,11 +86,12 @@
   <ItemGroup>
     <Compile Include="ConfigVariables.cs" />
     <Compile Include="Controllers\EnemyControllerBase.cs" />
+    <Compile Include="EnemyPrefabMap.cs" />
     <Compile Include="EnemyTypes.cs" />
     <Compile Include="Utility\DelayUtility.cs" />
     <Compile Include="Controllers\DuckPlayerController.cs" />
     <Compile Include="Utility\GeneralUtil.cs" />
-    <Compile Include="Networking\DuckSpawnerNetwork.cs" />
+    <Compile Include="Networking\EnemySpawnerNetwork.cs" />
     <Compile Include="Patches\EnemyHealthPatch.cs" />
     <Compile Include="Patches\PlayerAvatarPatch.cs" />
     <Compile Include="Plugin.cs" />

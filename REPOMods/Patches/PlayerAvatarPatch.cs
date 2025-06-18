@@ -31,13 +31,13 @@ namespace OpJosModREPO.IAmEnemy.Patches
             if (PhotonNetwork.IsMasterClient)
             {
                 mls.LogMessage("Player is dead, spawning duck as host");
-                GeneralUtil.SpawnDuckAt(__instance.transform.position, 1);
+                GeneralUtil.SpawnEnemyAt(__instance.transform.position, 1, EnemyTypes.Duck);
             }
             else
             {
                 mls.LogMessage("Player is dead, sending spawn duck request to host");
                 mls.LogInfo($"[CLIENT] Sending duck spawn request. My actor number: {PhotonNetwork.LocalPlayer.ActorNumber}");
-                DuckSpawnerNetwork.Instance.RequestDuckSpawn(__instance.transform.position);
+                EnemySpawnerNetwork.Instance.RequestSpawnEnemy(__instance.transform.position, EnemyTypes.Duck);
             }
         }
 
@@ -82,10 +82,10 @@ namespace OpJosModREPO.IAmEnemy.Patches
             PublicVars.DuckInBlendMode = false;
 
             //setup duck spawner network
-            if (DuckSpawnerNetwork.Instance == null)
+            if (EnemySpawnerNetwork.Instance == null)
             {
                 GameObject netObj = new GameObject("DuckSpawnerNetwork");
-                var spawner = netObj.AddComponent<DuckSpawnerNetwork>();
+                var spawner = netObj.AddComponent<EnemySpawnerNetwork>();
 
                 PhotonView view = netObj.AddComponent<PhotonView>();
 
