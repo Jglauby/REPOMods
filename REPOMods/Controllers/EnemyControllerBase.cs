@@ -128,7 +128,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
         protected void FixedUpdateLogic()
         {
-            if (PublicVars.DuckInBlendMode || isInBlendMode)
+            if (PublicVars.EnemyInBlendMode || isInBlendMode)
                 return;
 
             if (isYourEnemy || isHost)
@@ -193,10 +193,10 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                 if (Keyboard.current[ConfigVariables.toggleBlendModeKey].wasPressedThisFrame)
                 {
                     //toggle blend mode
-                    if (PublicVars.DuckInBlendMode)
+                    if (PublicVars.EnemyInBlendMode)
                     {
                         mls.LogInfo("Leaving Blend mode");
-                        PublicVars.DuckInBlendMode = false;
+                        PublicVars.EnemyInBlendMode = false;
 
                         if (PhotonNetwork.IsMasterClient)
                             GeneralUtil.BreakEnemyAI(thisEnemyEnemy);
@@ -206,7 +206,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                     else
                     {
                         mls.LogInfo("Starting blend mode");
-                        PublicVars.DuckInBlendMode = true;
+                        PublicVars.EnemyInBlendMode = true;
 
                         if (PhotonNetwork.IsMasterClient)
                             GeneralUtil.EnableEnemyAI(thisEnemyEnemy);

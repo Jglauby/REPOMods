@@ -21,14 +21,14 @@ namespace OpJosModREPO.IAmEnemy.Patches
         [HarmonyPostfix]
         static void PlayerDeathPatch(PlayerAvatar __instance)
         {
-            if (ConfigVariables.limitEnemiesPerLevel && PublicVars.TimesSpawnedDuck >= ConfigVariables.maxEnemiesPerLevel)
+            if (ConfigVariables.limitEnemiesPerLevel && PublicVars.TimesSpawnedEnemy >= ConfigVariables.maxEnemiesPerLevel)
             {
                 mls.LogInfo("Can't spawn duck again, set to spectate");
                 GeneralUtil.ReleaseDuckControlToSpectate();
                 return;
             }
 
-            PublicVars.TimesSpawnedDuck += 1;
+            PublicVars.TimesSpawnedEnemy += 1;
             if (PhotonNetwork.IsMasterClient)
             {
                 mls.LogMessage("Player is dead, spawning duck as host");
@@ -57,8 +57,8 @@ namespace OpJosModREPO.IAmEnemy.Patches
                 GeneralUtil.ReattatchCameraToPlayer();
                 GeneralUtil.RemoveSpawnedControllableEnemy(duckController);
 
-                PublicVars.DuckCleanupInProgress = false;
-                PublicVars.DuckInBlendMode = false; //ensures when duck spawns you dont spawn in blend mode
+                PublicVars.EnemyCleanupInProgress = false;
+                PublicVars.EnemyInBlendMode = false; //ensures when duck spawns you dont spawn in blend mode
             }
             else if (PhotonNetwork.IsMasterClient)
             {
@@ -78,9 +78,9 @@ namespace OpJosModREPO.IAmEnemy.Patches
             }
 
             mls.LogMessage("New Level, allow being duck again");
-            PublicVars.TimesSpawnedDuck = 0;
-            PublicVars.DuckCleanupInProgress = false;
-            PublicVars.DuckInBlendMode = false;
+            PublicVars.TimesSpawnedEnemy = 0;
+            PublicVars.EnemyCleanupInProgress = false;
+            PublicVars.EnemyInBlendMode = false;
 
             //setup duck spawner network
             if (EnemySpawnerNetwork.Instance == null)

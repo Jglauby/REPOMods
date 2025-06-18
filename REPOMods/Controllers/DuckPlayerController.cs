@@ -30,7 +30,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
         void FixedUpdate()
         {
-            if (PublicVars.DuckInBlendMode || isInBlendMode)
+            if (PublicVars.EnemyInBlendMode || isInBlendMode)
                 return;
 
             base.FixedUpdateLogic();

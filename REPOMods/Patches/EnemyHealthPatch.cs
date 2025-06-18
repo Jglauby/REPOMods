@@ -25,7 +25,7 @@ namespace OpJosModREPO.IAmEnemy.Patches
             EnemyDuck duck = enemy.GetComponent<EnemyDuck>();
             if (duck == null) return; //not duck that died
 
-            if (PublicVars.DuckCleanupInProgress)
+            if (PublicVars.EnemyCleanupInProgress)
             {
                 mls.LogInfo("Duck cleanup already in progress — skipping DeathRPC patch.");
                 return;

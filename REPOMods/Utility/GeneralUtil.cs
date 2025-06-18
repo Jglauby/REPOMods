@@ -113,19 +113,6 @@ namespace OpJosModREPO.IAmEnemy.Util
             return null;
         }
 
-        public static EnemyDuck FindDuck(int? actorNumber)
-        {
-            foreach (var controller in GameObject.FindObjectsOfType<DuckPlayerController>())
-            {
-                if (controller.controlActorNumber == actorNumber)
-                {
-                    return controller.thisDuck;
-                }
-            }
-
-            return null;
-        }
-
         public static List<Enemy> FindCloseEnemies(Vector3 pos, float range)
         {
             List<Enemy> result = new List<Enemy>();
@@ -463,13 +450,13 @@ namespace OpJosModREPO.IAmEnemy.Util
 
         public static void ReleaseDuckControlToSpectate()
         {
-            if (PublicVars.DuckCleanupInProgress)
+            if (PublicVars.EnemyCleanupInProgress)
             {
                 mls.LogInfo("Duck cleanup already in progress — skipping duplicate call of ReleaseDuckControlToSpectate");
                 return;
             }
 
-            PublicVars.DuckCleanupInProgress = true;
+            PublicVars.EnemyCleanupInProgress = true;
             ReattatchCameraToPlayer();
 
             DuckPlayerController duckController = GameObject.FindObjectOfType<DuckPlayerController>();
@@ -525,13 +512,13 @@ namespace OpJosModREPO.IAmEnemy.Util
                         mls.LogWarning("SpectateCamera.instance was null.");
                     }
 
-                    PublicVars.DuckCleanupInProgress = false;
+                    PublicVars.EnemyCleanupInProgress = false;
                 });
             }
             else
             {
                 mls.LogWarning("PlayerAvatar.instance was null when trying to spectate.");
-                PublicVars.DuckCleanupInProgress = false;
+                PublicVars.EnemyCleanupInProgress = false;
             }
         }
 
