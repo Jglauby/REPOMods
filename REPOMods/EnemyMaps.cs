@@ -9,7 +9,7 @@ namespace OpJosModREPO.IAmEnemy
         private static readonly Dictionary<EnemyTypes, string> prefabPaths = new Dictionary<EnemyTypes, string>()
         {
             { EnemyTypes.Duck, "Enemies/Enemy - Duck" },
-            { EnemyTypes.Peeper, "Enemies/Enemy - Peeper" },
+            //{ EnemyTypes.Peeper, "Enemies/Enemy - Ceiling Eye" },
             { EnemyTypes.ShadowChild, "Enemies/Enemy - ShadowChild" },
             { EnemyTypes.Gnome, "Enemies/Enemy - Gnome" },
             { EnemyTypes.Spewer, "Enemies/Enemy - Slow Mouth" },
@@ -25,7 +25,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Robe, "Enemies/Enemy - Robe" },
             { EnemyTypes.Huntsman, "Enemies/Enemy - Huntsman" },
             { EnemyTypes.Reaper, "Enemies/Enemy - Runner" },
-            { EnemyTypes.Clown, "Enemies/Enemy - Clown" },
+            { EnemyTypes.Clown, "Enemies/Enemy - Beamer" },
             { EnemyTypes.Trudge, "Enemies/Enemy - Trudge" }
         };
 
@@ -42,7 +42,7 @@ namespace OpJosModREPO.IAmEnemy
         private static readonly Dictionary<EnemyTypes, Type> enemyComponentTypes = new Dictionary<EnemyTypes, Type>()
         {
             { EnemyTypes.Duck, typeof(EnemyDuck) },
-            { EnemyTypes.Peeper, typeof(EnemyCeilingEye) },
+            //{ EnemyTypes.Peeper, typeof(EnemyCeilingEye) },
             { EnemyTypes.ShadowChild, typeof(Enemy) },
             { EnemyTypes.Gnome, typeof(EnemyGnome) },
             { EnemyTypes.Spewer, typeof(EnemySlowMouth) },
@@ -58,7 +58,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Robe, typeof(EnemyRobe) },
             { EnemyTypes.Huntsman, typeof(EnemyHunter) },
             { EnemyTypes.Reaper, typeof(EnemyRunner) },
-            { EnemyTypes.Clown, typeof(Enemy) },
+            { EnemyTypes.Clown, typeof(EnemyBeamer) },
             { EnemyTypes.Trudge, typeof(Enemy) }
         };
 
@@ -92,6 +92,8 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Robe, typeof(RobePlayerController) },
             { EnemyTypes.Spewer, typeof(SpewerPlayerController) },
             { EnemyTypes.Reaper, typeof(ReaperPlayerController) },
+            { EnemyTypes.Clown, typeof(ClownPlayerController) },
+            //{ EnemyTypes.Peeper, typeof(PeeperPlayerController) },
         };
 
         public static Type GetControllerType(EnemyTypes type)

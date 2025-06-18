@@ -3,7 +3,7 @@
     public enum EnemyTypes
     {
         Random = 0,
-        Peeper = 1,
+        //Peeper = 1,
         ShadowChild = 2,
         Gnome = 3,
         Duck = 4,

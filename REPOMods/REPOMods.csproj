@@ -86,6 +86,8 @@
   <ItemGroup>
     <Compile Include="ConfigVariables.cs" />
     <Compile Include="Controllers\ReaperPlayerController.cs" />
+    <Compile Include="Controllers\ClownPlayerController.cs" />
+    <Compile Include="Controllers\PeeperPlayerController.cs" />
     <Compile Include="Controllers\SpewerPlayerController.cs" />
     <Compile Include="Controllers\RobePlayerController.cs" />
     <Compile Include="Controllers\EnemyControllerBase.cs" />
