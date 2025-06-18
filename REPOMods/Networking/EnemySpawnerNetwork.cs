@@ -34,7 +34,7 @@ namespace OpJosModREPO.IAmEnemy.Networking
             if (!PhotonNetwork.IsMasterClient)
                 return;
 
-            DuckPlayerController control = GeneralUtil.FindDuckController(actorNumber);
+            EnemyControllerBase control = GeneralUtil.FindEnemyController(actorNumber);
             if (control != null)
                 control.UpdateMovementAndRotation(movement, camForward, jump);
         }
@@ -64,9 +64,9 @@ namespace OpJosModREPO.IAmEnemy.Networking
             if (!PhotonNetwork.IsMasterClient)
                 return;
 
-            DuckPlayerController control = GeneralUtil.FindDuckController(actorNumber);
+            EnemyControllerBase control = GeneralUtil.FindEnemyController(actorNumber);
             control.isInBlendMode = true;
-            GeneralUtil.EnableEnemyAI(control.thisDuck.enemy);
+            GeneralUtil.EnableEnemyAI(control.thisEnemyEnemy);
         }
 
         public void EnableDuckAI(int actorNumber)
@@ -80,9 +80,9 @@ namespace OpJosModREPO.IAmEnemy.Networking
             if (!PhotonNetwork.IsMasterClient)
                 return;
 
-            DuckPlayerController control = GeneralUtil.FindDuckController(actorNumber);
+            EnemyControllerBase control = GeneralUtil.FindEnemyController(actorNumber);
             control.isInBlendMode = false;
-            GeneralUtil.BreakEnemyAI(control.thisDuck.enemy);
+            GeneralUtil.BreakEnemyAI(control.thisEnemyEnemy);
         }
 
         public void BreakDuckAI(int actorNumber)

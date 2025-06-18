@@ -1,5 +1,6 @@
 ﻿using BepInEx.Logging;
 using HarmonyLib;
+using OpJosModREPO.Controllers.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Networking;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
@@ -51,10 +52,10 @@ namespace OpJosModREPO.IAmEnemy.Patches
             {
                 mls.LogInfo($"Handling local player respawn: {actorNumber}");
 
-                var duckController = GeneralUtil.FindDuckController(actorNumber);
+                EnemyControllerBase duckController = GeneralUtil.FindEnemyController(actorNumber);
 
                 GeneralUtil.ReattatchCameraToPlayer();
-                GeneralUtil.RemoveSpawnedControllableDuck(duckController);
+                GeneralUtil.RemoveSpawnedControllableEnemy(duckController);
 
                 PublicVars.DuckCleanupInProgress = false;
                 PublicVars.DuckInBlendMode = false; //ensures when duck spawns you dont spawn in blend mode
@@ -62,8 +63,8 @@ namespace OpJosModREPO.IAmEnemy.Patches
             else if (PhotonNetwork.IsMasterClient)
             {
                 mls.LogInfo($"[HOST] Cleaning up duck for revived player: {actorNumber}");
-                var duckController = GeneralUtil.FindDuckController(actorNumber);
-                GeneralUtil.RemoveSpawnedControllableDuck(duckController);
+                EnemyControllerBase duckController = GeneralUtil.FindEnemyController(actorNumber);
+                GeneralUtil.RemoveSpawnedControllableEnemy(duckController);
             }
         }
 

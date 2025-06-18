@@ -19,6 +19,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
         public int controlActorNumber;
         public bool isInBlendMode; //used for host, host controllers of other peoples ducks use this
+        public GameObject thisEnemyGameObject;
+        public Enemy thisEnemyEnemy;
 
         protected EnemyRigidbody erb;
         protected Rigidbody rb;
@@ -26,8 +28,6 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         protected bool isHost = false;
         protected float attackCooldown;
 
-        private GameObject thisEnemyGameObject;
-        private Enemy thisEnemyEnemy;
         private Transform thisEnemyTransform;
         private Vector3 moveDirection;
         private float moveSpeed = 3f;

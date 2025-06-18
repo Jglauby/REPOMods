@@ -31,7 +31,7 @@ namespace OpJosModREPO.IAmEnemy.Patches
                 return;
             }
 
-            DuckPlayerController ducksController = GeneralUtil.FindDuckController(duck);
+            EnemyControllerBase ducksController = GeneralUtil.FindEnemyController(duck.enemy);
             if (ducksController == null)
             {
                 mls.LogWarning("No DuckPlayerController found for duck. Skipping DeathRPC handling.");

@@ -1,0 +1,87 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace OpJosModREPO.IAmEnemy
+{
+    public static class EnemyMaps
+    {
+        private static readonly Dictionary<EnemyTypes, string> prefabPaths = new Dictionary<EnemyTypes, string>()
+        {
+            { EnemyTypes.Duck, "Enemies/Enemy - Duck" },
+            { EnemyTypes.Peeper, "Enemies/Enemy - Peeper" },
+            { EnemyTypes.ShadowChild, "Enemies/Enemy - ShadowChild" },
+            { EnemyTypes.Gnome, "Enemies/Enemy - Gnome" },
+            { EnemyTypes.Spewer, "Enemies/Enemy - Spewer" },
+            { EnemyTypes.Baby, "Enemies/Enemy - Baby" },
+            { EnemyTypes.Animal, "Enemies/Enemy - Animal" },
+            { EnemyTypes.Upscream, "Enemies/Enemy - Upscream" },
+            { EnemyTypes.Chef, "Enemies/Enemy - Chef" },
+            { EnemyTypes.Hidden, "Enemies/Enemy - Hidden" },
+            { EnemyTypes.Bowtie, "Enemies/Enemy - Bowtie" },
+            { EnemyTypes.Mentalist, "Enemies/Enemy - Mentalist" },
+            { EnemyTypes.Banger, "Enemies/Enemy - Banger" },
+            { EnemyTypes.Headman, "Enemies/Enemy - Headman" },
+            { EnemyTypes.Robe, "Enemies/Enemy - Robe" },
+            { EnemyTypes.Huntsman, "Enemies/Enemy - Huntsman" },
+            { EnemyTypes.Reaper, "Enemies/Enemy - Reaper" },
+            { EnemyTypes.Clown, "Enemies/Enemy - Clown" },
+            { EnemyTypes.Trudge, "Enemies/Enemy - Trudge" }
+        };
+
+        private static readonly Dictionary<EnemyTypes, Type> enemyComponentTypes = new Dictionary<EnemyTypes, Type>()
+        {
+            { EnemyTypes.Duck, typeof(EnemyDuck) },
+            { EnemyTypes.Peeper, typeof(EnemyCeilingEye) },
+            { EnemyTypes.ShadowChild, typeof(Enemy) },
+            { EnemyTypes.Gnome, typeof(EnemyGnome) },
+            { EnemyTypes.Spewer, typeof(Enemy) },
+            { EnemyTypes.Baby, typeof(Enemy) },
+            { EnemyTypes.Animal, typeof(EnemyAnimal) },
+            { EnemyTypes.Upscream, typeof(Enemy) },
+            { EnemyTypes.Chef, typeof(Enemy) },
+            { EnemyTypes.Hidden, typeof(Enemy) },
+            { EnemyTypes.Bowtie, typeof(EnemyBowtie) },
+            { EnemyTypes.Mentalist, typeof(Enemy) },
+            { EnemyTypes.Banger, typeof(Enemy) },
+            { EnemyTypes.Headman, typeof(Enemy) },
+            { EnemyTypes.Robe, typeof(Enemy) },
+            { EnemyTypes.Huntsman, typeof(EnemyHunter) },
+            { EnemyTypes.Reaper, typeof(Enemy) },
+            { EnemyTypes.Clown, typeof(Enemy) },
+            { EnemyTypes.Trudge, typeof(Enemy) }
+        };
+
+        public static string GetPrefabPath(EnemyTypes type)
+        {
+            if (prefabPaths.TryGetValue(type, out string path))
+            {
+                return path;
+            }
+
+            return null;
+        }
+
+        public static Type GetEnemyType(EnemyTypes type)
+        {
+            if (enemyComponentTypes.TryGetValue(type, out Type obj))
+            {
+                return obj;
+            }
+
+            return null;
+        }
+
+        public static EnemyTypes? GetEnemyTypeFromInstance(Enemy enemyInstance)
+        {
+            foreach (var kvp in enemyComponentTypes)
+            {
+                if (enemyInstance.GetComponent(kvp.Value) != null)
+                {
+                    return kvp.Key;
+                }
+            }
+
+            return null;
+        }
+    }
+}

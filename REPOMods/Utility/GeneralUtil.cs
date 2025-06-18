@@ -19,52 +19,67 @@ namespace OpJosModREPO.IAmEnemy.Util
             mls = logSource;
         }
 
-        public static EnemyDuck FindClosestDuck(Vector3 pos)
+        public static T FindClosestEnemy<T>(Vector3 pos) where T : MonoBehaviour
         {
-            EnemyDuck cloestDuck = null;
+            T cloestEnemy = null;
             float closestDistance = float.MaxValue;
 
-            foreach (var enemy in GameObject.FindObjectsOfType<EnemyDuck>())
+            foreach (var enemy in GameObject.FindObjectsOfType<T>())
             {
                 float distance = Vector3.Distance(enemy.gameObject.transform.position, pos);
 
                 if (distance < closestDistance)
                 {
-                    cloestDuck = enemy;
+                    cloestEnemy = enemy;
                     closestDistance = distance;
                 }
             }
 
-            return cloestDuck;
+            return cloestEnemy;
         }
 
-        public static EnemyDuck FindClosestDuckWithoutController(Vector3 pos)
+        public static Enemy FindClosestEnemyWithoutController(Vector3 pos, EnemyTypes type)
         {
-            EnemyDuck cloestDuck = null;
-            float closestDistance = float.MaxValue;
+            Enemy closest = null;
+            float closestDist = float.MaxValue;
 
-            foreach (var enemy in GameObject.FindObjectsOfType<EnemyDuck>())
+            foreach (var enemy in GameObject.FindObjectsOfType<Enemy>())
             {
-                if (FindDuckController(enemy) != null) //has a controller skip it
+                var actualType = EnemyMaps.GetEnemyTypeFromInstance(enemy);
+                if (actualType == null || actualType != type)
                     continue;
 
-                float distance = Vector3.Distance(enemy.gameObject.transform.position, pos);
+                if (HasController(enemy))
+                    continue;
 
-                if (distance < closestDistance)
+                float dist = Vector3.Distance(enemy.transform.position, pos);
+                if (dist < closestDist)
                 {
-                    cloestDuck = enemy;
-                    closestDistance = distance;
+                    closest = enemy;
+                    closestDist = dist;
                 }
             }
 
-            return cloestDuck;
+            return closest;
         }
 
-        public static DuckPlayerController FindDuckController(EnemyDuck duck)
+        public static bool HasController(Enemy enemy)
         {
-            foreach (var controller in GameObject.FindObjectsOfType<DuckPlayerController>())
+            foreach (var controller in GameObject.FindObjectsOfType<EnemyControllerBase>())
             {
-                if (controller.thisDuck.GetInstanceID() == duck.GetInstanceID())
+                if (controller != null && controller.thisEnemyGameObject != null 
+                    && controller.thisEnemyGameObject.GetInstanceID() == enemy?.gameObject.GetInstanceID())
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static EnemyControllerBase FindEnemyController(int? actorNumber)
+        {
+            foreach (var controller in GameObject.FindObjectsOfType<EnemyControllerBase>())
+            {
+                if (controller.controlActorNumber == actorNumber)
                 {
                     return controller;
                 }
@@ -73,11 +88,11 @@ namespace OpJosModREPO.IAmEnemy.Util
             return null;
         }
 
-        public static DuckPlayerController FindDuckController(int? actorNumber)
+        public static EnemyControllerBase FindEnemyController(Enemy enemy)
         {
-            foreach (var controller in GameObject.FindObjectsOfType<DuckPlayerController>())
+            foreach (var controller in GameObject.FindObjectsOfType<EnemyControllerBase>())
             {
-                if (controller.controlActorNumber == actorNumber)
+                if (controller.thisEnemyEnemy.GetInstanceID() == enemy.GetInstanceID())
                 {
                     return controller;
                 }
@@ -116,36 +131,55 @@ namespace OpJosModREPO.IAmEnemy.Util
             return result;
         }
 
-        public static void MoveDuckToPos(Vector3 pos) 
+        public static void MoveEnemyToPos(Enemy enemy, Vector3 pos)
         {
-            EnemyDuck enemyDuck = GeneralUtil.FindClosestDuckWithoutController(pos);
-            GameObject duckGameObject = enemyDuck?.gameObject;
-            if (duckGameObject == null)
+            if (enemy == null)
             {
-
-                mls.LogError("No duck found without a controller to teleport.");
+                mls.LogError("No enemy provided to move.");
                 return;
+            }
+
+            GameObject enemyObject = enemy.gameObject;
+            if (enemyObject == null)
+            {
+                mls.LogError("Enemy's GameObject is null.");
+                return;
+            }
+
+            mls.LogMessage($"Found enemy at {enemyObject.transform.position}, moving it to {pos}.");
+
+            // Try disabling enemy AI if supported
+            var duckAI = enemy.GetComponent<EnemyDuck>();
+            if (duckAI != null)
+            {
+                duckAI.enabled = false;
+                duckAI.currentState = EnemyDuck.State.Idle;
+                ReflectionUtils.SetFieldValue(duckAI, "playerTarget", null);
+            }
+
+            // Set NavMesh destination
+            NavMeshAgent agent = enemyObject.GetComponent<NavMeshAgent>();
+            if (agent != null)
+            {
+                agent.SetDestination(pos);
             }
             else
             {
-                mls.LogMessage($"Found closest duck at {duckGameObject.transform.position}, moving it to player.");
-
-                enemyDuck.enabled = false;
-                enemyDuck.currentState = EnemyDuck.State.Idle;
-                ReflectionUtils.SetFieldValue(enemyDuck, "playerTarget", null);
-
-                NavMeshAgent agent = duckGameObject.GetComponent<NavMeshAgent>();
-                if (agent != null)
-                {
-                    agent.SetDestination(pos);
-                }
-
-                //prevents duck from despawning
-                EnemyParent enemyParent = ReflectionUtils.GetFieldValue<EnemyParent>(enemyDuck.enemy, "EnemyParent");
-                enemyParent.SpawnedTimer = float.PositiveInfinity;
-
-                mls.LogMessage($"Duck moving towards {duckGameObject.transform.position}");
+                mls.LogWarning("Enemy has no NavMeshAgent; cannot set destination.");
             }
+
+            // Prevent despawn
+            EnemyParent enemyParent = ReflectionUtils.GetFieldValue<EnemyParent>(enemy, "EnemyParent");
+            if (enemyParent != null)
+            {
+                enemyParent.SpawnedTimer = float.PositiveInfinity;
+            }
+            else
+            {
+                mls.LogWarning("Could not access EnemyParent to prevent despawning.");
+            }
+
+            mls.LogMessage($"Enemy moving toward {pos}.");
         }
 
         public static void ControlClosestDuck(Vector3 pos, int actorNumber)
@@ -157,7 +191,7 @@ namespace OpJosModREPO.IAmEnemy.Util
                 return;
             }
 
-            EnemyDuck closestDuck = FindClosestDuck(pos);
+            EnemyDuck closestDuck = FindClosestEnemy<EnemyDuck>(pos);
             if (closestDuck != null)
             {
                 mls.LogInfo($"Found closest duck at {closestDuck.gameObject.transform.position}, transferring control to player.");
@@ -325,23 +359,23 @@ namespace OpJosModREPO.IAmEnemy.Util
             mls.LogInfo("Enemy AI restore complete.");
         }
 
-        public static void RemoveSpawnedControllableDuck(DuckPlayerController duckController)
+        public static void RemoveSpawnedControllableEnemy(EnemyControllerBase enemyController)
         {
-            if (duckController == null)
+            if (enemyController == null)
             {
                 mls.LogWarning("Duck controller is null, cannot destroy.");
                 return;
             }
 
-            GameObject.Destroy(duckController);
+            GameObject.Destroy(enemyController);
             mls.LogInfo("Duck controller destroyed.");
 
             if (PhotonNetwork.IsMasterClient)
             {
                 PlayerController pc = PlayerController.instance;
-                if (duckController.thisDuck != null)
+                if (enemyController.thisEnemyGameObject != null)
                 {
-                    EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(duckController.thisDuck.enemy, "Health");
+                    EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(enemyController.thisEnemyEnemy, "Health");
                     ReflectionUtils.InvokeMethod(healthComponent, "Death", new object[] { Vector3.zero });
                     mls.LogMessage("Killed controlled duck");
                 }
@@ -474,7 +508,7 @@ namespace OpJosModREPO.IAmEnemy.Util
         {
             mls.LogMessage($"Spawning enemy at {spawnPos}");
 
-            string enemyPrefabPath = EnemyPrefabMap.GetPrefabPath(enemyType);
+            string enemyPrefabPath = EnemyMaps.GetPrefabPath(enemyType);
             GameObject enemyPrefab = Resources.Load<GameObject>(enemyPrefabPath);
             if (enemyPrefab == null)
             {
@@ -495,21 +529,21 @@ namespace OpJosModREPO.IAmEnemy.Util
             }
             mls.LogInfo("Enemy spawned successfully.");
 
-            EnemyDuck duck = null;
+            Enemy targetEnemy = null;
             // Move the enemy to the player after delay
             DelayUtility.RunAfterDelay(10f, () =>
             {
-                duck = FindClosestDuckWithoutController(spawnPos);
-                MoveDuckToPos(spawnPos);
+                targetEnemy = FindClosestEnemyWithoutController(spawnPos, EnemyTypes.Duck);
+                MoveEnemyToPos(targetEnemy, spawnPos);
             });
 
             //take over the enemy
             DelayUtility.RunUntil(() =>
             {
-                if (duck == null)
+                if (targetEnemy == null)
                     return false;
 
-                var dist = Vector3.Distance(duck.transform.position, spawnPos);
+                var dist = Vector3.Distance(targetEnemy.transform.position, spawnPos);
                 mls.LogMessage($"Duck distance: {dist} from goal");
                 return dist < 1.5f;
             }, () =>
