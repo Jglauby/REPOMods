@@ -19,7 +19,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Chef, "Enemies/Enemy - Chef" },
             { EnemyTypes.Hidden, "Enemies/Enemy - Hidden" },
             { EnemyTypes.Bowtie, "Enemies/Enemy - Bowtie" },
-            { EnemyTypes.Mentalist, "Enemies/Enemy - Mentalist" },
+            { EnemyTypes.Mentalist, "Enemies/Enemy - Floater" },
             { EnemyTypes.Banger, "Enemies/Enemy - Bang" },
             { EnemyTypes.Headman, "Enemies/Enemy - Head" },
             { EnemyTypes.Robe, "Enemies/Enemy - Robe" },
@@ -52,7 +52,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Chef, typeof(Enemy) },
             { EnemyTypes.Hidden, typeof(Enemy) },
             { EnemyTypes.Bowtie, typeof(EnemyBowtie) },
-            { EnemyTypes.Mentalist, typeof(Enemy) },
+            { EnemyTypes.Mentalist, typeof(EnemyFloater) },
             { EnemyTypes.Banger, typeof(EnemyBang) },
             { EnemyTypes.Headman, typeof(EnemyHeadController) },
             { EnemyTypes.Robe, typeof(EnemyRobe) },
@@ -103,6 +103,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Bowtie, typeof(BowtiePlayerController) },
             { EnemyTypes.Trudge, typeof(TrudgePlayerController) },
             { EnemyTypes.Upscream, typeof(UpscreamPlayerController) },
+            { EnemyTypes.Mentalist, typeof(MentalistPlayerController) },
         };
 
         public static Type GetControllerType(EnemyTypes type)
