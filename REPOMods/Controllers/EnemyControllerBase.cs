@@ -201,7 +201,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                         if (PhotonNetwork.IsMasterClient)
                             GeneralUtil.BreakEnemyAI(thisEnemyEnemy);
                         else
-                            EnemySpawnerNetwork.Instance.BreakDuckAI(controlActorNumber);
+                            EnemySpawnerNetwork.Instance.BreakEnemyAI(controlActorNumber);
                     }
                     else
                     {
@@ -211,7 +211,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                         if (PhotonNetwork.IsMasterClient)
                             GeneralUtil.EnableEnemyAI(thisEnemyEnemy);
                         else
-                            EnemySpawnerNetwork.Instance.EnableDuckAI(controlActorNumber);
+                            EnemySpawnerNetwork.Instance.EnableEnemyAI(controlActorNumber);
                     }
                 }
             }

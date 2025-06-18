@@ -45,7 +45,7 @@ namespace OpJosModREPO.IAmEnemy.Networking
         }
 
         [PunRPC]
-        public void RPC_EnableDuckAI(int actorNumber)
+        public void RPC_EnableEnemyAI(int actorNumber)
         {
             if (!PhotonNetwork.IsMasterClient)
                 return;
@@ -55,13 +55,13 @@ namespace OpJosModREPO.IAmEnemy.Networking
             GeneralUtil.EnableEnemyAI(control.thisEnemyEnemy);
         }
 
-        public void EnableDuckAI(int actorNumber)
+        public void EnableEnemyAI(int actorNumber)
         {
-            photonView.RPC("RPC_EnableDuckAI", RpcTarget.MasterClient, actorNumber);
+            photonView.RPC("RPC_EnableEnemyAI", RpcTarget.MasterClient, actorNumber);
         }
 
         [PunRPC]
-        public void RPC_BreakDuckAI(int actorNumber)
+        public void RPC_BreakEnemyAI(int actorNumber)
         {
             if (!PhotonNetwork.IsMasterClient)
                 return;
@@ -71,9 +71,9 @@ namespace OpJosModREPO.IAmEnemy.Networking
             GeneralUtil.BreakEnemyAI(control.thisEnemyEnemy);
         }
 
-        public void BreakDuckAI(int actorNumber)
+        public void BreakEnemyAI(int actorNumber)
         {
-            photonView.RPC("RPC_BreakDuckAI", RpcTarget.MasterClient, actorNumber);
+            photonView.RPC("RPC_BreakEnemyAI", RpcTarget.MasterClient, actorNumber);
         }
 
         [PunRPC]
