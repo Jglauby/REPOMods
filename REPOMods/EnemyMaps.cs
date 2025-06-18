@@ -12,7 +12,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Peeper, "Enemies/Enemy - Peeper" },
             { EnemyTypes.ShadowChild, "Enemies/Enemy - ShadowChild" },
             { EnemyTypes.Gnome, "Enemies/Enemy - Gnome" },
-            { EnemyTypes.Spewer, "Enemies/Enemy - Spewer" },
+            { EnemyTypes.Spewer, "Enemies/Enemy - Slow Mouth" },
             { EnemyTypes.Baby, "Enemies/Enemy - Baby" },
             { EnemyTypes.Animal, "Enemies/Enemy - Animal" },
             { EnemyTypes.Upscream, "Enemies/Enemy - Upscream" },
@@ -45,7 +45,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Peeper, typeof(EnemyCeilingEye) },
             { EnemyTypes.ShadowChild, typeof(Enemy) },
             { EnemyTypes.Gnome, typeof(EnemyGnome) },
-            { EnemyTypes.Spewer, typeof(Enemy) },
+            { EnemyTypes.Spewer, typeof(EnemySlowMouth) },
             { EnemyTypes.Baby, typeof(EnemyValuableThrower) },
             { EnemyTypes.Animal, typeof(EnemyAnimal) },
             { EnemyTypes.Upscream, typeof(Enemy) },
@@ -90,6 +90,7 @@ namespace OpJosModREPO.IAmEnemy
         {
             { EnemyTypes.Duck, typeof(DuckPlayerController) },
             { EnemyTypes.Robe, typeof(RobePlayerController) },
+            { EnemyTypes.Spewer, typeof(SpewerPlayerController) },
         };
 
         public static Type GetControllerType(EnemyTypes type)

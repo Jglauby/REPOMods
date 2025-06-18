@@ -61,8 +61,6 @@ namespace OpJosModREPO.IAmEnemy.Patches
         //        }
         //    }
         //}
-
-        //// Optional helper to show full hierarchy path for clarity
         //private static string GetHierarchyPath(GameObject obj)
         //{
         //    string path = obj.name;
