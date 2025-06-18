@@ -48,7 +48,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Spewer, typeof(EnemySlowMouth) },
             { EnemyTypes.Baby, typeof(EnemyValuableThrower) },
             { EnemyTypes.Animal, typeof(EnemyAnimal) },
-            { EnemyTypes.Upscream, typeof(Enemy) },
+            { EnemyTypes.Upscream, typeof(EnemyUpscream) },
             { EnemyTypes.Chef, typeof(Enemy) },
             { EnemyTypes.Hidden, typeof(Enemy) },
             { EnemyTypes.Bowtie, typeof(EnemyBowtie) },
@@ -102,6 +102,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Banger, typeof(BangerPlayerController) },
             { EnemyTypes.Bowtie, typeof(BowtiePlayerController) },
             { EnemyTypes.Trudge, typeof(TrudgePlayerController) },
+            { EnemyTypes.Upscream, typeof(UpscreamPlayerController) },
         };
 
         public static Type GetControllerType(EnemyTypes type)
