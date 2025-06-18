@@ -63,11 +63,6 @@ namespace OpJosModREPO.IAmEnemy
                                         Key.E,
                                         "Button to toggle on and off duck's attack mode");
 
-            var configResetControlOnDuckButton = Config.Bind("Reset Control On Duck Button",
-                                        "ResetControlButton",
-                                        Key.C,
-                                        "Button to reset control on duck in case things get wack.");
-
             var configSelfDestructButton = Config.Bind("Self Destruct Button",
                                         "SelfDestructButton",
                                         Key.K,
@@ -81,7 +76,6 @@ namespace OpJosModREPO.IAmEnemy
             ConfigVariables.whatEnemyYouSpawnAs = configWhatEnemySpawn.Value;
             ConfigVariables.allowAttackToggle = configAllowAttackToggle.Value;
             ConfigVariables.attackToggleKey = configAttackToggleButton.Value;
-            ConfigVariables.resetControlKey = configResetControlOnDuckButton.Value;
             ConfigVariables.selfDestructKey = configSelfDestructButton.Value;
             ConfigVariables.toggleBlendModeKey = configToggleBlendMode.Value;
             ConfigVariables.limitEnemiesPerLevel = configLimitEnemiesPerLevel.Value;

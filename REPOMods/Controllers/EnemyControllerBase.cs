@@ -179,16 +179,6 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             try
             {
-                if (Keyboard.current[ConfigVariables.resetControlKey].wasPressedThisFrame)
-                {
-                    mls.LogInfo("Reseting control of enemy");
-                    GeneralUtil.ControlClosestDuck(cameraTransform.position, controlActorNumber);
-                }
-            }
-            catch { }
-
-            try
-            {
                 if (Keyboard.current[ConfigVariables.selfDestructKey].wasPressedThisFrame)
                 {
                     EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(thisEnemyEnemy, "Health");

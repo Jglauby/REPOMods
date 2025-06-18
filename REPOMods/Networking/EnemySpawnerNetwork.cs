@@ -45,20 +45,6 @@ namespace OpJosModREPO.IAmEnemy.Networking
         }
 
         [PunRPC]
-        public void RPC_ResetDuckControl(Vector3 loc, int actorNumber)
-        {
-            if (!PhotonNetwork.IsMasterClient)
-                return;
-
-            GeneralUtil.ControlClosestDuck(loc, actorNumber);
-        }
-
-        public void ResetDuckControl(Vector3 loc, int actorNumber)
-        {
-            photonView.RPC("RPC_ResetDuckControl", RpcTarget.MasterClient, loc, actorNumber);
-        }
-
-        [PunRPC]
         public void RPC_EnableDuckAI(int actorNumber)
         {
             if (!PhotonNetwork.IsMasterClient)
