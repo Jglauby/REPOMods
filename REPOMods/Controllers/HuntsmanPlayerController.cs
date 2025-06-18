@@ -44,7 +44,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             try
             {
-                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle)
                 {
                     Vector3 targetPosition = Camera.main.transform.position + Camera.main.transform.forward * 10f;
 
@@ -55,17 +55,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
                     //wait after aim and then shoot
                     DelayUtility.RunAfterDelay(0.5f, () => {
-                        var photonView = ReflectionUtils.GetFieldValue<PhotonView>(thisHunter, "photonView");
-                        if (photonView != null && photonView.IsMine)
-                        {
-                            photonView.RPC("ShootRPC", RpcTarget.All, targetPosition);
-                            mls.LogInfo("ShootRPC manually triggered across network.");
-                        }
-                        else
-                        {
-                            ReflectionUtils.InvokeMethod(thisHunter, "ShootRPC", new object[] { targetPosition });
-                            mls.LogWarning("ShootRPC invoked locally — not owned PhotonView.");
-                        }
+                        ReflectionUtils.InvokeMethod(thisHunter, "StateShoot", null);
 
                         //wait after shooting and then set state to ShootEnd
                         DelayUtility.RunAfterDelay(0.25f, () => {
