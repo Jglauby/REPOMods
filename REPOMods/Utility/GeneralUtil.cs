@@ -5,6 +5,7 @@ using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.AI;
@@ -130,7 +131,7 @@ namespace OpJosModREPO.IAmEnemy.Util
             return result;
         }
 
-        public static void MoveEnemyToPos(Enemy enemy, Vector3 pos)
+        public static void MoveEnemyToPos(Enemy enemy, Vector3 pos, EnemyTypes enemyType)
         {
             if (enemy == null)
             {
@@ -147,13 +148,39 @@ namespace OpJosModREPO.IAmEnemy.Util
 
             mls.LogMessage($"Found enemy at {enemyObject.transform.position}, moving it to {pos}.");
 
-            // Try disabling enemy AI if supported
-            var duckAI = enemy.GetComponent<EnemyDuck>();
-            if (duckAI != null)
+            // Disable AI component dynamically based on enemy type
+            Type aiComponentType = EnemyMaps.GetEnemyType(enemyType);
+            if (aiComponentType != null)
             {
-                duckAI.enabled = false;
-                duckAI.currentState = EnemyDuck.State.Idle;
-                ReflectionUtils.SetFieldValue(duckAI, "playerTarget", null);
+                Component aiComponent = enemyObject.GetComponent(aiComponentType);
+                if (aiComponent != null)
+                {
+                    // Disable component
+                    PropertyInfo enabledProp = aiComponentType.GetProperty("enabled");
+                    if (enabledProp != null && enabledProp.CanWrite)
+                    {
+                        enabledProp.SetValue(aiComponent, false);
+                    }
+
+                    // Try setting AI state to Idle if there's a 'currentState' field
+                    FieldInfo stateField = aiComponentType.GetField("currentState");
+                    if (stateField != null)
+                    {
+                        // Try to get the Idle enum value
+                        object idleValue = Enum.GetValues(stateField.FieldType)
+                                               .Cast<object>()
+                                               .FirstOrDefault(val => val.ToString().Equals("Idle", StringComparison.OrdinalIgnoreCase));
+                        if (idleValue != null)
+                            stateField.SetValue(aiComponent, idleValue);
+                    }
+
+                    // Try to null out playerTarget field if present
+                    FieldInfo playerTargetField = aiComponentType.GetField("playerTarget");
+                    if (playerTargetField != null)
+                    {
+                        ReflectionUtils.SetFieldValue(aiComponent, "playerTarget", null);
+                    }
+                }
             }
 
             // Set NavMesh destination
@@ -557,7 +584,7 @@ namespace OpJosModREPO.IAmEnemy.Util
             DelayUtility.RunAfterDelay(10f, () =>
             {
                 targetEnemy = FindClosestEnemyWithoutController(spawnPos, enemyType);
-                MoveEnemyToPos(targetEnemy, spawnPos);
+                MoveEnemyToPos(targetEnemy, spawnPos, enemyType);
             });
 
             //take over the enemy
