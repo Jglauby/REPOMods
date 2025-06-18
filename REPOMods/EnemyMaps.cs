@@ -46,7 +46,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.ShadowChild, typeof(Enemy) },
             { EnemyTypes.Gnome, typeof(EnemyGnome) },
             { EnemyTypes.Spewer, typeof(Enemy) },
-            { EnemyTypes.Baby, typeof(Enemy) },
+            { EnemyTypes.Baby, typeof(EnemyTumbler) },
             { EnemyTypes.Animal, typeof(EnemyAnimal) },
             { EnemyTypes.Upscream, typeof(Enemy) },
             { EnemyTypes.Chef, typeof(Enemy) },

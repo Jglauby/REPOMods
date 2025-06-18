@@ -21,6 +21,7 @@ namespace OpJosModREPO.IAmEnemy.Patches
         [HarmonyPostfix]
         static void PlayerDeathPatch(PlayerAvatar __instance)
         {
+            PublicVars.SetNextSpawnType();
             if (ConfigVariables.limitEnemiesPerLevel && PublicVars.TimesSpawnedEnemy >= ConfigVariables.maxEnemiesPerLevel)
             {
                 mls.LogInfo("Can't spawn enemy again, set to spectate");
@@ -32,13 +33,13 @@ namespace OpJosModREPO.IAmEnemy.Patches
             if (PhotonNetwork.IsMasterClient)
             {
                 mls.LogMessage("Player is dead, spawning enemy as host");
-                GeneralUtil.SpawnEnemyAt(__instance.transform.position, 1, EnemyTypes.Duck);
+                GeneralUtil.SpawnEnemyAt(__instance.transform.position, 1, PublicVars.NextSpawnType);
             }
             else
             {
                 mls.LogMessage("Player is dead, sending spawn enemy request to host");
                 mls.LogInfo($"[CLIENT] Sending enemy spawn request. My actor number: {PhotonNetwork.LocalPlayer.ActorNumber}");
-                EnemySpawnerNetwork.Instance.RequestSpawnEnemy(__instance.transform.position, EnemyTypes.Duck);
+                EnemySpawnerNetwork.Instance.RequestSpawnEnemy(__instance.transform.position, PublicVars.NextSpawnType);
             }
         }
 
