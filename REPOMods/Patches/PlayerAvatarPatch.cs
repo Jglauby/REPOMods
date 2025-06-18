@@ -4,6 +4,7 @@ using OpJosModREPO.Controllers.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Networking;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using System;
 using UnityEngine;
 
 namespace OpJosModREPO.IAmEnemy.Patches
@@ -42,6 +43,37 @@ namespace OpJosModREPO.IAmEnemy.Patches
                 EnemySpawnerNetwork.Instance.RequestSpawnEnemy(__instance.transform.position, PublicVars.NextSpawnType);
             }
         }
+
+        //[HarmonyPatch("Jump")]
+        //[HarmonyPostfix]
+        //static void JumpPatch(PlayerAvatar __instance)
+        //{
+        //    LogAllEnemyPrefabsInScene();
+        //}
+        //public static void LogAllEnemyPrefabsInScene()
+        //{
+        //    var allGameObjects = GameObject.FindObjectsOfType<GameObject>();
+        //    foreach (var obj in allGameObjects)
+        //    {
+        //        if (obj.scene.IsValid() && obj.name.StartsWith("Enemy - ", StringComparison.OrdinalIgnoreCase))
+        //        {
+        //            mls.LogWarning($"[EnemyPrefab] Name: {obj.name}, Path: {GetHierarchyPath(obj)}");
+        //        }
+        //    }
+        //}
+
+        //// Optional helper to show full hierarchy path for clarity
+        //private static string GetHierarchyPath(GameObject obj)
+        //{
+        //    string path = obj.name;
+        //    Transform current = obj.transform;
+        //    while (current.parent != null)
+        //    {
+        //        current = current.parent;
+        //        path = current.name + "/" + path;
+        //    }
+        //    return path;
+        //}
 
         [HarmonyPatch("ReviveRPC")]
         [HarmonyPostfix]
