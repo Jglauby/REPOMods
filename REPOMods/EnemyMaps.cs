@@ -10,7 +10,7 @@ namespace OpJosModREPO.IAmEnemy
         {
             { EnemyTypes.Duck, "Enemies/Enemy - Duck" },
             //{ EnemyTypes.Peeper, "Enemies/Enemy - Ceiling Eye" },
-            { EnemyTypes.ShadowChild, "Enemies/Enemy - ShadowChild" },
+            { EnemyTypes.ShadowChild, "Enemies/Enemy - Thin Man" },
             { EnemyTypes.Gnome, "Enemies/Enemy - Gnome" },
             { EnemyTypes.Spewer, "Enemies/Enemy - Slow Mouth" },
             { EnemyTypes.Baby, "Enemies/Enemy - Baby" },
@@ -43,7 +43,7 @@ namespace OpJosModREPO.IAmEnemy
         {
             { EnemyTypes.Duck, typeof(EnemyDuck) },
             //{ EnemyTypes.Peeper, typeof(EnemyCeilingEye) },
-            { EnemyTypes.ShadowChild, typeof(Enemy) },
+            { EnemyTypes.ShadowChild, typeof(EnemyThinMan) },
             { EnemyTypes.Gnome, typeof(EnemyGnome) },
             { EnemyTypes.Spewer, typeof(EnemySlowMouth) },
             { EnemyTypes.Baby, typeof(EnemyValuableThrower) },
@@ -95,6 +95,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Clown, typeof(ClownPlayerController) },
             //{ EnemyTypes.Peeper, typeof(PeeperPlayerController) },
             { EnemyTypes.Gnome, typeof(GnomePlayerController) },
+            { EnemyTypes.ShadowChild, typeof(ShadowChildPlayerController) },
         };
 
         public static Type GetControllerType(EnemyTypes type)
