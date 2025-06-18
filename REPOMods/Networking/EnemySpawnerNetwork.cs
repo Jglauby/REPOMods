@@ -77,7 +77,7 @@ namespace OpJosModREPO.IAmEnemy.Networking
         }
 
         [PunRPC]
-        public void RPC_ControlDuck(Vector3 pos, int actorNumber)
+        public void RPC_ControlEnemy(Vector3 pos, int actorNumber)
         {
             if (PhotonNetwork.LocalPlayer.ActorNumber != actorNumber || PhotonNetwork.IsMasterClient)
                 return;
@@ -85,9 +85,9 @@ namespace OpJosModREPO.IAmEnemy.Networking
             GeneralUtil.ControlClosestDuck(pos, actorNumber);
         }
 
-        public void ControlDuck(Vector3 pos, int actorNumber)
+        public void ControlEnemy(Vector3 pos, int actorNumber)
         {
-            photonView.RPC("RPC_ControlDuck", RpcTarget.All, pos, actorNumber);
+            photonView.RPC("RPC_ControlEnemy", RpcTarget.All, pos, actorNumber);
         }
     }
 }
