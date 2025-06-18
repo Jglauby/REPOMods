@@ -1,6 +1,7 @@
 ﻿using OpJosModREPO.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.Controllers.IAmEnemy
 {
@@ -36,6 +37,15 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         {
             if (controlActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)//dont listen to keys if not your duck
                 return;
+
+            try
+            {
+                if (Keyboard.current[ConfigVariables.attackToggleKey].wasPressedThisFrame)
+                {
+                    ReflectionUtils.InvokeMethod(thisBang, "ExplodeRPC", new object[] { });
+                }
+            }
+            catch { }
         }  
     }
 }
