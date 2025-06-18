@@ -13,7 +13,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.ShadowChild, "Enemies/Enemy - Thin Man" },
             { EnemyTypes.Gnome, "Enemies/Enemy - Gnome" },
             { EnemyTypes.Spewer, "Enemies/Enemy - Slow Mouth" },
-            { EnemyTypes.Baby, "Enemies/Enemy - Baby" },
+            { EnemyTypes.Baby, "Enemies/Enemy - Valuable Thrower" },
             { EnemyTypes.Animal, "Enemies/Enemy - Animal" },
             { EnemyTypes.Upscream, "Enemies/Enemy - Upscream" },
             { EnemyTypes.Chef, "Enemies/Enemy - Chef" },
@@ -98,6 +98,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.ShadowChild, typeof(ShadowChildPlayerController) },
             { EnemyTypes.Headman, typeof(HeadManPlayerController) },
             { EnemyTypes.Huntsman, typeof(HuntsmanPlayerController) },
+            { EnemyTypes.Baby, typeof(BabyPlayerController) },
         };
 
         public static Type GetControllerType(EnemyTypes type)
