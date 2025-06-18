@@ -100,6 +100,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Huntsman, typeof(HuntsmanPlayerController) },
             { EnemyTypes.Baby, typeof(BabyPlayerController) },
             { EnemyTypes.Banger, typeof(BangerPlayerController) },
+            { EnemyTypes.Bowtie, typeof(BowtiePlayerController) },
         };
 
         public static Type GetControllerType(EnemyTypes type)

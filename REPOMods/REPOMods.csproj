@@ -94,6 +94,7 @@
     <Compile Include="Controllers\HuntsmanPlayerController.cs" />
     <Compile Include="Controllers\BabyPlayerController.cs" />
     <Compile Include="Controllers\BangerPlayerController.cs" />
+    <Compile Include="Controllers\BowtiePlayerController.cs" />
     <Compile Include="Controllers\SpewerPlayerController.cs" />
     <Compile Include="Controllers\RobePlayerController.cs" />
     <Compile Include="Controllers\EnemyControllerBase.cs" />
