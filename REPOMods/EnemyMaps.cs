@@ -24,7 +24,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Headman, "Enemies/Enemy - Headman" },
             { EnemyTypes.Robe, "Enemies/Enemy - Robe" },
             { EnemyTypes.Huntsman, "Enemies/Enemy - Huntsman" },
-            { EnemyTypes.Reaper, "Enemies/Enemy - Reaper" },
+            { EnemyTypes.Reaper, "Enemies/Enemy - Runner" },
             { EnemyTypes.Clown, "Enemies/Enemy - Clown" },
             { EnemyTypes.Trudge, "Enemies/Enemy - Trudge" }
         };
@@ -57,7 +57,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Headman, typeof(Enemy) },
             { EnemyTypes.Robe, typeof(EnemyRobe) },
             { EnemyTypes.Huntsman, typeof(EnemyHunter) },
-            { EnemyTypes.Reaper, typeof(Enemy) },
+            { EnemyTypes.Reaper, typeof(EnemyRunner) },
             { EnemyTypes.Clown, typeof(Enemy) },
             { EnemyTypes.Trudge, typeof(Enemy) }
         };
@@ -91,6 +91,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Duck, typeof(DuckPlayerController) },
             { EnemyTypes.Robe, typeof(RobePlayerController) },
             { EnemyTypes.Spewer, typeof(SpewerPlayerController) },
+            { EnemyTypes.Reaper, typeof(ReaperPlayerController) },
         };
 
         public static Type GetControllerType(EnemyTypes type)
