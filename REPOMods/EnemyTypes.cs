@@ -16,7 +16,7 @@
         Bowtie = 11,
         Mentalist = 12,
         Banger = 13,
-        Headman = 14,
+        //Headman = 14,
         Robe = 15,
         Huntsman = 16,
         Reaper = 17,
