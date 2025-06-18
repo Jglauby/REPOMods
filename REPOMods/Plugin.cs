@@ -26,6 +26,7 @@ namespace OpJosModREPO.OpModTesting
             mls.LogInfo($"{modName} has started!");
 
             RoundDirectorPatch.SetLogSource(mls);
+            PlayerAvatarPatch.SetLogSource(mls);
             harmoy.PatchAll();
         }
     }
