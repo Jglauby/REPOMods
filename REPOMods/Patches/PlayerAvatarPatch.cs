@@ -23,7 +23,7 @@ namespace OpJosModREPO.IAmEnemy.Patches
         {
             if (ConfigVariables.limitEnemiesPerLevel && PublicVars.TimesSpawnedEnemy >= ConfigVariables.maxEnemiesPerLevel)
             {
-                mls.LogInfo("Can't spawn duck again, set to spectate");
+                mls.LogInfo("Can't spawn enemy again, set to spectate");
                 GeneralUtil.ReleaseEnemyControlToSpectate();
                 return;
             }
@@ -31,13 +31,13 @@ namespace OpJosModREPO.IAmEnemy.Patches
             PublicVars.TimesSpawnedEnemy += 1;
             if (PhotonNetwork.IsMasterClient)
             {
-                mls.LogMessage("Player is dead, spawning duck as host");
+                mls.LogMessage("Player is dead, spawning enemy as host");
                 GeneralUtil.SpawnEnemyAt(__instance.transform.position, 1, EnemyTypes.Duck);
             }
             else
             {
-                mls.LogMessage("Player is dead, sending spawn duck request to host");
-                mls.LogInfo($"[CLIENT] Sending duck spawn request. My actor number: {PhotonNetwork.LocalPlayer.ActorNumber}");
+                mls.LogMessage("Player is dead, sending spawn enemy request to host");
+                mls.LogInfo($"[CLIENT] Sending enemy spawn request. My actor number: {PhotonNetwork.LocalPlayer.ActorNumber}");
                 EnemySpawnerNetwork.Instance.RequestSpawnEnemy(__instance.transform.position, EnemyTypes.Duck);
             }
         }
@@ -52,19 +52,19 @@ namespace OpJosModREPO.IAmEnemy.Patches
             {
                 mls.LogInfo($"Handling local player respawn: {actorNumber}");
 
-                EnemyControllerBase duckController = GeneralUtil.FindEnemyController(actorNumber);
+                EnemyControllerBase enemyController = GeneralUtil.FindEnemyController(actorNumber);
 
                 GeneralUtil.ReattatchCameraToPlayer();
-                GeneralUtil.RemoveSpawnedControllableEnemy(duckController);
+                GeneralUtil.RemoveSpawnedControllableEnemy(enemyController);
 
                 PublicVars.EnemyCleanupInProgress = false;
                 PublicVars.EnemyInBlendMode = false; //ensures when duck spawns you dont spawn in blend mode
             }
             else if (PhotonNetwork.IsMasterClient)
             {
-                mls.LogInfo($"[HOST] Cleaning up duck for revived player: {actorNumber}");
-                EnemyControllerBase duckController = GeneralUtil.FindEnemyController(actorNumber);
-                GeneralUtil.RemoveSpawnedControllableEnemy(duckController);
+                mls.LogInfo($"[HOST] Cleaning up enemy for revived player: {actorNumber}");
+                EnemyControllerBase enemyController = GeneralUtil.FindEnemyController(actorNumber);
+                GeneralUtil.RemoveSpawnedControllableEnemy(enemyController);
             }
         }
 
@@ -77,15 +77,15 @@ namespace OpJosModREPO.IAmEnemy.Patches
                 return;
             }
 
-            mls.LogMessage("New Level, allow being duck again");
+            mls.LogMessage("New Level, allow being an enemy again");
             PublicVars.TimesSpawnedEnemy = 0;
             PublicVars.EnemyCleanupInProgress = false;
             PublicVars.EnemyInBlendMode = false;
 
-            //setup duck spawner network
+            //setup enemy spawner network
             if (EnemySpawnerNetwork.Instance == null)
             {
-                GameObject netObj = new GameObject("DuckSpawnerNetwork");
+                GameObject netObj = new GameObject("EnemySpawnerNetwork");
                 var spawner = netObj.AddComponent<EnemySpawnerNetwork>();
 
                 PhotonView view = netObj.AddComponent<PhotonView>();
@@ -94,18 +94,18 @@ namespace OpJosModREPO.IAmEnemy.Patches
                 {
                     // Only the MasterClient is allowed to allocate a ViewID
                     view.ViewID = 1738;
-                    mls.LogInfo($"[HOST] Allocated ViewID for DuckSpawnerNetwork: {view.ViewID}");
+                    mls.LogInfo($"[HOST] Allocated ViewID for EnemySpawnerNetwork: {view.ViewID}");
                 }
                 else
                 {
                     // Use a hardcoded fallback ViewID (must match what host allocated)
                     view.ViewID = 1738;
-                    mls.LogInfo($"[CLIENT] Using known ViewID for DuckSpawnerNetwork: {view.ViewID}");
+                    mls.LogInfo($"[CLIENT] Using known ViewID for EnemySpawnerNetwork: {view.ViewID}");
                 }
 
                 GameObject.DontDestroyOnLoad(netObj);
 
-                mls.LogInfo("DuckSpawnerNetwork initialized");
+                mls.LogInfo("EnemySpawnerNetwork initialized");
             }
         }
     }

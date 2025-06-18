@@ -556,7 +556,7 @@ namespace OpJosModREPO.IAmEnemy.Util
             // Move the enemy to the player after delay
             DelayUtility.RunAfterDelay(10f, () =>
             {
-                targetEnemy = FindClosestEnemyWithoutController(spawnPos, EnemyTypes.Duck);
+                targetEnemy = FindClosestEnemyWithoutController(spawnPos, enemyType);
                 MoveEnemyToPos(targetEnemy, spawnPos);
             });
 
