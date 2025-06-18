@@ -22,31 +22,29 @@ namespace OpJosModREPO.IAmEnemy.Patches
         {
             Enemy enemy = ReflectionUtils.GetFieldValue<Enemy>(__instance, "enemy");
             if (enemy == null) return;
-            EnemyDuck duck = enemy.GetComponent<EnemyDuck>();
-            if (duck == null) return; //not duck that died
 
             if (PublicVars.EnemyCleanupInProgress)
             {
-                mls.LogInfo("Duck cleanup already in progress — skipping DeathRPC patch.");
+                mls.LogInfo("Enemy cleanup already in progress — skipping DeathRPC patch.");
                 return;
             }
 
-            EnemyControllerBase ducksController = GeneralUtil.FindEnemyController(duck.enemy);
-            if (ducksController == null)
+            EnemyControllerBase enemyController = GeneralUtil.FindEnemyController(enemy);
+            if (enemyController == null)
             {
-                mls.LogWarning("No DuckPlayerController found for duck. Skipping DeathRPC handling.");
+                mls.LogWarning("No PlayerController found for enemy. Skipping DeathRPC handling.");
                 return;
             }
 
-            if (PhotonNetwork.LocalPlayer.ActorNumber == ducksController.controlActorNumber && ReflectionUtils.GetFieldValue<bool>(PlayerAvatar.instance, "deadSet")) //is your duck
+            if (PhotonNetwork.LocalPlayer.ActorNumber == enemyController.controlActorNumber && ReflectionUtils.GetFieldValue<bool>(PlayerAvatar.instance, "deadSet")) //is your enemy
             {
-                mls.LogInfo("Duck dying is duck being controlled, release control of duck");
+                mls.LogInfo("enemy dying is enemy being controlled, release control of enemy");
                 GeneralUtil.ReleaseEnemyControlToSpectate();
             }
             else if (PhotonNetwork.IsMasterClient) //destory relevant controller if host
             {
-                GameObject.Destroy(ducksController);
-                mls.LogInfo($"Player{ducksController.controlActorNumber}'s Duck controller destroyed.");
+                GameObject.Destroy(enemyController);
+                mls.LogInfo($"Player{enemyController.controlActorNumber}'s enemy controller destroyed.");
             }
         }
     }
