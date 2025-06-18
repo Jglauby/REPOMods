@@ -56,22 +56,22 @@ namespace OpJosModREPO.IAmEnemy
             var configAllowAttackToggle = Config.Bind("Allow Attack Toggle",
                                         "AllowAttackToggle",
                                         true,
-                                        "Should the duck be able to manually start attack mode?");
+                                        "Should the enemy be able to manually start attack mode?");
 
             var configAttackToggleButton = Config.Bind("Attack Mode Toggle",
                                         "AttackModeToggle",
                                         Key.E,
-                                        "Button to toggle on and off duck's attack mode");
+                                        "Button to toggle on and off enemy's attack mode");
 
             var configSelfDestructButton = Config.Bind("Self Destruct Button",
                                         "SelfDestructButton",
                                         Key.K,
-                                        "Button to self destruct the duck");
+                                        "Button to self destruct the controlled enemy");
 
             var configToggleBlendMode = Config.Bind("Toggle Blend Mode Button",
                                         "ToggleBlendModeButton",
                                         Key.B,
-                                        "Button to turn on duck AI to blend in as a normal duck");
+                                        "Button to turn on the enemy's AI to blend in as a normal enemy");
 
             ConfigVariables.whatEnemyYouSpawnAs = configWhatEnemySpawn.Value;
             ConfigVariables.allowAttackToggle = configAllowAttackToggle.Value;
