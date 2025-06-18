@@ -1,6 +1,7 @@
 ﻿using OpJosModREPO.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.Controllers.IAmEnemy
 {
@@ -36,6 +37,24 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         {
             if (controlActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)//dont listen to keys if not your duck
                 return;
+
+            try
+            {
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
+                {
+                    if (thisGnome.currentState == EnemyGnome.State.Attack)
+                    {
+                        mls.LogInfo("Stopping gnome attack mode");
+                        ReflectionUtils.InvokeMethod(thisGnome, "UpdateState", new object[] { EnemyGnome.State.Idle });
+                    }
+                    else if (ConfigVariables.allowAttackToggle)
+                    {
+                        mls.LogInfo("Starting gnome attack mode");
+                        ReflectionUtils.InvokeMethod(thisGnome, "UpdateState", new object[] { EnemyGnome.State.Attack });
+                    }
+                }
+            }
+            catch { }
         }  
     }
 }

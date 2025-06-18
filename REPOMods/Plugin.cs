@@ -58,10 +58,10 @@ namespace OpJosModREPO.IAmEnemy
                                         true,
                                         "Should the enemy be able to manually start attack mode?");
 
-            var configAttackToggleButton = Config.Bind("Attack Mode Toggle",
-                                        "AttackModeToggle",
+            var configAttackButton = Config.Bind("Attack Mode Button",
+                                        "AttackModeButton",
                                         Key.E,
-                                        "Button to toggle on and off enemy's attack mode");
+                                        "Button to toggle on and off enemy's attack or to trigger an attack (depends on enemy)");
 
             var configSelfDestructButton = Config.Bind("Self Destruct Button",
                                         "SelfDestructButton",
@@ -75,7 +75,7 @@ namespace OpJosModREPO.IAmEnemy
 
             ConfigVariables.whatEnemyYouSpawnAs = configWhatEnemySpawn.Value;
             ConfigVariables.allowAttackToggle = configAllowAttackToggle.Value;
-            ConfigVariables.attackToggleKey = configAttackToggleButton.Value;
+            ConfigVariables.attackButtonKey = configAttackButton.Value;
             ConfigVariables.selfDestructKey = configSelfDestructButton.Value;
             ConfigVariables.toggleBlendModeKey = configToggleBlendMode.Value;
             ConfigVariables.limitEnemiesPerLevel = configLimitEnemiesPerLevel.Value;

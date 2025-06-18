@@ -1,6 +1,11 @@
 ﻿using OpJosModREPO.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using Photon.Realtime;
+using System.Reflection;
+using System;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.Controllers.IAmEnemy
 {
@@ -36,6 +41,40 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         {
             if (controlActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)//dont listen to keys if not your duck
                 return;
-        }  
+
+            try
+            {
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
+                {
+                    Vector3 targetPosition = Camera.main.transform.position + Camera.main.transform.forward * 10f;
+
+                    ReflectionUtils.SetFieldValue(thisHunter, "investigatePoint", targetPosition);
+                    ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Idle });
+                    ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Aim });
+                    mls.LogInfo("Set hunter to Aim at: " + targetPosition);
+
+                    //wait after aim and then shoot
+                    DelayUtility.RunAfterDelay(0.5f, () => {
+                        var photonView = ReflectionUtils.GetFieldValue<PhotonView>(thisHunter, "photonView");
+                        if (photonView != null && photonView.IsMine)
+                        {
+                            photonView.RPC("ShootRPC", RpcTarget.All, targetPosition);
+                            mls.LogInfo("ShootRPC manually triggered across network.");
+                        }
+                        else
+                        {
+                            ReflectionUtils.InvokeMethod(thisHunter, "ShootRPC", new object[] { targetPosition });
+                            mls.LogWarning("ShootRPC invoked locally — not owned PhotonView.");
+                        }
+
+                        //wait after shooting and then set state to ShootEnd
+                        DelayUtility.RunAfterDelay(0.25f, () => {
+                            ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.ShootEnd });
+                        });
+                    });
+                }
+            }
+            catch (Exception e) { mls.LogError(e); }
+        }
     }
 }

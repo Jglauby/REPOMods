@@ -40,7 +40,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             try
             {
-                if (Keyboard.current[ConfigVariables.attackToggleKey].wasPressedThisFrame)
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
                 {
                     ReflectionUtils.InvokeMethod(thisBang, "ExplodeRPC", new object[] { });
                 }

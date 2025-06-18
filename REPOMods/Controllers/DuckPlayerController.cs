@@ -55,7 +55,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             try
             {
-                if (Keyboard.current[ConfigVariables.attackToggleKey].wasPressedThisFrame)
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
                 {
                     if (thisDuck.currentState == EnemyDuck.State.AttackStart)
                     {
