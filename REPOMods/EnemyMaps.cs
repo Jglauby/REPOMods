@@ -11,7 +11,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Duck, "Enemies/Enemy - Duck" },
             //{ EnemyTypes.Peeper, "Enemies/Enemy - Ceiling Eye" },
             { EnemyTypes.ShadowChild, "Enemies/Enemy - Thin Man" },
-            { EnemyTypes.Gnome, "Enemies/Enemy - Gnome" },
+            { EnemyTypes.Gnome, "Enemies/Enemy - Gnome Director" },
             { EnemyTypes.Spewer, "Enemies/Enemy - Slow Mouth" },
             { EnemyTypes.Baby, "Enemies/Enemy - Valuable Thrower" },
             //{ EnemyTypes.Animal, "Enemies/Enemy - Animal" },
