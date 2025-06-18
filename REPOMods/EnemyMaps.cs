@@ -21,7 +21,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Bowtie, "Enemies/Enemy - Bowtie" },
             { EnemyTypes.Mentalist, "Enemies/Enemy - Mentalist" },
             { EnemyTypes.Banger, "Enemies/Enemy - Banger" },
-            { EnemyTypes.Headman, "Enemies/Enemy - Headman" },
+            { EnemyTypes.Headman, "Enemies/Enemy - Head" },
             { EnemyTypes.Robe, "Enemies/Enemy - Robe" },
             { EnemyTypes.Huntsman, "Enemies/Enemy - Huntsman" },
             { EnemyTypes.Reaper, "Enemies/Enemy - Runner" },
@@ -54,7 +54,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Bowtie, typeof(EnemyBowtie) },
             { EnemyTypes.Mentalist, typeof(Enemy) },
             { EnemyTypes.Banger, typeof(Enemy) },
-            { EnemyTypes.Headman, typeof(Enemy) },
+            { EnemyTypes.Headman, typeof(EnemyHeadController) },
             { EnemyTypes.Robe, typeof(EnemyRobe) },
             { EnemyTypes.Huntsman, typeof(EnemyHunter) },
             { EnemyTypes.Reaper, typeof(EnemyRunner) },
@@ -96,6 +96,7 @@ namespace OpJosModREPO.IAmEnemy
             //{ EnemyTypes.Peeper, typeof(PeeperPlayerController) },
             { EnemyTypes.Gnome, typeof(GnomePlayerController) },
             { EnemyTypes.ShadowChild, typeof(ShadowChildPlayerController) },
+            { EnemyTypes.Headman, typeof(HeadManPlayerController) },
         };
 
         public static Type GetControllerType(EnemyTypes type)
