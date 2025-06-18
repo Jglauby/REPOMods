@@ -53,17 +53,22 @@ namespace OpJosModREPO.IAmEnemy.Util
 
         public static Enemy FindClosestEnemyWithoutController(Vector3 pos, EnemyTypes type)
         {
+            Type wrapperType = EnemyMaps.GetEnemyType(type);
+            if (wrapperType == null)
+            {
+                mls.LogError($"No wrapper type mapped for EnemyType {type}");
+                return null;
+            }
+
             Enemy closest = null;
             float closestDist = float.MaxValue;
 
-            foreach (var enemy in GameObject.FindObjectsOfType<Enemy>())
+            foreach (var wrapper in GameObject.FindObjectsOfType(wrapperType))
             {
-                var actualType = EnemyMaps.GetEnemyTypeFromInstance(enemy);
-                if (actualType == null || actualType != type)
-                    continue;
+                Enemy enemy = ReflectionUtils.GetFieldValue<Enemy>(wrapper, "enemy");
+                if (enemy == null) continue;
 
-                if (HasController(enemy))
-                    continue;
+                if (HasController(enemy)) continue;
 
                 float dist = Vector3.Distance(enemy.transform.position, pos);
                 if (dist < closestDist)
