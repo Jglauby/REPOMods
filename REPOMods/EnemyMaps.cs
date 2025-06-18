@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpJosModREPO.Controllers.IAmEnemy;
+using System;
 using System.Collections.Generic;
 
 namespace OpJosModREPO.IAmEnemy
@@ -28,6 +29,16 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Trudge, "Enemies/Enemy - Trudge" }
         };
 
+        public static string GetPrefabPath(EnemyTypes type)
+        {
+            if (prefabPaths.TryGetValue(type, out string path))
+            {
+                return path;
+            }
+
+            return null;
+        }
+
         private static readonly Dictionary<EnemyTypes, Type> enemyComponentTypes = new Dictionary<EnemyTypes, Type>()
         {
             { EnemyTypes.Duck, typeof(EnemyDuck) },
@@ -51,16 +62,6 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Trudge, typeof(Enemy) }
         };
 
-        public static string GetPrefabPath(EnemyTypes type)
-        {
-            if (prefabPaths.TryGetValue(type, out string path))
-            {
-                return path;
-            }
-
-            return null;
-        }
-
         public static Type GetEnemyType(EnemyTypes type)
         {
             if (enemyComponentTypes.TryGetValue(type, out Type obj))
@@ -79,6 +80,23 @@ namespace OpJosModREPO.IAmEnemy
                 {
                     return kvp.Key;
                 }
+            }
+
+            return null;
+        }
+
+        private static readonly Dictionary<EnemyTypes, Type> enemyControllerTypes = new Dictionary<EnemyTypes, Type>()
+        {
+            { EnemyTypes.Duck, typeof(DuckPlayerController) },
+            // Add others as needed
+            // { EnemyTypes.Gnome, typeof(GnomePlayerController) },
+        };
+
+        public static Type GetControllerType(EnemyTypes type)
+        {
+            if (enemyControllerTypes.TryGetValue(type, out Type controllerType))
+            {
+                return controllerType;
             }
 
             return null;

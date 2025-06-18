@@ -19,23 +19,35 @@ namespace OpJosModREPO.IAmEnemy.Util
             mls = logSource;
         }
 
-        public static T FindClosestEnemy<T>(Vector3 pos) where T : MonoBehaviour
+        public static Enemy FindClosestEnemy(Vector3 pos, EnemyTypes type)
         {
-            T cloestEnemy = null;
-            float closestDistance = float.MaxValue;
-
-            foreach (var enemy in GameObject.FindObjectsOfType<T>())
+            Type targetType = EnemyMaps.GetEnemyType(type);
+            if (targetType == null)
             {
-                float distance = Vector3.Distance(enemy.gameObject.transform.position, pos);
+                mls.LogWarning($"Unknown enemy type: {type}");
+                return null;
+            }
 
-                if (distance < closestDistance)
+            Enemy closest = null;
+            float closestDist = float.MaxValue;
+
+            foreach (var enemy in GameObject.FindObjectsOfType<Enemy>())
+            {
+                if (enemy == null || enemy.GetComponent(targetType) == null)
+                    continue;
+
+                if (HasController(enemy))
+                    continue;
+
+                float dist = Vector3.Distance(enemy.transform.position, pos);
+                if (dist < closestDist)
                 {
-                    cloestEnemy = enemy;
-                    closestDistance = distance;
+                    closest = enemy;
+                    closestDist = dist;
                 }
             }
 
-            return cloestEnemy;
+            return closest;
         }
 
         public static Enemy FindClosestEnemyWithoutController(Vector3 pos, EnemyTypes type)
@@ -182,28 +194,47 @@ namespace OpJosModREPO.IAmEnemy.Util
             mls.LogMessage($"Enemy moving toward {pos}.");
         }
 
-        public static void ControlClosestDuck(Vector3 pos, int actorNumber)
+        public static void ControlClosestEnemy(Vector3 pos, int actorNumber, EnemyTypes enemyType)
         {
             //player is dead, and it is not the host setting up someone elses controller
             if (!ReflectionUtils.GetFieldValue<bool>(PlayerAvatar.instance, "deadSet") && PhotonNetwork.LocalPlayer.ActorNumber == actorNumber)
             {
-                mls.LogWarning("Player is not dead, cannot control duck.");
+                mls.LogWarning("Player is not dead, cannot control enemy.");
                 return;
             }
 
-            EnemyDuck closestDuck = FindClosestEnemy<EnemyDuck>(pos);
-            if (closestDuck != null)
+            Enemy closestEnemy = FindClosestEnemy(pos, enemyType);
+            if (closestEnemy != null)
             {
-                mls.LogInfo($"Found closest duck at {closestDuck.gameObject.transform.position}, transferring control to player.");
+                mls.LogInfo($"Found closest duck at {closestEnemy.gameObject.transform.position}, transferring control to player.");
 
-                // Transfer control: Add PlayerController to Duck
-                BreakEnemyAI(closestDuck.enemy);
-                DuckPlayerController duckPlayerController = closestDuck.gameObject.GetComponent<DuckPlayerController>();
-                if (duckPlayerController == null)
+                // Transfer control: Add PlayerController to enemy
+                BreakEnemyAI(closestEnemy);
+                Type controllerType = EnemyMaps.GetControllerType(enemyType);
+                if (controllerType == null)
                 {
-                    duckPlayerController = closestDuck.gameObject.AddComponent<DuckPlayerController>();
+                    mls.LogError($"No controller mapped for enemy type {enemyType}.");
+                    return;
                 }
-                duckPlayerController.Setup(actorNumber, closestDuck);
+
+                if (closestEnemy.gameObject.GetComponent(controllerType) is MonoBehaviour controller)
+                {
+                    mls.LogInfo("Controller already exists, using existing one.");
+                }
+                else
+                {
+                    controller = (MonoBehaviour)closestEnemy.gameObject.AddComponent(controllerType);
+                }
+
+                Type expectedEnemyComponent = EnemyMaps.GetEnemyType(enemyType);
+                Component specificEnemy = closestEnemy.GetComponent(expectedEnemyComponent);
+                if (specificEnemy == null)
+                {
+                    mls.LogError($"Enemy is missing expected component of type {expectedEnemyComponent}.");
+                    return;
+                }
+                
+                ReflectionUtils.InvokeMethod(controller, "Setup", new object[] { actorNumber, specificEnemy });
 
                 mls.LogInfo("Control transferred to the duck.");
             }
@@ -548,7 +579,7 @@ namespace OpJosModREPO.IAmEnemy.Util
                 return dist < 1.5f;
             }, () =>
             {
-                GeneralUtil.ControlClosestDuck(spawnPos, actorNumber);
+                GeneralUtil.ControlClosestEnemy(spawnPos, actorNumber, EnemyTypes.Duck);
                 Photon.Realtime.Player targetPlayer = PhotonNetwork.CurrentRoom.Players.ContainsKey(actorNumber)
                     ? PhotonNetwork.CurrentRoom.Players[actorNumber]
                     : null;
@@ -559,12 +590,12 @@ namespace OpJosModREPO.IAmEnemy.Util
                     return;
                 }
 
-                EnemySpawnerNetwork.Instance.ControlEnemy(spawnPos, actorNumber);
+                EnemySpawnerNetwork.Instance.ControlEnemy(spawnPos, actorNumber, EnemyTypes.Duck);
             }, timeoutSeconds: 60f, onTimeout: () =>
             {
                 mls.LogWarning("Duck never reached goal, attempting to control anyway...");
-                GeneralUtil.ControlClosestDuck(spawnPos, actorNumber);
-                EnemySpawnerNetwork.Instance.ControlEnemy(spawnPos, actorNumber);
+                GeneralUtil.ControlClosestEnemy(spawnPos, actorNumber, EnemyTypes.Duck);
+                EnemySpawnerNetwork.Instance.ControlEnemy(spawnPos, actorNumber, EnemyTypes.Duck);
             });
         }
     }
