@@ -29,7 +29,7 @@ namespace OpJosModREPO.IAmEnemy.Networking
         }
 
         [PunRPC]
-        public void RPC_SendDuckMovement(Vector3 movement, Vector3 camForward, int actorNumber, bool jump, PhotonMessageInfo info)
+        public void RPC_SendEnemyMovement(Vector3 movement, Vector3 camForward, int actorNumber, bool jump, PhotonMessageInfo info)
         {
             if (!PhotonNetwork.IsMasterClient)
                 return;
@@ -39,9 +39,9 @@ namespace OpJosModREPO.IAmEnemy.Networking
                 control.UpdateMovementAndRotation(movement, camForward, jump);
         }
 
-        public void SendDuckMovement(Vector3 movement, Vector3 camForward, int actorNumber, bool jump)
+        public void SendEnemyMovement(Vector3 movement, Vector3 camForward, int actorNumber, bool jump)
         {
-            photonView.RPC("RPC_SendDuckMovement", RpcTarget.MasterClient, movement, camForward, actorNumber, jump);
+            photonView.RPC("RPC_SendEnemyMovement", RpcTarget.MasterClient, movement, camForward, actorNumber, jump);
         }
 
         [PunRPC]

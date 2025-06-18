@@ -117,7 +117,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                     camForward.y = 0f;
                     camForward.Normalize();
 
-                    EnemySpawnerNetwork.Instance.SendDuckMovement(moveDirection, camForward, controlActorNumber, shouldJump);
+                    EnemySpawnerNetwork.Instance.SendEnemyMovement(moveDirection, camForward, controlActorNumber, shouldJump);
                     shouldJump = false;
                     syncTimer = 0f;
                 }
