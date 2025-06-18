@@ -18,7 +18,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         }
 
         public int controlActorNumber;
-        public bool isInBlendMode; //used for host, host controllers of other peoples ducks use this
+        public bool isInBlendMode; //used for host, host controllers of other peoples enemies use this
         public GameObject thisEnemyGameObject;
         public Enemy thisEnemyEnemy;
 
@@ -169,7 +169,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
         private void handleInput()
         {
-            if (controlActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)//dont listen to keys if not your duck
+            if (controlActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)//dont listen to keys if not your enemy
                 return;
 
             if (Keyboard.current.spaceKey.wasPressedThisFrame && PhotonNetwork.IsMasterClient)
@@ -183,7 +183,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                 {
                     EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(thisEnemyEnemy, "Health");
                     ReflectionUtils.InvokeMethod(healthComponent, "Death", new object[] { Vector3.zero });
-                    mls.LogMessage("Killed controlled duck");
+                    mls.LogMessage("Killed controlled enemy");
                 }
             }
             catch { }
@@ -233,7 +233,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         {
             if (nightLight != null) return;
 
-            nightLight = new GameObject("DuckVisionLight");
+            nightLight = new GameObject("EnemyVisionLight");
             var light = nightLight.AddComponent<Light>();
 
             light.type = LightType.Directional;
