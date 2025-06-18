@@ -23,7 +23,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Banger, "Enemies/Enemy - Banger" },
             { EnemyTypes.Headman, "Enemies/Enemy - Head" },
             { EnemyTypes.Robe, "Enemies/Enemy - Robe" },
-            { EnemyTypes.Huntsman, "Enemies/Enemy - Huntsman" },
+            { EnemyTypes.Huntsman, "Enemies/Enemy - Hunter" },
             { EnemyTypes.Reaper, "Enemies/Enemy - Runner" },
             { EnemyTypes.Clown, "Enemies/Enemy - Beamer" },
             { EnemyTypes.Trudge, "Enemies/Enemy - Trudge" }
@@ -97,6 +97,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Gnome, typeof(GnomePlayerController) },
             { EnemyTypes.ShadowChild, typeof(ShadowChildPlayerController) },
             { EnemyTypes.Headman, typeof(HeadManPlayerController) },
+            { EnemyTypes.Huntsman, typeof(HuntsmanPlayerController) },
         };
 
         public static Type GetControllerType(EnemyTypes type)
