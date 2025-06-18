@@ -71,6 +71,13 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                         DelayUtility.RunAfterDelay(0.25f, () => {
                             ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.ShootEnd });
                         });
+
+                        //set it back to idle after a delay
+                        DelayUtility.RunAfterDelay(0.5f, () =>
+                        {
+                            ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Idle });
+                            mls.LogInfo("Returned hunter to Idle.");
+                        });
                     });
                 }
             }
