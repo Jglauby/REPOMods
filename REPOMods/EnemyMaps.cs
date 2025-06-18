@@ -44,7 +44,7 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Duck, typeof(EnemyDuck) },
             //{ EnemyTypes.Peeper, typeof(EnemyCeilingEye) },
             { EnemyTypes.ShadowChild, typeof(EnemyThinMan) },
-            { EnemyTypes.Gnome, typeof(EnemyGnome) },
+            { EnemyTypes.Gnome, typeof(EnemyGnomeDirector) },
             { EnemyTypes.Spewer, typeof(EnemySlowMouth) },
             { EnemyTypes.Baby, typeof(EnemyValuableThrower) },
             //{ EnemyTypes.Animal, typeof(EnemyAnimal) },
