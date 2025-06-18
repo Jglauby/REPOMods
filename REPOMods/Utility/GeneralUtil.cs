@@ -190,47 +190,67 @@ namespace OpJosModREPO.IAmEnemy.Util
                 return;
             }
 
-            // Disable AI component
-            Component aiComponent = enemy.GetComponent(enemy.GetType());
-            if (aiComponent != null)
+            mls.LogInfo($"Breaking AI for enemy of type {enemy.GetType().Name}");
+
+            MonoBehaviour foundAI = null;
+            FieldInfo stateField = null;
+
+            foreach (var comp in enemy.GetComponents<MonoBehaviour>())
             {
-                ((MonoBehaviour)aiComponent).enabled = false;
+                if (comp == null) continue;
+                stateField = comp.GetType().GetField("currentState", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (stateField != null)
+                {
+                    foundAI = comp;
+                    break;
+                }
+            }
+
+            if (foundAI != null)
+            {
+                foundAI.enabled = false;
+                mls.LogInfo($"Disabled component {foundAI.GetType().Name}");
 
                 try
                 {
-                    var stateField = enemy.GetType().GetField("currentState", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (stateField != null)
-                    {
-                        Type enumType = stateField.FieldType;
-                        object idleValue = Enum.Parse(enumType, "Idle");
-                        ReflectionUtils.SetFieldValue(enemy, "currentState", idleValue);
-                    }
+                    Type enumType = stateField.FieldType;
+                    object idleValue = Enum.Parse(enumType, "Idle");
+                    ReflectionUtils.SetFieldValue(foundAI, "currentState", idleValue);
                 }
                 catch (Exception ex)
                 {
                     mls.LogWarning($"Could not set currentState to Idle: {ex.Message}");
                 }
             }
+            else
+            {
+                mls.LogWarning("Could not find currentState field.");
+            }
 
-            EnemyRigidbody enemyrb = enemy.GetComponent<EnemyRigidbody>();
+            EnemyRigidbody enemyrb = enemy.GetComponentInChildren<EnemyRigidbody>(true);
             if (enemyrb != null)
             {
-                enemyrb.enabled = false; // prevent SetChaseTarget
+                enemyrb.enabled = false;
                 Rigidbody rb = ReflectionUtils.GetFieldValue<Rigidbody>(enemyrb, "rb");
 
                 rb.drag = 5000f;
                 rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
                 rb.useGravity = true;
             }
-
-            NavMeshAgent agent = enemy.gameObject.GetComponent<NavMeshAgent>();
-            if (agent != null)
+            else
             {
-                agent.isStopped = true;  // Stop AI pathfinding
-                agent.enabled = false;   // Disable NavMeshAgent
+                mls.LogWarning("No EnemyRigidbody found.");
             }
 
-            mls.LogInfo("Enemy AI broken.");
+            NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
+            if (agent != null)
+            {
+                agent.isStopped = true;
+                agent.enabled = false;
+                mls.LogInfo("Disabled NavMeshAgent.");
+            }
+
+            mls.LogInfo("Enemy AI break complete.");
         }
 
         public static void EnableEnemyAI(Enemy enemy)
@@ -241,46 +261,68 @@ namespace OpJosModREPO.IAmEnemy.Util
                 return;
             }
 
-            Component aiComponent = enemy.GetComponent(enemy.GetType());
-            if (aiComponent != null)
+            mls.LogInfo($"Restoring AI for enemy of type {enemy.GetType().Name}");
+
+            MonoBehaviour foundAI = null;
+            FieldInfo stateField = null;
+
+            foreach (var comp in enemy.GetComponents<MonoBehaviour>())
             {
-                ((MonoBehaviour)aiComponent).enabled = true;
+                if (comp == null) continue;
+                stateField = comp.GetType().GetField("currentState", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (stateField != null)
+                {
+                    foundAI = comp;
+                    break;
+                }
+            }
+
+            if (foundAI != null)
+            {
+                foundAI.enabled = true;
+                mls.LogInfo($"Enabled component {foundAI.GetType().Name}");
 
                 try
                 {
-                    var stateField = enemy.GetType().GetField("currentState", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (stateField != null)
-                    {
-                        Type enumType = stateField.FieldType;
-                        object idleValue = Enum.Parse(enumType, "Roam");
-                        ReflectionUtils.SetFieldValue(enemy, "currentState", idleValue);
-                    }
+                    Type enumType = stateField.FieldType;
+                    object roamValue = Enum.Parse(enumType, "Roam");
+                    ReflectionUtils.SetFieldValue(foundAI, "currentState", roamValue);
                 }
                 catch (Exception ex)
                 {
                     mls.LogWarning($"Could not set currentState to Roam: {ex.Message}");
                 }
             }
+            else
+            {
+                mls.LogWarning("Could not find currentState field.");
+            }
 
-            EnemyRigidbody enemyrb = enemy.GetComponent<EnemyRigidbody>();
+            EnemyRigidbody enemyrb = enemy.GetComponentInChildren<EnemyRigidbody>(true);
             if (enemyrb != null)
             {
                 enemyrb.enabled = true;
                 Rigidbody rb = ReflectionUtils.GetFieldValue<Rigidbody>(enemyrb, "rb");
+
                 rb.constraints = RigidbodyConstraints.FreezeAll;
                 rb.useGravity = false;
                 rb.drag = 0;
             }
+            else
+            {
+                mls.LogWarning("No EnemyRigidbody found.");
+            }
 
-            NavMeshAgent agent = enemy.gameObject.GetComponent<NavMeshAgent>();
+            NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
             if (agent != null)
             {
                 agent.isStopped = false;
                 agent.enabled = true;
                 agent.ResetPath();
+                mls.LogInfo("Re-enabled NavMeshAgent.");
             }
 
-            mls.LogInfo("Enemy AI restored.");
+            mls.LogInfo("Enemy AI restore complete.");
         }
 
         public static void RemoveSpawnedControllableDuck(DuckPlayerController duckController)
