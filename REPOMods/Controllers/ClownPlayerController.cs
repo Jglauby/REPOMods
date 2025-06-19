@@ -13,6 +13,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         public EnemyBeamer thisBeamer = null;
         private Vector3 laserLocation;
         private Vector3 laserAngle;
+        private float syncTimer = 0f;
+        private float syncInterval = 0.375f;
 
         public void Setup(int actorNumber, EnemyBeamer beamer)
         {
@@ -33,6 +35,9 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
         void FixedUpdate()
         {
+            if (PublicVars.EnemyInBlendMode || isInBlendMode)
+                return;
+
             base.FixedUpdateLogic();
 
             if (thisBeamer.currentState == EnemyBeamer.State.Idle)
@@ -47,9 +52,11 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
                     if (!PhotonNetwork.IsMasterClient)
                     {
+                        syncTimer += Time.deltaTime;
                         if (syncTimer >= syncInterval)
                         {
                             EnemySpawnerNetwork.Instance.TriggerSpecialAttack(laserLocation, laserAngle, controlActorNumber);
+                            syncTimer = 0f;
                         }
                     }
                 }
@@ -73,22 +80,12 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                     if (thisBeamer.currentState == EnemyBeamer.State.Attack)
                     {
                         mls.LogInfo("Stopping clown attack mode");
-                        ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.AttackEnd });
-
-                        DelayUtility.RunAfterDelay(0.5f, () =>
-                        {
-                            ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.Roam });
-                        });
+                        ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.Roam });
                     }
                     else if (ConfigVariables.allowAttackToggle)
                     {
                         mls.LogInfo("Starting clown attack mode");
-                        ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.AttackStart });
-
-                        DelayUtility.RunAfterDelay(0.5f, () =>
-                        {
-                            ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.Attack });
-                        });
+                        ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.Attack });
                     }
                 }
             }

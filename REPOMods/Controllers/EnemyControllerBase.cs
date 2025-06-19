@@ -27,10 +27,10 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         protected bool isYourEnemy = false; //if false means you are host, no client has this controller if it isn't for them
         protected bool isHost = false;
         protected float attackCooldown;
-        protected float syncTimer = 0f;
-        protected float syncInterval = 0.375f;
         protected Transform cameraTransform;
 
+        private float syncTimer = 0f;
+        private float syncInterval = 0.375f;
         private Transform thisEnemyTransform;
         private Vector3 moveDirection;
         private float moveSpeed = 3f;
