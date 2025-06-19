@@ -99,7 +99,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                 ReflectionUtils.InvokeMethod(thisBaby, "UpdateState", new object[] { EnemyValuableThrower.State.Throw });
 
                 DelayUtility.RunAfterDelay(0.5f, () => {
-                    Vector3 forwardDir = Camera.main.transform.forward;
+                    Vector3 forwardDir = thisBaby.transform.forward;
                     Vector3 startPos = thisBaby.pickupTarget.position;
                     Vector3 targetSpot = startPos + forwardDir * 10f;
                     CustomThrowAtLocation(targetSpot);
