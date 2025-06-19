@@ -45,15 +45,13 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             try
             {
-                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame &&
-                    ConfigVariables.allowAttackToggle &&
-                    thisBaby != null)
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle)
                 {
                     var target = ReflectionUtils.GetFieldValue<PhysGrabObject>(thisBaby, "valuableTarget");
 
                     if (target == null)
                     {
-                        Collider[] hits = Physics.OverlapSphere(thisEnemyGameObject.transform.position, 5f, LayerMask.GetMask("PhysGrabObject"));
+                        Collider[] hits = Physics.OverlapSphere(thisEnemyGameObject.transform.position, 2f, LayerMask.GetMask("PhysGrabObject"));
                         foreach (var hit in hits)
                         {
                             var valObj = hit.GetComponentInParent<ValuableObject>();
@@ -78,11 +76,54 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                     }
                     else
                     {
-                        ReflectionUtils.InvokeMethod(thisBaby, "Throw", new object[] { });
+                        ReflectionUtils.InvokeMethod(thisBaby, "UpdateState", new object[] { EnemyValuableThrower.State.Throw });
+
+                        Vector3 forwardDir = Camera.main.transform.forward;
+                        Vector3 startPos = thisBaby.pickupTarget.position;
+                        Vector3 targetSpot = startPos + forwardDir * 10f;
+                        CustomThrowAtLocation(targetSpot);
+
+                        DelayUtility.RunAfterDelay(0.25f, () => {
+                            ReflectionUtils.InvokeMethod(thisBaby, "UpdateState", new object[] { EnemyValuableThrower.State.Idle });
+                        });
                     }
                 }
             }
             catch {}
+        }
+
+        private void CustomThrowAtLocation(Vector3 targetSpot)
+        {
+            var valuableTarget = ReflectionUtils.GetFieldValue<PhysGrabObject>(thisBaby, "valuableTarget");
+            if (!valuableTarget)
+            {
+                return;
+            }
+
+            foreach (PhysGrabber item in valuableTarget.playerGrabbing.ToList())
+            {
+                if (!SemiFunc.IsMultiplayer())
+                {
+                    item.ReleaseObject();
+                    continue;
+                }
+
+                item.photonView.RPC("ReleaseObjectRPC", RpcTarget.All, false, 0.1f);
+            }
+
+            Vector3 throwDir = targetSpot - valuableTarget.centerPoint;
+            throwDir = Vector3.Lerp(thisBaby.transform.forward, throwDir, 0.5f);
+
+            valuableTarget.ResetMass();
+            float a = 20f * valuableTarget.rb.mass;
+            a = Mathf.Min(a, 100f);
+            valuableTarget.ResetIndestructible();
+            valuableTarget.rb.AddForce(throwDir * a, ForceMode.Impulse);
+            valuableTarget.rb.AddTorque(valuableTarget.transform.right * 0.5f, ForceMode.Impulse);
+            PhysGrabObjectImpactDetector impactDetector = ReflectionUtils.GetFieldValue<PhysGrabObjectImpactDetector>(valuableTarget, "impactDetector");
+            impactDetector.PlayerHurtMultiplier(5f, 2f);
+
+            ReflectionUtils.SetFieldValue(thisBaby, "valuableTarget", null);
         }
     }
 }
