@@ -1,6 +1,7 @@
 ﻿using OpJosModREPO.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.Controllers.IAmEnemy
@@ -28,10 +29,23 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
         void FixedUpdate()
         {
-            if (PublicVars.EnemyInBlendMode || isInBlendMode)
-                return;
-
             base.FixedUpdateLogic();
+
+            if (thisBeamer.currentState == EnemyBeamer.State.Idle)
+                ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.Roam });
+
+            if (thisBeamer.currentState == EnemyBeamer.State.Attack)
+            {
+                Quaternion forwardRot = Quaternion.LookRotation(thisBeamer.transform.forward);
+                ReflectionUtils.SetFieldValue(thisBeamer, "aimHorizontalTarget", forwardRot);
+                ReflectionUtils.SetFieldValue(thisBeamer, "aimVerticalTarget", forwardRot);
+                ReflectionUtils.SetFieldValue(thisBeamer, "hitPositionTimer", 0f);
+                ReflectionUtils.SetFieldValue(thisBeamer, "hitPositionStartImpulse", true);
+
+                ReflectionUtils.InvokeMethod(thisBeamer, "RotationLogic", new object[] { });
+                ReflectionUtils.InvokeMethod(thisBeamer, "VerticalAimLogic", new object[] { });
+                ReflectionUtils.InvokeMethod(thisBeamer, "LaserLogic", new object[] { });
+            }
         }
 
         private void handleInput()
