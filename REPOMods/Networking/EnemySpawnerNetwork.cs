@@ -89,5 +89,20 @@ namespace OpJosModREPO.IAmEnemy.Networking
         {
             photonView.RPC("RPC_ControlEnemy", RpcTarget.All, pos, actorNumber, (int)enemyType);
         }
+
+        [PunRPC]
+        public void RPC_TriggerSpecialAttack(Vector3 pos, int actorNumber)
+        {
+            if (!PhotonNetwork.IsMasterClient)
+                return;
+
+            EnemyControllerBase control = GeneralUtil.FindEnemyController(actorNumber);
+            control.SpecialAttack(pos);
+        }
+
+        public void TriggerSpecialAttack(Vector3 pos, int actorNumber)
+        {
+            photonView.RPC("RPC_TriggerSpecialAttack", RpcTarget.MasterClient, pos, actorNumber);
+        }
     }
 }

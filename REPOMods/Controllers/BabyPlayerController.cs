@@ -1,4 +1,5 @@
 ﻿using OpJosModREPO.IAmEnemy;
+using OpJosModREPO.IAmEnemy.Networking;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             base.FixedUpdateLogic();
 
             var heldObject = ReflectionUtils.GetFieldValue<PhysGrabObject>(thisBaby, "valuableTarget");
-            if (heldObject != null)
+            if (heldObject != null && PhotonNetwork.IsMasterClient)
             {
                 ReflectionUtils.InvokeMethod(thisBaby, "ValuableTargetFollow", new object[] { });
             }
@@ -47,51 +48,67 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle)
                 {
-                    var target = ReflectionUtils.GetFieldValue<PhysGrabObject>(thisBaby, "valuableTarget");
-
-                    if (target == null)
+                    if (PhotonNetwork.IsMasterClient)
                     {
-                        Collider[] hits = Physics.OverlapSphere(thisEnemyGameObject.transform.position, 2f, LayerMask.GetMask("PhysGrabObject"));
-                        foreach (var hit in hits)
-                        {
-                            var valObj = hit.GetComponentInParent<ValuableObject>();
-                            if (valObj != null && valObj.volumeType <= ValuableVolume.Type.Big)
-                            {
-                                target = ReflectionUtils.GetFieldValue<PhysGrabObject>(valObj, "physGrabObject");
-                                ReflectionUtils.SetFieldValue(thisBaby, "valuableTarget", target);
-
-                                target.OverrideZeroGravity();
-                                target.OverrideMass(0.5f);
-                                target.OverrideIndestructible();
-                                target.OverrideBreakEffects(0.1f);
-                                target.transform.position = thisBaby.pickupTarget.position;
-                                target.transform.rotation = thisBaby.pickupTarget.rotation;
-                                target.rb.velocity = Vector3.zero;
-                                target.rb.angularVelocity = Vector3.zero;
-
-                                ReflectionUtils.InvokeMethod(thisBaby, "UpdateState", new object[] { EnemyValuableThrower.State.PickUpTarget });
-                                break;
-                            }
-                        }
+                        TriggerPickupOrThrow();
                     }
                     else
                     {
-                        ReflectionUtils.InvokeMethod(thisBaby, "UpdateState", new object[] { EnemyValuableThrower.State.Throw });
-
-                        DelayUtility.RunAfterDelay(0.5f, () => {
-                            Vector3 forwardDir = Camera.main.transform.forward;
-                            Vector3 startPos = thisBaby.pickupTarget.position;
-                            Vector3 targetSpot = startPos + forwardDir * 10f;
-                            CustomThrowAtLocation(targetSpot);
-                        });
-
-                        DelayUtility.RunAfterDelay(0.75f, () => {
-                            ReflectionUtils.InvokeMethod(thisBaby, "UpdateState", new object[] { EnemyValuableThrower.State.Idle });
-                        });
+                        EnemySpawnerNetwork.Instance.TriggerSpecialAttack(Vector3.zero, controlActorNumber);
                     }
                 }
             }
             catch {}
+        }
+
+        public override void SpecialAttack(Vector3 pos)
+        {
+            TriggerPickupOrThrow();
+        }
+
+        public void TriggerPickupOrThrow()
+        {
+            var target = ReflectionUtils.GetFieldValue<PhysGrabObject>(thisBaby, "valuableTarget");
+            if (target == null)
+            {
+                Collider[] hits = Physics.OverlapSphere(thisEnemyGameObject.transform.position, 2f, LayerMask.GetMask("PhysGrabObject"));
+                foreach (var hit in hits)
+                {
+                    var valObj = hit.GetComponentInParent<ValuableObject>();
+                    if (valObj != null && valObj.volumeType <= ValuableVolume.Type.Big)
+                    {
+                        target = ReflectionUtils.GetFieldValue<PhysGrabObject>(valObj, "physGrabObject");
+                        ReflectionUtils.SetFieldValue(thisBaby, "valuableTarget", target);
+
+                        target.OverrideZeroGravity();
+                        target.OverrideMass(0.5f);
+                        target.OverrideIndestructible();
+                        target.OverrideBreakEffects(0.1f);
+                        target.transform.position = thisBaby.pickupTarget.position;
+                        target.transform.rotation = thisBaby.pickupTarget.rotation;
+                        target.rb.velocity = Vector3.zero;
+                        target.rb.angularVelocity = Vector3.zero;
+
+                        ReflectionUtils.InvokeMethod(thisBaby, "UpdateState", new object[] { EnemyValuableThrower.State.PickUpTarget });
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                ReflectionUtils.InvokeMethod(thisBaby, "UpdateState", new object[] { EnemyValuableThrower.State.Throw });
+
+                DelayUtility.RunAfterDelay(0.5f, () => {
+                    Vector3 forwardDir = Camera.main.transform.forward;
+                    Vector3 startPos = thisBaby.pickupTarget.position;
+                    Vector3 targetSpot = startPos + forwardDir * 10f;
+                    CustomThrowAtLocation(targetSpot);
+                });
+
+                DelayUtility.RunAfterDelay(0.75f, () => {
+                    ReflectionUtils.InvokeMethod(thisBaby, "UpdateState", new object[] { EnemyValuableThrower.State.Idle });
+                });
+            }
         }
 
         private void CustomThrowAtLocation(Vector3 targetSpot)

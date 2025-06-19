@@ -218,6 +218,11 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             catch { }
         }
 
+        public virtual void SpecialAttack(Vector3 pos)
+        {
+            mls.LogWarning("Special attack was hit in base controller, it should be override");
+        }
+
         private void TriggerJump()
         {
             if (thisEnemyEnemy == null) return;
