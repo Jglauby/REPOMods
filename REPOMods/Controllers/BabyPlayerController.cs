@@ -2,7 +2,6 @@
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,7 +10,6 @@ namespace OpJosModREPO.Controllers.IAmEnemy
     public class BabyPlayerController : EnemyControllerBase
     {
         public EnemyValuableThrower thisBaby = null;
-        private bool runUpdate = false;
 
         public void Setup(int actorNumber, EnemyValuableThrower baby)
         {
@@ -26,7 +24,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                 return;
 
             base.UpdateLogic();
-            handleInput();
+            HandleInput();
         }
 
         void FixedUpdate()
@@ -53,72 +51,56 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             }
         }
 
-        private void handleInput()
+        private void HandleInput()
         {
-            if (controlActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)//dont listen to keys if not your duck
+            if (controlActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
                 return;
 
             try
             {
-                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle)
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle && thisBaby != null)
                 {
-                    if (thisBaby != null)
+                    var target = ReflectionUtils.GetFieldValue<PhysGrabObject>(thisBaby, "valuableTarget");
+
+                    if (target == null)
                     {
-                        var target = ReflectionUtils.GetFieldValue<PhysGrabObject>(thisBaby, "valuableTarget");
-                        if (target == null)
+                        Collider[] hits = Physics.OverlapSphere(thisEnemyGameObject.transform.position, 5f, LayerMask.GetMask("PhysGrabObject"));
+                        foreach (var hit in hits)
                         {
-                            // Try to find and pick up a new object
-                            Collider[] hits = Physics.OverlapSphere(thisEnemyGameObject.transform.position, 5f, LayerMask.GetMask("PhysGrabObject"));
-                            foreach (var hit in hits)
+                            var valObj = hit.GetComponentInParent<ValuableObject>();
+                            if (valObj != null && valObj.volumeType <= ValuableVolume.Type.Big)
                             {
-                                var valObj = hit.GetComponentInParent<ValuableObject>();
-                                if (valObj != null && valObj.volumeType <= ValuableVolume.Type.Big)
-                                {
-                                    target = ReflectionUtils.GetFieldValue<PhysGrabObject>(valObj, "physGrabObject");
-                                    ReflectionUtils.SetFieldValue(thisBaby, "valuableTarget", target);
+                                target = ReflectionUtils.GetFieldValue<PhysGrabObject>(valObj, "physGrabObject");
+                                ReflectionUtils.SetFieldValue(thisBaby, "valuableTarget", target);
 
-                                    // Attach target visually to hand
-                                    target.OverrideZeroGravity();
-                                    target.OverrideMass(0.5f);
-                                    target.OverrideIndestructible();
-                                    target.OverrideBreakEffects(0.1f);
-                                    target.transform.position = thisBaby.pickupTarget.position;
-                                    target.transform.rotation = thisBaby.pickupTarget.rotation;
-                                    target.rb.velocity = Vector3.zero;
-                                    target.rb.angularVelocity = Vector3.zero;
+                                // Visual attach
+                                target.OverrideZeroGravity();
+                                target.OverrideMass(0.5f);
+                                target.OverrideIndestructible();
+                                target.OverrideBreakEffects(0.1f);
+                                target.transform.position = thisBaby.pickupTarget.position;
+                                target.transform.rotation = thisBaby.pickupTarget.rotation;
+                                target.rb.velocity = Vector3.zero;
+                                target.rb.angularVelocity = Vector3.zero;
 
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            var playerTarget = ReflectionUtils.GetFieldValue<PlayerAvatar>(thisBaby, "playerTarget");
-                            if (playerTarget != null)
-                            {
-                                foreach (var grabber in target.playerGrabbing.ToList())
+                                // Try playing pickup animation
+                                var anim = ReflectionUtils.GetFieldValue<EnemyValuableThrowerAnim>(thisBaby, "anim");
+                                if (anim != null && anim.isActiveAndEnabled)
                                 {
-                                    grabber.photonView?.RPC("ReleaseObjectRPC", RpcTarget.All, false, 0.1f);
+                                    ReflectionUtils.InvokeMethod(anim, "Pickup", new object[] { });
                                 }
 
-                                Vector3 toTarget = playerTarget.PlayerVisionTarget.VisionTransform.position - target.centerPoint;
-                                Vector3 forceDir = Vector3.Lerp(thisBaby.transform.forward, toTarget, 0.5f).normalized;
-                                float force = Mathf.Min(20f * target.rb.mass, 100f);
-
-                                target.ResetMass();
-                                target.ResetIndestructible();
-                                target.rb.AddForce(forceDir * force, ForceMode.Impulse);
-                                target.rb.AddTorque(target.transform.right * 0.5f, ForceMode.Impulse);
-                                PhysGrabObjectImpactDetector impactDetector = ReflectionUtils.GetFieldValue<PhysGrabObjectImpactDetector>(target, "impactDetector");
-                                impactDetector.PlayerHurtMultiplier(5f, 2f);
-
-                                ReflectionUtils.SetFieldValue(thisBaby, "valuableTarget", null);
+                                break;
                             }
                         }
                     }
+                    else
+                    {
+                        ReflectionUtils.InvokeMethod(thisBaby, "Throw", new object[] { });
+                    }
                 }
             }
-            catch { }
-        }  
+            catch {}
+        }
     }
 }
