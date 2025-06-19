@@ -91,18 +91,18 @@ namespace OpJosModREPO.IAmEnemy.Networking
         }
 
         [PunRPC]
-        public void RPC_TriggerSpecialAttack(Vector3 pos, int actorNumber)
+        public void RPC_TriggerSpecialAttack(Vector3 pos, Vector3 rot, int actorNumber)
         {
             if (!PhotonNetwork.IsMasterClient)
                 return;
 
             EnemyControllerBase control = GeneralUtil.FindEnemyController(actorNumber);
-            control.SpecialAttack(pos);
+            control.SpecialAttack(pos, rot);
         }
 
-        public void TriggerSpecialAttack(Vector3 pos, int actorNumber)
+        public void TriggerSpecialAttack(Vector3 pos, Vector3 rot, int actorNumber)
         {
-            photonView.RPC("RPC_TriggerSpecialAttack", RpcTarget.MasterClient, pos, actorNumber);
+            photonView.RPC("RPC_TriggerSpecialAttack", RpcTarget.MasterClient, pos, rot, actorNumber);
         }
     }
 }

@@ -54,14 +54,14 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                     }
                     else
                     {
-                        EnemySpawnerNetwork.Instance.TriggerSpecialAttack(Vector3.zero, controlActorNumber);
+                        EnemySpawnerNetwork.Instance.TriggerSpecialAttack(Vector3.zero, Vector3.zero, controlActorNumber);
                     }
                 }
             }
             catch {}
         }
 
-        public override void SpecialAttack(Vector3 pos)
+        public override void SpecialAttack(Vector3 pos, Vector3 angle)
         {
             TriggerPickupOrThrow();
         }

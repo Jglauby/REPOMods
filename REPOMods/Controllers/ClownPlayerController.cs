@@ -1,6 +1,8 @@
 ﻿using OpJosModREPO.IAmEnemy;
+using OpJosModREPO.IAmEnemy.Networking;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +11,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
     public class ClownPlayerController : EnemyControllerBase
     {
         public EnemyBeamer thisBeamer = null;
+        private Vector3 laserLocation;
+        private Vector3 laserAngle;
 
         public void Setup(int actorNumber, EnemyBeamer beamer)
         {
@@ -34,20 +38,26 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             if (thisBeamer.currentState == EnemyBeamer.State.Idle)
                 ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.Roam });
 
-            if (thisBeamer.currentState == EnemyBeamer.State.Attack && isYourEnemy)
+            if (thisBeamer.currentState == EnemyBeamer.State.Attack)
             {
-                Camera cam = Camera.main;
-                if (cam != null)
+                if (isYourEnemy)
                 {
-                    Vector3 origin = thisBeamer.laserStartTransform.position;
-                    Vector3 direction = cam.transform.forward * 20f;
-                    ReflectionUtils.SetFieldValue(thisBeamer, "aimHorizontalTarget", Quaternion.Euler(0f, cam.transform.eulerAngles.y, 0f));
-                    ReflectionUtils.SetFieldValue(thisBeamer, "hitPosition", origin + direction);
+                    laserAngle = cameraTransform.eulerAngles;
+                    laserLocation = thisBeamer.laserStartTransform.position + cameraTransform.forward * 20f;
+
+                    if (!PhotonNetwork.IsMasterClient)
+                    {
+                        if (syncTimer >= syncInterval)
+                        {
+                            EnemySpawnerNetwork.Instance.TriggerSpecialAttack(laserLocation, laserAngle, controlActorNumber);
+                        }
+                    }
                 }
 
-                ReflectionUtils.InvokeMethod(thisBeamer, "RotationLogic", new object[] { });
-                ReflectionUtils.InvokeMethod(thisBeamer, "VerticalAimLogic", new object[] { });
-                ReflectionUtils.InvokeMethod(thisBeamer, "LaserLogic", new object[] { });
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    ShootLaser();
+                }
             }
         }
 
@@ -78,21 +88,27 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                         DelayUtility.RunAfterDelay(0.5f, () =>
                         {
                             ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.Attack });
-
-                            //set inital aim
-                            Camera cam = Camera.main;
-                            if (cam != null)
-                            {
-                                Vector3 origin = thisBeamer.laserStartTransform.position;
-                                Vector3 direction = cam.transform.forward * 20f;
-                                ReflectionUtils.SetFieldValue(thisBeamer, "hitPosition", origin + direction);
-                                ReflectionUtils.SetFieldValue(thisBeamer, "hitPositionStartImpulse", true);
-                            }
                         });
                     }
                 }
             }
             catch { }
         }  
+
+        public override void SpecialAttack(Vector3 pos, Vector3 angle)
+        {
+            //mls.LogInfo($"updating clown laser position to {pos} and angle to {angle}");
+            laserAngle = angle;
+            laserLocation = pos;
+        }
+
+        private void ShootLaser()
+        {
+            ReflectionUtils.SetFieldValue(thisBeamer, "aimHorizontalTarget", Quaternion.Euler(0f, laserAngle.y, 0f));
+            ReflectionUtils.SetFieldValue(thisBeamer, "hitPosition", laserLocation);
+            ReflectionUtils.InvokeMethod(thisBeamer, "RotationLogic", new object[] { });
+            ReflectionUtils.InvokeMethod(thisBeamer, "VerticalAimLogic", new object[] { });
+            ReflectionUtils.InvokeMethod(thisBeamer, "LaserLogic", new object[] { });
+        }
     }
 }

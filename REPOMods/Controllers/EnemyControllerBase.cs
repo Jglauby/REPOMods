@@ -27,19 +27,19 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         protected bool isYourEnemy = false; //if false means you are host, no client has this controller if it isn't for them
         protected bool isHost = false;
         protected float attackCooldown;
+        protected float syncTimer = 0f;
+        protected float syncInterval = 0.375f;
+        protected Transform cameraTransform;
 
         private Transform thisEnemyTransform;
         private Vector3 moveDirection;
         private float moveSpeed = 3f;
         private float turnSpeed = 3f;
         private float jumpForce = 0.5f;
-        private Transform cameraTransform;
         private float mouseSensitivity = 0.25f;
         private float cameraPitch = 0f;
         private Vector3 cameraOffset = new Vector3(0, 1.75f, -1.75f);
         private float cameraSmoothSpeed = 15f;
-        private float syncTimer = 0f;
-        private float syncInterval = 0.375f;
         private Vector3 targetLookDirection;
         private bool shouldJump = false;
         private bool slowFall = false;
@@ -218,7 +218,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             catch { }
         }
 
-        public virtual void SpecialAttack(Vector3 pos)
+        public virtual void SpecialAttack(Vector3 pos, Vector3 rot)
         {
             mls.LogWarning("Special attack was hit in base controller, it should be override");
         }
