@@ -34,7 +34,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
         private void handleInput()
         {
-            if (controlActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)//dont listen to keys if not your duck
+            if (controlActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)//dont listen to keys if not your enemy
                 return;
         }  
     }
