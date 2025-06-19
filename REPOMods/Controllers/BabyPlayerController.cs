@@ -34,20 +34,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             var heldObject = ReflectionUtils.GetFieldValue<PhysGrabObject>(thisBaby, "valuableTarget");
             if (heldObject != null)
             {
-                Vector3 midPoint = heldObject.midPoint;
-                midPoint.y = heldObject.transform.position.y;
-                Vector3 targetPos = thisBaby.pickupTarget.position;
-
-                heldObject.OverrideZeroGravity();
-                heldObject.OverrideMass(0.5f);
-                heldObject.OverrideIndestructible();
-                heldObject.OverrideBreakEffects(0.1f);
-
-                Vector3 followForce = SemiFunc.PhysFollowPosition(midPoint, targetPos, heldObject.rb.velocity, 5f);
-                heldObject.rb.AddForce(followForce * (5f * Time.fixedDeltaTime), ForceMode.Impulse);
-
-                Vector3 torque = SemiFunc.PhysFollowRotation(heldObject.transform, thisBaby.pickupTarget.rotation, heldObject.rb, 0.5f);
-                heldObject.rb.AddTorque(torque * (5f * Time.fixedDeltaTime), ForceMode.Impulse);
+                ReflectionUtils.InvokeMethod(thisBaby, "ValuableTargetFollow", new object[] { });
             }
         }
 
@@ -58,7 +45,9 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             try
             {
-                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle && thisBaby != null)
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame &&
+                    ConfigVariables.allowAttackToggle &&
+                    thisBaby != null)
                 {
                     var target = ReflectionUtils.GetFieldValue<PhysGrabObject>(thisBaby, "valuableTarget");
 
@@ -73,7 +62,6 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                                 target = ReflectionUtils.GetFieldValue<PhysGrabObject>(valObj, "physGrabObject");
                                 ReflectionUtils.SetFieldValue(thisBaby, "valuableTarget", target);
 
-                                // Visual attach
                                 target.OverrideZeroGravity();
                                 target.OverrideMass(0.5f);
                                 target.OverrideIndestructible();
@@ -83,13 +71,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                                 target.rb.velocity = Vector3.zero;
                                 target.rb.angularVelocity = Vector3.zero;
 
-                                // Try playing pickup animation
-                                var anim = ReflectionUtils.GetFieldValue<EnemyValuableThrowerAnim>(thisBaby, "anim");
-                                if (anim != null && anim.isActiveAndEnabled)
-                                {
-                                    ReflectionUtils.InvokeMethod(anim, "Pickup", new object[] { });
-                                }
-
+                                ReflectionUtils.InvokeMethod(thisBaby, "UpdateState", new object[] { EnemyValuableThrower.State.PickUpTarget });
                                 break;
                             }
                         }
