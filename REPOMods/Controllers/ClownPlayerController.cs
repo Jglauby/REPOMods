@@ -34,13 +34,16 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             if (thisBeamer.currentState == EnemyBeamer.State.Idle)
                 ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.Roam });
 
-            if (thisBeamer.currentState == EnemyBeamer.State.Attack)
+            if (thisBeamer.currentState == EnemyBeamer.State.Attack && isYourEnemy)
             {
-                Quaternion forwardRot = Quaternion.LookRotation(thisBeamer.transform.forward);
-                ReflectionUtils.SetFieldValue(thisBeamer, "aimHorizontalTarget", forwardRot);
-                ReflectionUtils.SetFieldValue(thisBeamer, "aimVerticalTarget", forwardRot);
-                ReflectionUtils.SetFieldValue(thisBeamer, "hitPositionTimer", 0f);
-                ReflectionUtils.SetFieldValue(thisBeamer, "hitPositionStartImpulse", true);
+                Camera cam = Camera.main;
+                if (cam != null)
+                {
+                    Vector3 origin = thisBeamer.laserStartTransform.position;
+                    Vector3 direction = cam.transform.forward * 20f;
+                    ReflectionUtils.SetFieldValue(thisBeamer, "aimHorizontalTarget", Quaternion.Euler(0f, cam.transform.eulerAngles.y, 0f));
+                    ReflectionUtils.SetFieldValue(thisBeamer, "hitPosition", origin + direction);
+                }
 
                 ReflectionUtils.InvokeMethod(thisBeamer, "RotationLogic", new object[] { });
                 ReflectionUtils.InvokeMethod(thisBeamer, "VerticalAimLogic", new object[] { });
@@ -75,6 +78,16 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                         DelayUtility.RunAfterDelay(0.5f, () =>
                         {
                             ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.Attack });
+
+                            //set inital aim
+                            Camera cam = Camera.main;
+                            if (cam != null)
+                            {
+                                Vector3 origin = thisBeamer.laserStartTransform.position;
+                                Vector3 direction = cam.transform.forward * 20f;
+                                ReflectionUtils.SetFieldValue(thisBeamer, "hitPosition", origin + direction);
+                                ReflectionUtils.SetFieldValue(thisBeamer, "hitPositionStartImpulse", true);
+                            }
                         });
                     }
                 }
