@@ -1,6 +1,9 @@
 ﻿using OpJosModREPO.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.Controllers.IAmEnemy
 {
@@ -30,12 +33,63 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                 return;
 
             base.FixedUpdateLogic();
+
+            if (thisTrudge.currentState == EnemySlowWalker.State.Idle)
+                ReflectionUtils.InvokeMethod(thisTrudge, "UpdateState", new object[] { EnemySlowWalker.State.Roam });
         }
 
         private void handleInput()
         {
             if (controlActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)//dont listen to keys if not your enemy
                 return;
-        }  
+
+            try
+            {
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
+                {
+                    ReflectionUtils.InvokeMethod(thisTrudge, "UpdateState", new object[] { EnemySlowWalker.State.Attack });
+
+                    DelayUtility.RunAfterDelay(4f, () =>
+                    {
+                        attackNearbyEnemies();
+                        DelayUtility.RunAfterDelay(1f, () =>
+                        {
+                            ReflectionUtils.InvokeMethod(thisTrudge, "UpdateState", new object[] { EnemySlowWalker.State.Idle });
+                        });
+                    });
+                }
+            }
+            catch { }
+        }
+
+        private void attackNearbyEnemies()
+        {
+            List<Enemy> closeEnemies = GeneralUtil.FindCloseEnemies(thisTrudge.transform.position, 6f);
+            foreach (var enemy in closeEnemies)
+            {
+                if (enemy != null && enemy.GetInstanceID() != thisTrudge.enemy.GetInstanceID())//not controlled enemy
+                {
+                    Vector3 toEnemy = (enemy.transform.position - thisTrudge.transform.position).normalized;
+                    float angle = Vector3.Angle(thisTrudge.transform.forward, toEnemy);
+
+                    if (angle < 50f)
+                    {
+                        EnemyHealth healthComponent = ReflectionUtils.GetFieldValue<EnemyHealth>(enemy, "Health");
+                        if (healthComponent != null)
+                        {
+                            // Get direction from this enemy to enemy beign attacked
+                            Vector3 hurtDir = (enemy.transform.position - thisTrudge.transform.position).normalized;
+
+                            // Call internal method "Hurt"
+                            healthComponent.Hurt(120, hurtDir);
+                        }
+                        else
+                        {
+                            mls.LogError($"Health component not found for enemy: {enemy.name}");
+                        }
+                    }
+                }
+            }
+        }
     }
 }
