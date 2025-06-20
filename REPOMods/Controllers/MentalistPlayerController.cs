@@ -62,6 +62,30 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                 }
             }
             catch { }
+
+            try
+            {
+                if (Keyboard.current[Key.Space].wasPressedThisFrame)
+                {
+                    //move up
+                    EnemyRigidbody erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisEnemyEnemy, "Rigidbody");
+                    Rigidbody rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
+                    rb.AddForce(Vector3.up * 1f, ForceMode.Impulse);
+                }
+            }
+            catch { }
+
+            try
+            {
+                if (Keyboard.current[Key.LeftCtrl].wasPressedThisFrame)
+                {
+                    //move down
+                    EnemyRigidbody erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisEnemyEnemy, "Rigidbody");
+                    Rigidbody rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
+                    rb.AddForce(Vector3.down * 1f, ForceMode.Impulse);
+                }
+            }
+            catch { }
         }  
     }
 }
