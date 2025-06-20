@@ -11,5 +11,6 @@ namespace OpJosModREPO.IAmEnemy
         public static Key toggleBlendModeKey;
         public static bool limitEnemiesPerLevel;
         public static int maxEnemiesPerLevel;
+        public static bool hostOnly;
     }
 }

@@ -13,7 +13,7 @@ namespace OpJosModREPO.IAmEnemy
     {
         private const string modGUID = "OpJosModREPO.IAmEnemy";
         private const string modName = "IAmEnemy";
-        private const string modVersion = "0.7.0";
+        private const string modVersion = "0.7.1";
 
         private readonly Harmony harmoy = new Harmony(modGUID);
         private static OpJosModBase Instance;
@@ -73,6 +73,11 @@ namespace OpJosModREPO.IAmEnemy
                                         Key.B,
                                         "Button to turn on the enemy's AI to blend in as a normal enemy");
 
+            var configHostOnly = Config.Bind("Host Only",
+                            "HostOnly",
+                            false,
+                            "Should only the host be able to turn into enemies?");
+
             ConfigVariables.whatEnemyYouSpawnAs = configWhatEnemySpawn.Value;
             ConfigVariables.allowAttackToggle = configAllowAttackToggle.Value;
             ConfigVariables.attackButtonKey = configAttackButton.Value;
@@ -80,6 +85,7 @@ namespace OpJosModREPO.IAmEnemy
             ConfigVariables.toggleBlendModeKey = configToggleBlendMode.Value;
             ConfigVariables.limitEnemiesPerLevel = configLimitEnemiesPerLevel.Value;
             ConfigVariables.maxEnemiesPerLevel = configMaxEnemiesPerLevel.Value;
+            ConfigVariables.hostOnly = configHostOnly.Value;
         }
     }
 }

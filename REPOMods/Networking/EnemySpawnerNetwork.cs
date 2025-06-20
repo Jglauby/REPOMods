@@ -17,7 +17,7 @@ namespace OpJosModREPO.IAmEnemy.Networking
         [PunRPC]
         public void RPC_RequestSpawnEnemy(Vector3 position, int enemyTypeInt, PhotonMessageInfo info)
         {
-            if (!PhotonNetwork.IsMasterClient)
+            if (!PhotonNetwork.IsMasterClient || ConfigVariables.hostOnly)
                 return;
 
             GeneralUtil.SpawnEnemyAt(position, info.Sender.ActorNumber, (EnemyTypes)enemyTypeInt);
@@ -31,7 +31,7 @@ namespace OpJosModREPO.IAmEnemy.Networking
         [PunRPC]
         public void RPC_SendEnemyMovement(Vector3 movement, Vector3 camForward, int actorNumber, bool jump, PhotonMessageInfo info)
         {
-            if (!PhotonNetwork.IsMasterClient)
+            if (!PhotonNetwork.IsMasterClient || ConfigVariables.hostOnly)
                 return;
 
             EnemyControllerBase control = GeneralUtil.FindEnemyController(actorNumber);
@@ -47,7 +47,7 @@ namespace OpJosModREPO.IAmEnemy.Networking
         [PunRPC]
         public void RPC_EnableEnemyAI(int actorNumber)
         {
-            if (!PhotonNetwork.IsMasterClient)
+            if (!PhotonNetwork.IsMasterClient || ConfigVariables.hostOnly)
                 return;
 
             EnemyControllerBase control = GeneralUtil.FindEnemyController(actorNumber);
@@ -63,7 +63,7 @@ namespace OpJosModREPO.IAmEnemy.Networking
         [PunRPC]
         public void RPC_BreakEnemyAI(int actorNumber)
         {
-            if (!PhotonNetwork.IsMasterClient)
+            if (!PhotonNetwork.IsMasterClient || ConfigVariables.hostOnly)
                 return;
 
             EnemyControllerBase control = GeneralUtil.FindEnemyController(actorNumber);
@@ -79,7 +79,7 @@ namespace OpJosModREPO.IAmEnemy.Networking
         [PunRPC]
         public void RPC_ControlEnemy(Vector3 pos, int actorNumber, int enemyTypeId)
         {
-            if (PhotonNetwork.LocalPlayer.ActorNumber != actorNumber || PhotonNetwork.IsMasterClient)
+            if (PhotonNetwork.LocalPlayer.ActorNumber != actorNumber || PhotonNetwork.IsMasterClient || ConfigVariables.hostOnly)
                 return;
 
             GeneralUtil.ControlClosestEnemy(pos, actorNumber, (EnemyTypes)enemyTypeId);
@@ -93,7 +93,7 @@ namespace OpJosModREPO.IAmEnemy.Networking
         [PunRPC]
         public void RPC_TriggerSpecialAttack(Vector3 pos, Vector3 rot, int actorNumber)
         {
-            if (!PhotonNetwork.IsMasterClient)
+            if (!PhotonNetwork.IsMasterClient || ConfigVariables.hostOnly)
                 return;
 
             EnemyControllerBase control = GeneralUtil.FindEnemyController(actorNumber);
@@ -108,7 +108,7 @@ namespace OpJosModREPO.IAmEnemy.Networking
         [PunRPC]
         public void RPC_TriggerSpecialMovement(int num, int actorNumber)
         {
-            if (!PhotonNetwork.IsMasterClient)
+            if (!PhotonNetwork.IsMasterClient || ConfigVariables.hostOnly)
                 return;
 
             EnemyControllerBase control = GeneralUtil.FindEnemyController(actorNumber);
