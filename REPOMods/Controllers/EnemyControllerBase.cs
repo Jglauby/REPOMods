@@ -223,6 +223,11 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             mls.LogWarning("Special attack was hit in base controller, it should be override");
         }
 
+        public virtual void SpecialMovement(int num)
+        {
+            mls.LogWarning("Special movement was hit in base controller, it should be override");
+        }
+
         private void TriggerJump()
         {
             if (thisEnemyEnemy == null) return;

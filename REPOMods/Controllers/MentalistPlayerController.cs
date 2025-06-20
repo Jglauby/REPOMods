@@ -4,6 +4,7 @@ using Photon.Pun;
 using System;
 using UnityEngine.InputSystem;
 using UnityEngine;
+using OpJosModREPO.IAmEnemy.Networking;
 
 namespace OpJosModREPO.Controllers.IAmEnemy
 {
@@ -67,10 +68,14 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[Key.Space].wasPressedThisFrame)
                 {
-                    //move up
-                    EnemyRigidbody erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisEnemyEnemy, "Rigidbody");
-                    Rigidbody rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
-                    rb.AddForce(Vector3.up * 1f, ForceMode.Impulse);
+                    if (isHost)
+                    {
+                        SpecialMovement(1);
+                    }
+                    else
+                    {
+                        EnemySpawnerNetwork.Instance.TriggerSpecialMovement(1, controlActorNumber);
+                    }
                 }
             }
             catch { }
@@ -79,13 +84,34 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[Key.LeftCtrl].wasPressedThisFrame)
                 {
-                    //move down
-                    EnemyRigidbody erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisEnemyEnemy, "Rigidbody");
-                    Rigidbody rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
-                    rb.AddForce(Vector3.down * 1f, ForceMode.Impulse);
+                    if (isHost)
+                    {
+                        SpecialMovement(0);
+                    }
+                    else
+                    {
+                        EnemySpawnerNetwork.Instance.TriggerSpecialMovement(0, controlActorNumber);
+                    }
                 }
             }
             catch { }
-        }  
+        }
+
+        public override void SpecialMovement(int num)
+        {
+            //1 -> up, 0 -> down
+            if (num == 1)
+            {
+                EnemyRigidbody erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisEnemyEnemy, "Rigidbody");
+                Rigidbody rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
+                rb.AddForce(Vector3.up * 1f, ForceMode.Impulse);
+            }
+            else if (num == 0)
+            {
+                EnemyRigidbody erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisEnemyEnemy, "Rigidbody");
+                Rigidbody rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
+                rb.AddForce(Vector3.down * 1f, ForceMode.Impulse);
+            }
+        }
     }
 }
