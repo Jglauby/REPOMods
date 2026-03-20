@@ -1,6 +1,7 @@
 ﻿using OpJosModREPO.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using REPOMods;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,7 +16,15 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         {
             thisTrudge = trudge;
             var enemy = ReflectionUtils.GetFieldValue<Enemy>(trudge, "enemy");
-            base.OnSetup(actorNumber, trudge.gameObject, enemy, trudge.transform);
+
+            var specs = new EnemySpecs
+            {
+                MoveSpeed = 0.7f,
+                TurnSpeed = 3f,
+                JumpForce = 0.5f,
+                AttackDelay = 10f
+            };
+            base.OnSetup(actorNumber, trudge.gameObject, enemy, trudge.transform, specs);
         }
 
         void Update()
@@ -47,16 +56,18 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
                 {
-                    ReflectionUtils.InvokeMethod(thisTrudge, "UpdateState", new object[] { EnemySlowWalker.State.Attack });
+                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                        ReflectionUtils.InvokeMethod(thisTrudge, "UpdateState", new object[] { EnemySlowWalker.State.Attack });
 
-                    DelayUtility.RunAfterDelay(4f, () =>
-                    {
-                        attackNearbyEnemies();
-                        DelayUtility.RunAfterDelay(1f, () =>
+                        DelayUtility.RunAfterDelay(4f, () =>
                         {
-                            ReflectionUtils.InvokeMethod(thisTrudge, "UpdateState", new object[] { EnemySlowWalker.State.Idle });
+                            attackNearbyEnemies();
+                            DelayUtility.RunAfterDelay(1f, () =>
+                            {
+                                ReflectionUtils.InvokeMethod(thisTrudge, "UpdateState", new object[] { EnemySlowWalker.State.Idle });
+                            });
                         });
-                    });
+                    }
                 }
             }
             catch { }

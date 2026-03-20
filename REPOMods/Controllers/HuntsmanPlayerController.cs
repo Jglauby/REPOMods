@@ -2,8 +2,9 @@
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
 using Photon.Realtime;
-using System.Reflection;
+using REPOMods;
 using System;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,7 +18,15 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         {
             thisHunter = hunter;
             var enemy = ReflectionUtils.GetFieldValue<Enemy>(hunter, "enemy");
-            base.OnSetup(actorNumber, hunter.gameObject, enemy, hunter.transform);
+
+            var specs = new EnemySpecs
+            {
+                MoveSpeed = 2.7f,
+                TurnSpeed = 3f,
+                JumpForce = 0.5f,
+                AttackDelay = 25f
+            };
+            base.OnSetup(actorNumber, hunter.gameObject, enemy, hunter.transform, specs);
         }
 
         void Update()
@@ -46,29 +55,31 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle)
                 {
-                    Vector3 targetPosition = Camera.main.transform.position + Camera.main.transform.forward * 10f;
+                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                        Vector3 targetPosition = Camera.main.transform.position + Camera.main.transform.forward * 10f;
 
-                    ReflectionUtils.SetFieldValue(thisHunter, "investigatePoint", targetPosition);
-                    ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Idle });
-                    ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Aim });
-                    mls.LogInfo("Set hunter to Aim at: " + targetPosition);
+                        ReflectionUtils.SetFieldValue(thisHunter, "investigatePoint", targetPosition);
+                        ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Idle });
+                        ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Aim });
+                        mls.LogInfo("Set hunter to Aim at: " + targetPosition);
 
-                    //wait after aim and then shoot
-                    DelayUtility.RunAfterDelay(0.5f, () => {
-                        ReflectionUtils.InvokeMethod(thisHunter, "StateShoot", null);
+                        //wait after aim and then shoot
+                        DelayUtility.RunAfterDelay(0.5f, () => {
+                            ReflectionUtils.InvokeMethod(thisHunter, "StateShoot", null);
 
-                        //wait after shooting and then set state to ShootEnd
-                        DelayUtility.RunAfterDelay(0.25f, () => {
-                            ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.ShootEnd });
-                        });
+                            //wait after shooting and then set state to ShootEnd
+                            DelayUtility.RunAfterDelay(0.25f, () => {
+                                ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.ShootEnd });
+                            });
 
-                        //set it back to idle after a delay
-                        DelayUtility.RunAfterDelay(0.5f, () =>
-                        {
-                            ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Idle });
-                            mls.LogInfo("Returned hunter to Idle.");
-                        });
-                    });
+                            //set it back to idle after a delay
+                            DelayUtility.RunAfterDelay(0.5f, () =>
+                            {
+                                ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Idle });
+                                mls.LogInfo("Returned hunter to Idle.");
+                            });
+                        });                    
+                    }
                 }
             }
             catch (Exception e) { mls.LogError(e); }

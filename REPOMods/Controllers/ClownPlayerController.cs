@@ -2,6 +2,7 @@
 using OpJosModREPO.IAmEnemy.Networking;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using REPOMods;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -20,7 +21,15 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         {
             thisBeamer = beamer;
             var enemy = ReflectionUtils.GetFieldValue<Enemy>(beamer, "enemy");
-            base.OnSetup(actorNumber, beamer.gameObject, enemy, beamer.transform);
+
+            var specs = new EnemySpecs
+            {
+                MoveSpeed = 1.7f,
+                TurnSpeed = 3f,
+                JumpForce = 0.5f,
+                AttackDelay = 6f
+            };
+            base.OnSetup(actorNumber, beamer.gameObject, enemy, beamer.transform, specs);
             ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.Roam }); //roam instead of idle so it can get walk animations
         }
 
@@ -77,15 +86,17 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
                 {
-                    if (thisBeamer.currentState == EnemyBeamer.State.Attack)
-                    {
-                        mls.LogInfo("Stopping clown attack mode");
-                        ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.Roam });
-                    }
-                    else if (ConfigVariables.allowAttackToggle)
-                    {
-                        mls.LogInfo("Starting clown attack mode");
-                        ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.Attack });
+                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                        if (thisBeamer.currentState == EnemyBeamer.State.Attack)
+                        {
+                            mls.LogInfo("Stopping clown attack mode");
+                            ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.Roam });
+                        }
+                        else if (ConfigVariables.allowAttackToggle)
+                        {
+                            mls.LogInfo("Starting clown attack mode");
+                            ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.Attack });
+                        }
                     }
                 }
             }

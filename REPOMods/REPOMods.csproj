@@ -104,6 +104,7 @@
     <Compile Include="Controllers\RobePlayerController.cs" />
     <Compile Include="Controllers\EnemyControllerBase.cs" />
     <Compile Include="EnemyMaps.cs" />
+    <Compile Include="EnemySpecs.cs" />
     <Compile Include="EnemyTypes.cs" />
     <Compile Include="Utility\DelayUtility.cs" />
     <Compile Include="Controllers\DuckPlayerController.cs" />

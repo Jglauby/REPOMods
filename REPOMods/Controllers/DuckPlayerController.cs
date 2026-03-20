@@ -3,6 +3,7 @@ using OpJosModREPO.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Networking;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using REPOMods;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -16,7 +17,15 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         public void Setup(int actorNumber, EnemyDuck duck)
         {
             thisDuck = duck;
-            base.OnSetup(actorNumber, duck.gameObject, duck.enemy, duck.transform);
+
+            var specs = new EnemySpecs
+            {
+                MoveSpeed = 2.7f,
+                TurnSpeed = 3f,
+                JumpForce = 0.7f,
+                AttackDelay = 3f
+            };
+            base.OnSetup(actorNumber, duck.gameObject, duck.enemy, duck.transform, specs);
         }
 
         void Update()
@@ -57,15 +66,17 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
                 {
-                    if (thisDuck.currentState == EnemyDuck.State.AttackStart)
-                    {
-                        mls.LogInfo("Stopping duck attack mode");
-                        ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.Idle });
-                    }
-                    else if (ConfigVariables.allowAttackToggle)
-                    {
-                        mls.LogInfo("Starting duck attack mode");
-                        ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.AttackStart });
+                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                        if (thisDuck.currentState == EnemyDuck.State.AttackStart)
+                        {
+                            mls.LogInfo("Stopping duck attack mode");
+                            ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.Idle });
+                        }
+                        else if (ConfigVariables.allowAttackToggle)
+                        {
+                            mls.LogInfo("Starting duck attack mode");
+                            ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.AttackStart });
+                        }
                     }
                 }
             }

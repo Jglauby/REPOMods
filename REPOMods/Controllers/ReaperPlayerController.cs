@@ -1,6 +1,7 @@
 ﻿using OpJosModREPO.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using REPOMods;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,7 +16,15 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         {
             thisRunner = runner;
             var enemy = ReflectionUtils.GetFieldValue<Enemy>(runner, "enemy");
-            base.OnSetup(actorNumber, runner.gameObject, enemy, runner.transform);
+
+            var specs = new EnemySpecs
+            {
+                MoveSpeed = 1.7f,
+                TurnSpeed = 3f,
+                JumpForce = 0.5f,
+                AttackDelay = 0.1f
+            };
+            base.OnSetup(actorNumber, runner.gameObject, enemy, runner.transform, specs);
         }
 
         void Update()
@@ -59,15 +68,17 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
                 {
-                    if (thisRunner.currentState == EnemyRunner.State.AttackPlayer)
-                    {
-                        mls.LogInfo("Stopping reaper attack mode");
-                        ReflectionUtils.InvokeMethod(thisRunner, "UpdateState", new object[] { EnemyRunner.State.Idle });
-                    }
-                    else if (ConfigVariables.allowAttackToggle)
-                    {
-                        mls.LogInfo("Starting reaper attack mode");
-                        ReflectionUtils.InvokeMethod(thisRunner, "UpdateState", new object[] { EnemyRunner.State.AttackPlayer });
+                    DelayUtility.RunAfterDelay(attackDelay, () => {
+                        if (thisRunner.currentState == EnemyRunner.State.AttackPlayer)
+                        {
+                            mls.LogInfo("Stopping reaper attack mode");
+                            ReflectionUtils.InvokeMethod(thisRunner, "UpdateState", new object[] { EnemyRunner.State.Idle });
+                        }
+                        else if (ConfigVariables.allowAttackToggle)
+                        {
+                            mls.LogInfo("Starting reaper attack mode");
+                            ReflectionUtils.InvokeMethod(thisRunner, "UpdateState", new object[] { EnemyRunner.State.AttackPlayer });
+                        }
                     }
                 }
             }

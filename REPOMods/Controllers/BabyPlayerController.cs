@@ -2,6 +2,7 @@
 using OpJosModREPO.IAmEnemy.Networking;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using REPOMods;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -16,7 +17,15 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         {
             thisBaby = baby;
             var enemy = ReflectionUtils.GetFieldValue<Enemy>(baby, "enemy");
-            base.OnSetup(actorNumber, baby.gameObject, enemy, baby.transform);
+
+            var specs = new EnemySpecs
+            {
+                MoveSpeed = 2.3f,
+                TurnSpeed = 3f,
+                JumpForce = 0.4f,
+                AttackDelay = 1f
+            };
+            base.OnSetup(actorNumber, baby.gameObject, enemy, baby.transform, specs);
         }
 
         void Update()
@@ -48,13 +57,15 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle)
                 {
-                    if (PhotonNetwork.IsMasterClient)
-                    {
-                        TriggerPickupOrThrow();
-                    }
-                    else
-                    {
-                        EnemySpawnerNetwork.Instance.TriggerSpecialAttack(Vector3.zero, Vector3.zero, controlActorNumber);
+                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                        if (PhotonNetwork.IsMasterClient)
+                        {
+                            TriggerPickupOrThrow();
+                        }
+                        else
+                        {
+                            EnemySpawnerNetwork.Instance.TriggerSpecialAttack(Vector3.zero, Vector3.zero, controlActorNumber);
+                        }
                     }
                 }
             }
@@ -63,7 +74,10 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
         public override void SpecialAttack(Vector3 pos, Vector3 angle)
         {
-            TriggerPickupOrThrow();
+            DelayUtility.RunAfterDelay(attackDelay, () =>
+            {
+                TriggerPickupOrThrow();
+            }
         }
 
         public void TriggerPickupOrThrow()

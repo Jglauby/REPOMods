@@ -3,6 +3,7 @@ using OpJosModREPO.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Networking;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using REPOMods;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -33,9 +34,6 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         private float syncInterval = 0.375f;
         private Transform thisEnemyTransform;
         private Vector3 moveDirection;
-        private float moveSpeed = 2.7f;
-        private float turnSpeed = 3f;
-        private float jumpForce = 0.5f;
         private float mouseSensitivity = 0.25f;
         private float cameraPitch = 0f;
         private Vector3 cameraOffset = new Vector3(0, 1.75f, -1.75f);
@@ -45,13 +43,24 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         private bool slowFall = false;
         private GameObject nightLight;
 
-        protected void OnSetup(int actorNumber, GameObject enemyGameObject, Enemy thisEnemy, Transform enemyTransform)
+        //enemy specs
+        private float moveSpeed = 2.7f;
+        private float turnSpeed = 3f;
+        private float jumpForce = 0.5f;
+        public float attackDelay = 2f;
+
+        protected void OnSetup(int actorNumber, GameObject enemyGameObject, Enemy thisEnemy, Transform enemyTransform, EnemySpecs specs)
         {
             controlActorNumber = actorNumber;
             isHost = PhotonNetwork.IsMasterClient;
             thisEnemyGameObject = enemyGameObject;
             thisEnemyEnemy = thisEnemy;
             thisEnemyTransform = enemyTransform;
+
+            moveSpeed = specs.MoveSpeed;
+            turnSpeed = specs.TurnSpeed;
+            jumpForce = specs.JumpForce;
+            attackDelay = specs.AttackDelay;
 
             erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisEnemy, "Rigidbody");
             rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");

@@ -1,10 +1,11 @@
 ﻿using OpJosModREPO.IAmEnemy;
+using OpJosModREPO.IAmEnemy.Networking;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using REPOMods;
 using System;
-using UnityEngine.InputSystem;
 using UnityEngine;
-using OpJosModREPO.IAmEnemy.Networking;
+using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.Controllers.IAmEnemy
 {
@@ -16,7 +17,15 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         {
             thisMentalist = mentalist;
             var enemy = ReflectionUtils.GetFieldValue<Enemy>(mentalist, "enemy");
-            base.OnSetup(actorNumber, mentalist.gameObject, enemy, mentalist.transform);
+
+            var specs = new EnemySpecs
+            {
+                MoveSpeed = 2.7f,
+                TurnSpeed = 3f,
+                JumpForce = 0.5f,
+                AttackDelay = 0.1f
+            };
+            base.OnSetup(actorNumber, mentalist.gameObject, enemy, mentalist.transform, specs);
         }
 
         void Update()
@@ -45,20 +54,22 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle)
                 {
-                    if (thisMentalist.currentState == EnemyFloater.State.Attack)
-                    {
-                        mls.LogInfo("Stopping mentalist attack");
-                        ReflectionUtils.InvokeMethod(thisMentalist, "UpdateState", new object[] { EnemyFloater.State.Idle });
-                    }
-                    else
-                    {
-                        mls.LogInfo("Starting mentalist attack");
-                        ReflectionUtils.InvokeMethod(thisMentalist, "UpdateState", new object[] { EnemyFloater.State.ChargeAttack });
-
-                        DelayUtility.RunAfterDelay(0.5f, () =>
+                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                        if (thisMentalist.currentState == EnemyFloater.State.Attack)
                         {
-                            ReflectionUtils.InvokeMethod(thisMentalist, "UpdateState", new object[] { EnemyFloater.State.Attack });
-                        });
+                            mls.LogInfo("Stopping mentalist attack");
+                            ReflectionUtils.InvokeMethod(thisMentalist, "UpdateState", new object[] { EnemyFloater.State.Idle });
+                        }
+                        else
+                        {
+                            mls.LogInfo("Starting mentalist attack");
+                            ReflectionUtils.InvokeMethod(thisMentalist, "UpdateState", new object[] { EnemyFloater.State.ChargeAttack });
+
+                            DelayUtility.RunAfterDelay(0.5f, () =>
+                            {
+                                ReflectionUtils.InvokeMethod(thisMentalist, "UpdateState", new object[] { EnemyFloater.State.Attack });
+                            });
+                        }                    
                     }
                 }
             }

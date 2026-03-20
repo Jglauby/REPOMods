@@ -1,6 +1,7 @@
 ﻿using OpJosModREPO.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using REPOMods;
 
 namespace OpJosModREPO.Controllers.IAmEnemy
 {
@@ -12,7 +13,15 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         {
             thisRobe = robe;
             var enemy = ReflectionUtils.GetFieldValue<Enemy>(robe, "enemy");
-            base.OnSetup(actorNumber, robe.gameObject, enemy, robe.transform);
+
+            var specs = new EnemySpecs
+            {
+                MoveSpeed = 2.7f,
+                TurnSpeed = 3f,
+                JumpForce = 0.5f,
+                AttackDelay = 0.1f
+            };
+            base.OnSetup(actorNumber, robe.gameObject, enemy, robe.transform, specs);
         }
 
         void Update()

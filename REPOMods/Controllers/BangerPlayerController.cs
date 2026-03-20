@@ -1,6 +1,7 @@
 ﻿using OpJosModREPO.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
+using REPOMods;
 using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.Controllers.IAmEnemy
@@ -13,7 +14,15 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         {
             thisBang = bang;
             var enemy = ReflectionUtils.GetFieldValue<Enemy>(bang, "enemy");
-            base.OnSetup(actorNumber, bang.gameObject, enemy, bang.transform);
+
+            var specs = new EnemySpecs
+            {
+                MoveSpeed = 2.7f,
+                TurnSpeed = 3f,
+                JumpForce = 0.5f,
+                AttackDelay = 0.1f
+            };
+            base.OnSetup(actorNumber, bang.gameObject, enemy, bang.transform, specs);
         }
 
         void Update()
@@ -42,7 +51,9 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
                 {
-                    ReflectionUtils.InvokeMethod(thisBang, "ExplodeRPC", new object[] { });
+                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                        ReflectionUtils.InvokeMethod(thisBang, "ExplodeRPC", new object[] { });
+                    }
                 }
             }
             catch { }
