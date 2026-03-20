@@ -473,10 +473,45 @@ namespace OpJosModREPO.IAmEnemy.Util
             if (pc.cameraGameObjectLocal != null)
                 pc.cameraGameObjectLocal.SetActive(true);
 
-            // Restore camera aim
+            // Restore camera aim (use reflection to call game method that may have been renamed)
             DelayUtility.RunAfterDelay(0.25f, () =>
             {
-                CameraAim.Instance?.CameraAimSpawn(pc.transform.eulerAngles.y);
+                try
+                {
+                    Type camAimType = Type.GetType("CameraAim");
+                    if (camAimType == null)
+                    {
+                        foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+                        {
+                            camAimType = asm.GetType("CameraAim");
+                            if (camAimType != null) break;
+                        }
+                    }
+
+                    if (camAimType != null)
+                    {
+                        // Try common static instance/property names
+                        object camAimInstance = camAimType.GetProperty("Instance", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)?.GetValue(null)
+                            ?? camAimType.GetField("instance", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)?.GetValue(null)
+                            ?? camAimType.GetField("Instance", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)?.GetValue(null);
+
+                        if (camAimInstance != null)
+                        {
+                            try
+                            {
+                                ReflectionUtils.InvokeMethod(camAimInstance, "CameraAimSpawn", new object[] { pc.transform.eulerAngles.y });
+                            }
+                            catch (Exception ex)
+                            {
+                                mls.LogWarning($"Could not invoke CameraAimSpawn via ReflectionUtils: {ex.Message}");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    mls.LogWarning($"Could not call CameraAimSpawn: {ex.Message}");
+                }
             });
         }
 

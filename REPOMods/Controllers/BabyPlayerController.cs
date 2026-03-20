@@ -123,7 +123,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (!SemiFunc.IsMultiplayer())
                 {
-                    item.ReleaseObject();
+                    // Release locally with default values matching the RPC signature
+                    item.ReleaseObjectRPC(false, 0.1f, 0);
                     continue;
                 }
 

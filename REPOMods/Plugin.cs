@@ -60,7 +60,7 @@ namespace OpJosModREPO.IAmEnemy
 
             var configAttackButton = Config.Bind("Attack Mode Button",
                                         "AttackModeButton",
-                                        Key.E,
+                                        Key.R,
                                         "Button to toggle on and off enemy's attack or to trigger an attack (depends on enemy)");
 
             var configSelfDestructButton = Config.Bind("Self Destruct Button",
@@ -75,7 +75,7 @@ namespace OpJosModREPO.IAmEnemy
 
             var configHostOnly = Config.Bind("Host Only",
                             "HostOnly",
-                            false,
+                            true,
                             "Should only the host be able to turn into enemies?");
 
             ConfigVariables.whatEnemyYouSpawnAs = configWhatEnemySpawn.Value;
