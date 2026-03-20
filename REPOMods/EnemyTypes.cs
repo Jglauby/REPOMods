@@ -2,6 +2,7 @@
 {
     public enum EnemyTypes
     {
+        ChooseEnemy = -1,
         Random = 0,
         ShadowChild = 1,
         Gnome = 2,

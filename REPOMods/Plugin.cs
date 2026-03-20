@@ -40,7 +40,7 @@ namespace OpJosModREPO.IAmEnemy
         {
             var configWhatEnemySpawn = Config.Bind("What Enemy You Spawn As",
                                         "WhatEnemySpawnAs",
-                                        EnemyTypes.Random,
+                                        EnemyTypes.ChooseEnemy,
                                         "Which enemy do you want to spawn as?");
 
             var configLimitEnemiesPerLevel = Config.Bind("Limit Enemy Spawns Per Level",
