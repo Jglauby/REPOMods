@@ -256,6 +256,21 @@ namespace OpJosModREPO.IAmEnemy.Util
                 ReflectionUtils.InvokeMethod(controller, "Setup", new object[] { actorNumber, specificEnemy });
 
                 mls.LogInfo("Control transferred to the enemy.");
+
+                // Ensure the camera is correctly attached for the player who took control
+                try
+                {
+                    var controllerAsBase = controller as EnemyControllerBase;
+                    if (controllerAsBase != null && PhotonNetwork.LocalPlayer.ActorNumber == actorNumber)
+                    {
+                        controllerAsBase.ResetCameraToEnemy();
+                        mls.LogInfo("Reset camera to newly controlled enemy.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    mls.LogWarning($"Failed to reset camera after taking control: {ex.Message}");
+                }
             }
             else
             {

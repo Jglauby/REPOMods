@@ -33,7 +33,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         private float syncInterval = 0.375f;
         private Transform thisEnemyTransform;
         private Vector3 moveDirection;
-        private float moveSpeed = 3f;
+        private float moveSpeed = 2.7f;
         private float turnSpeed = 3f;
         private float jumpForce = 0.5f;
         private float mouseSensitivity = 0.25f;
@@ -71,6 +71,44 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             }
 
             cameraTransform = Camera.main.transform; // Get the main camera
+        }
+
+        // Reattach the main camera to this enemy (used when switching view back to enemy)
+        public void ResetCameraToEnemy()
+        {
+            if (thisEnemyGameObject == null)
+            {
+                mls.LogWarning("Cannot reset camera to enemy: thisEnemyGameObject is null.");
+                return;
+            }
+
+            Camera cam = Camera.main ?? GameObject.FindObjectOfType<Camera>();
+            if (cam == null)
+            {
+                mls.LogWarning("No camera found to reset to enemy.");
+                return;
+            }
+
+            // Disable player controller and attach camera to enemy
+            if (PlayerController.instance != null)
+                PlayerController.instance.enabled = false;
+
+            cam.tag = "MainCamera";
+            cam.enabled = true;
+            cam.gameObject.SetActive(true);
+
+            cam.transform.SetParent(thisEnemyGameObject.transform);
+            cam.transform.localPosition = cameraOffset;
+            cam.transform.localRotation = Quaternion.identity;
+            cam.transform.localScale = Vector3.one;
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
+            AddGlobalLight();
+
+            cameraTransform = cam.transform;
+            mls.LogInfo("Camera reattached to enemy.");
         }
 
         public void UpdateMovementAndRotation(Vector3 movement, Vector3 camForward, bool jump)
@@ -171,6 +209,11 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         {
             if (controlActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)//dont listen to keys if not your enemy
                 return;
+
+            if (Keyboard.current.eKey.wasPressedThisFrame && PhotonNetwork.IsMasterClient)
+            {
+                ResetCameraToEnemy();
+            }
 
             if (Keyboard.current.spaceKey.wasPressedThisFrame && PhotonNetwork.IsMasterClient)
             {
