@@ -87,10 +87,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigVariables.cs" />
+    <Compile Include="Controllers\ElsaPlayerController.cs" />
+    <Compile Include="Controllers\BirthdayBoyPlayerController.cs" />
+    <Compile Include="Controllers\BellaPlayerController.cs" />
+    <Compile Include="Controllers\LoomPlayerController.cs" />
     <Compile Include="Controllers\ReaperPlayerController.cs" />
     <Compile Include="Controllers\ClownPlayerController.cs" />
     <Compile Include="Controllers\PeeperPlayerController.cs" />
     <Compile Include="Controllers\GnomePlayerController.cs" />
+    <Compile Include="Controllers\OoglyPlayerController.cs" />
     <Compile Include="Controllers\ShadowChildPlayerController.cs" />
     <Compile Include="Controllers\HeadManPlayerController.cs" />
     <Compile Include="Controllers\HuntsmanPlayerController.cs" />

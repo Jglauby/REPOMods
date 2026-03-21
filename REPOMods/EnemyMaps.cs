@@ -120,6 +120,11 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Trudge, typeof(TrudgePlayerController) },
             { EnemyTypes.Upscream, typeof(UpscreamPlayerController) },
             { EnemyTypes.Mentalist, typeof(MentalistPlayerController) },
+            { EnemyTypes.Oogly, typeof(OoglyPlayerController) },
+            { EnemyTypes.Loom, typeof(LoomPlayerController) },
+            { EnemyTypes.Bella, typeof(BellaPlayerController) },
+            { EnemyTypes.BirthdayBoy, typeof(BirthdayBoyPlayerController) },
+            { EnemyTypes.Elsa, typeof(ElsaPlayerController) },
         };
 
         public static Type GetControllerType(EnemyTypes type)
