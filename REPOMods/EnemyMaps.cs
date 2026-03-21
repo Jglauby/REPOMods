@@ -26,7 +26,12 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Huntsman, "Enemies/Enemy - Hunter" },
             { EnemyTypes.Reaper, "Enemies/Enemy - Runner" },
             { EnemyTypes.Clown, "Enemies/Enemy - Beamer" },
-            { EnemyTypes.Trudge, "Enemies/Enemy - Slow Walker" }
+            { EnemyTypes.Trudge, "Enemies/Enemy - Slow Walker" },
+            { EnemyTypes.Oogly, "Enemies/Enemy - Oogly" },
+            { EnemyTypes.BirthdayBoy, "Enemies/Enemy - Birthday boy" },
+            { EnemyTypes.Loom, "Enemies/Enemy - Shadow" },
+            { EnemyTypes.Bella, "Enemies/Enemy - Tricycle" },
+            { EnemyTypes.Elsa, "Enemies/Enemy - Elsa" }
         };
 
         public static string GetPrefabPath(EnemyTypes type)
@@ -38,6 +43,12 @@ namespace OpJosModREPO.IAmEnemy
 
             return null;
         }
+
+        //Oogly(Clone) -> flying green spotlight bug thing
+        //Birthday boy(Clone) -> lil boy whos mad i broke his baloons
+        //Shadow(Clone) -> taller black girl creepy face graby hands
+        //Tricycle(Clone) -> litearlly a trike
+        //Elsa(Clone) -> the dog
 
         private static readonly Dictionary<EnemyTypes, Type> enemyComponentTypes = new Dictionary<EnemyTypes, Type>()
         {
@@ -59,7 +70,12 @@ namespace OpJosModREPO.IAmEnemy
             { EnemyTypes.Huntsman, typeof(EnemyHunter) },
             { EnemyTypes.Reaper, typeof(EnemyRunner) },
             { EnemyTypes.Clown, typeof(EnemyBeamer) },
-            { EnemyTypes.Trudge, typeof(EnemySlowWalker) }
+            { EnemyTypes.Trudge, typeof(EnemySlowWalker) },
+            { EnemyTypes.Oogly, typeof(EnemyOogly) },
+            { EnemyTypes.Loom, typeof(EnemyShadow) },
+            { EnemyTypes.Bella, typeof(EnemyTricycle) },
+            { EnemyTypes.BirthdayBoy, typeof(EnemyBirthdayBoy) },
+            { EnemyTypes.Elsa, typeof(EnemyElsa) }
         };
 
         public static Type GetEnemyType(EnemyTypes type)

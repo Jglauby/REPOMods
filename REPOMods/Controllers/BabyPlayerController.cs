@@ -57,7 +57,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    {
                         if (PhotonNetwork.IsMasterClient)
                         {
                             TriggerPickupOrThrow();
@@ -66,7 +67,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                         {
                             EnemySpawnerNetwork.Instance.TriggerSpecialAttack(Vector3.zero, Vector3.zero, controlActorNumber);
                         }
-                    }
+                    });
                 }
             }
             catch {}
@@ -77,7 +78,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             DelayUtility.RunAfterDelay(attackDelay, () =>
             {
                 TriggerPickupOrThrow();
-            }
+            });
         }
 
         public void TriggerPickupOrThrow()

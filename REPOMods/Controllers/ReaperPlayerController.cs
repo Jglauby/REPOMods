@@ -68,7 +68,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () => {
+                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    {
                         if (thisRunner.currentState == EnemyRunner.State.AttackPlayer)
                         {
                             mls.LogInfo("Stopping reaper attack mode");
@@ -79,7 +80,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                             mls.LogInfo("Starting reaper attack mode");
                             ReflectionUtils.InvokeMethod(thisRunner, "UpdateState", new object[] { EnemyRunner.State.AttackPlayer });
                         }
-                    }
+                    });
                 }
             }
             catch { }

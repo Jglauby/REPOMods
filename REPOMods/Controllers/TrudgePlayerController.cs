@@ -56,7 +56,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    {
                         ReflectionUtils.InvokeMethod(thisTrudge, "UpdateState", new object[] { EnemySlowWalker.State.Attack });
 
                         DelayUtility.RunAfterDelay(4f, () =>
@@ -67,7 +68,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                                 ReflectionUtils.InvokeMethod(thisTrudge, "UpdateState", new object[] { EnemySlowWalker.State.Idle });
                             });
                         });
-                    }
+                    });
                 }
             }
             catch { }

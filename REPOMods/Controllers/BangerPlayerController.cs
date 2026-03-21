@@ -51,9 +51,10 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    {
                         ReflectionUtils.InvokeMethod(thisBang, "ExplodeRPC", new object[] { });
-                    }
+                    });
                 }
             }
             catch { }

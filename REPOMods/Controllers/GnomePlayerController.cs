@@ -51,7 +51,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    {
                         if (thisGnome.currentState == EnemyGnome.State.Attack)
                         {
                             mls.LogInfo("Stopping gnome attack mode");
@@ -61,8 +62,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                         {
                             mls.LogInfo("Starting gnome attack mode");
                             ReflectionUtils.InvokeMethod(thisGnome, "UpdateState", new object[] { EnemyGnome.State.Attack });
-                        }                   
-                    }
+                        }
+                    });
                 }
             }
             catch { }

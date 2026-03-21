@@ -198,7 +198,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                     Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z);
 
                     // Dampen the horizontal speed gradually (like friction)
-                    horizontalVelocity = Vector3.Lerp(horizontalVelocity, Vector3.zero, Time.fixedDeltaTime * 5f);
+                    horizontalVelocity = Vector3.Lerp(horizontalVelocity, Vector3.zero, Time.fixedDeltaTime * 5.5f);
 
                     // Apply the damped velocity back
                     rb.velocity = new Vector3(horizontalVelocity.x, velocity.y, horizontalVelocity.z);

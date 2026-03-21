@@ -55,7 +55,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    {
                         Vector3 targetPosition = Camera.main.transform.position + Camera.main.transform.forward * 10f;
 
                         ReflectionUtils.SetFieldValue(thisHunter, "investigatePoint", targetPosition);
@@ -64,11 +65,13 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                         mls.LogInfo("Set hunter to Aim at: " + targetPosition);
 
                         //wait after aim and then shoot
-                        DelayUtility.RunAfterDelay(0.5f, () => {
+                        DelayUtility.RunAfterDelay(0.5f, () =>
+                        {
                             ReflectionUtils.InvokeMethod(thisHunter, "StateShoot", null);
 
                             //wait after shooting and then set state to ShootEnd
-                            DelayUtility.RunAfterDelay(0.25f, () => {
+                            DelayUtility.RunAfterDelay(0.25f, () =>
+                            {
                                 ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.ShootEnd });
                             });
 
@@ -78,8 +81,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                                 ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Idle });
                                 mls.LogInfo("Returned hunter to Idle.");
                             });
-                        });                    
-                    }
+                        });
+                    });
                 }
             }
             catch (Exception e) { mls.LogError(e); }

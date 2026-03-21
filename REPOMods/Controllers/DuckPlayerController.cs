@@ -66,7 +66,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    {
                         if (thisDuck.currentState == EnemyDuck.State.AttackStart)
                         {
                             mls.LogInfo("Stopping duck attack mode");
@@ -77,7 +78,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                             mls.LogInfo("Starting duck attack mode");
                             ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.AttackStart });
                         }
-                    }
+                    });
                 }
             }
             catch { }

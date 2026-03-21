@@ -51,7 +51,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    {
                         if (thisBowtie.currentState == EnemyBowtie.State.Yell)
                         {
                             mls.LogInfo("Stopping bowtie attack mode");
@@ -67,7 +68,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                             mls.LogInfo("Starting bowtie attack mode");
                             ReflectionUtils.InvokeMethod(thisBowtie, "UpdateState", new object[] { EnemyBowtie.State.Yell });
                         }
-                    }
+                    });
                 }
             }
             catch { }

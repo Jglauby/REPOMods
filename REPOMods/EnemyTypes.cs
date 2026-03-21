@@ -18,6 +18,11 @@
         Reaper = 12,
         Clown = 13,
         Trudge = 14,
+        Oogly = 15,
+        Loom = 16, 
+        Bella = 17,
+        BirthdayBoy= 18,
+        Elsa = 19
         //Peeper = 1,
         //Animal = 7,
         //Chef = 9,

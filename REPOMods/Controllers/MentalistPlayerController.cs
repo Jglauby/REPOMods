@@ -54,7 +54,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    {
                         if (thisMentalist.currentState == EnemyFloater.State.Attack)
                         {
                             mls.LogInfo("Stopping mentalist attack");
@@ -69,8 +70,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                             {
                                 ReflectionUtils.InvokeMethod(thisMentalist, "UpdateState", new object[] { EnemyFloater.State.Attack });
                             });
-                        }                    
-                    }
+                        }
+                    });
                 }
             }
             catch { }

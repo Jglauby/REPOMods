@@ -86,7 +86,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () => { 
+                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    {
                         if (thisBeamer.currentState == EnemyBeamer.State.Attack)
                         {
                             mls.LogInfo("Stopping clown attack mode");
@@ -97,7 +98,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                             mls.LogInfo("Starting clown attack mode");
                             ReflectionUtils.InvokeMethod(thisBeamer, "UpdateState", new object[] { EnemyBeamer.State.Attack });
                         }
-                    }
+                    });
                 }
             }
             catch { }
