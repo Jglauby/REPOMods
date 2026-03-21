@@ -44,12 +44,6 @@ namespace OpJosModREPO.IAmEnemy
             return null;
         }
 
-        //Oogly(Clone) -> flying green spotlight bug thing
-        //Birthday boy(Clone) -> lil boy whos mad i broke his baloons
-        //Shadow(Clone) -> taller black girl creepy face graby hands
-        //Tricycle(Clone) -> litearlly a trike
-        //Elsa(Clone) -> the dog
-
         private static readonly Dictionary<EnemyTypes, Type> enemyComponentTypes = new Dictionary<EnemyTypes, Type>()
         {
             { EnemyTypes.Duck, typeof(EnemyDuck) },
