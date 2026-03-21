@@ -22,6 +22,13 @@ namespace OpJosModREPO.IAmEnemy.Patches
         [HarmonyPostfix]
         static void PlayerDeathPatch(PlayerAvatar __instance)
         {
+            if (ConfigVariables.whatEnemyYouSpawnAs == EnemyTypes.ChooseEnemy)
+            {
+                mls.LogInfo("Opening enemy chooser UI for player selection");
+                PublicVars.BeginChooseEnemy(__instance.transform.position);
+                return;
+            }
+
             PublicVars.SetNextSpawnType();
             if (ConfigVariables.limitEnemiesPerLevel && PublicVars.TimesSpawnedEnemy >= ConfigVariables.maxEnemiesPerLevel)
             {

@@ -17,7 +17,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             var specs = new EnemySpecs
             {
-                MoveSpeed = 2.7f,
+                MoveSpeed = 9f,
                 TurnSpeed = 3f,
                 JumpForce = 0.5f,
                 AttackDelay = 0.1f
