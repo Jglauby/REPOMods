@@ -2,6 +2,7 @@
 using HarmonyLib;
 using OpJosModREPO.Controllers.IAmEnemy;
 using OpJosModREPO.IAmEnemy.Networking;
+using OpJosModREPO.IAmEnemy.UI;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
 using System;
@@ -25,7 +26,7 @@ namespace OpJosModREPO.IAmEnemy.Patches
             if (ConfigVariables.whatEnemyYouSpawnAs == EnemyTypes.ChooseEnemy)
             {
                 mls.LogInfo("Opening enemy chooser UI for player selection");
-                PublicVars.BeginChooseEnemy(__instance.transform.position);
+                EnemySelector.BeginChooseEnemy(__instance.transform.position);
                 return;
             }
 

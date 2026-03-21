@@ -122,7 +122,8 @@
     <Compile Include="EnemyMaps.cs" />
     <Compile Include="EnemySpecs.cs" />
     <Compile Include="EnemyTypes.cs" />
-    <Compile Include="UI\EnemySelectorBehaviour.cs" />
+    <Compile Include="Patches\SpectateCameraPatch.cs" />
+    <Compile Include="UI\EnemySelector.cs" />
     <Compile Include="Utility\DelayUtility.cs" />
     <Compile Include="Controllers\DuckPlayerController.cs" />
     <Compile Include="Utility\GeneralUtil.cs" />
