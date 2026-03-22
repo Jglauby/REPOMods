@@ -52,26 +52,24 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             try
             {
-                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle)
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle && timeSinceLastAttack >= attackDelay)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    lastAttackTime = Time.time;
+                    if (thisMentalist.currentState == EnemyFloater.State.Attack)
                     {
-                        if (thisMentalist.currentState == EnemyFloater.State.Attack)
-                        {
-                            mls.LogInfo("Stopping mentalist attack");
-                            ReflectionUtils.InvokeMethod(thisMentalist, "UpdateState", new object[] { EnemyFloater.State.Idle });
-                        }
-                        else
-                        {
-                            mls.LogInfo("Starting mentalist attack");
-                            ReflectionUtils.InvokeMethod(thisMentalist, "UpdateState", new object[] { EnemyFloater.State.ChargeAttack });
+                        mls.LogInfo("Stopping mentalist attack");
+                        ReflectionUtils.InvokeMethod(thisMentalist, "UpdateState", new object[] { EnemyFloater.State.Idle });
+                    }
+                    else
+                    {
+                        mls.LogInfo("Starting mentalist attack");
+                        ReflectionUtils.InvokeMethod(thisMentalist, "UpdateState", new object[] { EnemyFloater.State.ChargeAttack });
 
-                            DelayUtility.RunAfterDelay(0.5f, () =>
-                            {
-                                ReflectionUtils.InvokeMethod(thisMentalist, "UpdateState", new object[] { EnemyFloater.State.Attack });
-                            });
-                        }
-                    });
+                        DelayUtility.RunAfterDelay(0.5f, () =>
+                        {
+                            ReflectionUtils.InvokeMethod(thisMentalist, "UpdateState", new object[] { EnemyFloater.State.Attack });
+                        });
+                    }
                 }
             }
             catch { }

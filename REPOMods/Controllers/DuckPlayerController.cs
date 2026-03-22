@@ -64,21 +64,19 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             try
             {
-                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle && timeSinceLastAttack >= attackDelay)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    lastAttackTime = Time.time;
+                    if (thisDuck.currentState == EnemyDuck.State.AttackStart)
                     {
-                        if (thisDuck.currentState == EnemyDuck.State.AttackStart)
-                        {
-                            mls.LogInfo("Stopping duck attack mode");
-                            ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.Idle });
-                        }
-                        else if (ConfigVariables.allowAttackToggle)
-                        {
-                            mls.LogInfo("Starting duck attack mode");
-                            ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.AttackStart });
-                        }
-                    });
+                        mls.LogInfo("Stopping duck attack mode");
+                        ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.Idle });
+                    }
+                    else if (ConfigVariables.allowAttackToggle)
+                    {
+                        mls.LogInfo("Starting duck attack mode");
+                        ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.AttackStart });
+                    }
                 }
             }
             catch { }

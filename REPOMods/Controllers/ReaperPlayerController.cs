@@ -66,21 +66,19 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             try
             {
-                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle && timeSinceLastAttack >= attackDelay)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    lastAttackTime = Time.time;
+                    if (thisRunner.currentState == EnemyRunner.State.AttackPlayer)
                     {
-                        if (thisRunner.currentState == EnemyRunner.State.AttackPlayer)
-                        {
-                            mls.LogInfo("Stopping reaper attack mode");
-                            ReflectionUtils.InvokeMethod(thisRunner, "UpdateState", new object[] { EnemyRunner.State.Idle });
-                        }
-                        else if (ConfigVariables.allowAttackToggle)
-                        {
-                            mls.LogInfo("Starting reaper attack mode");
-                            ReflectionUtils.InvokeMethod(thisRunner, "UpdateState", new object[] { EnemyRunner.State.AttackPlayer });
-                        }
-                    });
+                        mls.LogInfo("Stopping reaper attack mode");
+                        ReflectionUtils.InvokeMethod(thisRunner, "UpdateState", new object[] { EnemyRunner.State.Idle });
+                    }
+                    else if (ConfigVariables.allowAttackToggle)
+                    {
+                        mls.LogInfo("Starting reaper attack mode");
+                        ReflectionUtils.InvokeMethod(thisRunner, "UpdateState", new object[] { EnemyRunner.State.AttackPlayer });
+                    }
                 }
             }
             catch { }

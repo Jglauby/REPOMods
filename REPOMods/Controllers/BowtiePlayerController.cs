@@ -2,6 +2,7 @@
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
 using REPOMods;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.Controllers.IAmEnemy
@@ -49,26 +50,24 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             try
             {
-                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle && timeSinceLastAttack >= attackDelay)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    lastAttackTime = Time.time;
+                    if (thisBowtie.currentState == EnemyBowtie.State.Yell)
                     {
-                        if (thisBowtie.currentState == EnemyBowtie.State.Yell)
-                        {
-                            mls.LogInfo("Stopping bowtie attack mode");
-                            ReflectionUtils.InvokeMethod(thisBowtie, "UpdateState", new object[] { EnemyBowtie.State.YellEnd });
+                        mls.LogInfo("Stopping bowtie attack mode");
+                        ReflectionUtils.InvokeMethod(thisBowtie, "UpdateState", new object[] { EnemyBowtie.State.YellEnd });
 
-                            DelayUtility.RunAfterDelay(0.25f, () =>
-                            {
-                                ReflectionUtils.InvokeMethod(thisBowtie, "UpdateState", new object[] { EnemyBowtie.State.Idle });
-                            });
-                        }
-                        else if (ConfigVariables.allowAttackToggle)
+                        DelayUtility.RunAfterDelay(0.25f, () =>
                         {
-                            mls.LogInfo("Starting bowtie attack mode");
-                            ReflectionUtils.InvokeMethod(thisBowtie, "UpdateState", new object[] { EnemyBowtie.State.Yell });
-                        }
-                    });
+                            ReflectionUtils.InvokeMethod(thisBowtie, "UpdateState", new object[] { EnemyBowtie.State.Idle });
+                        });
+                    }
+                    else if (ConfigVariables.allowAttackToggle)
+                    {
+                        mls.LogInfo("Starting bowtie attack mode");
+                        ReflectionUtils.InvokeMethod(thisBowtie, "UpdateState", new object[] { EnemyBowtie.State.Yell });
+                    }
                 }
             }
             catch { }

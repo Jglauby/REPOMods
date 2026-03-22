@@ -53,34 +53,33 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             try
             {
-                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle)
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle && timeSinceLastAttack >= attackDelay)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    lastAttackTime = Time.time;
+
+                    Vector3 targetPosition = Camera.main.transform.position + Camera.main.transform.forward * 10f;
+
+                    ReflectionUtils.SetFieldValue(thisHunter, "investigatePoint", targetPosition);
+                    ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Idle });
+                    ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Aim });
+                    mls.LogInfo("Set hunter to Aim at: " + targetPosition);
+
+                    //wait after aim and then shoot
+                    DelayUtility.RunAfterDelay(0.5f, () =>
                     {
-                        Vector3 targetPosition = Camera.main.transform.position + Camera.main.transform.forward * 10f;
+                        ReflectionUtils.InvokeMethod(thisHunter, "StateShoot", null);
 
-                        ReflectionUtils.SetFieldValue(thisHunter, "investigatePoint", targetPosition);
-                        ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Idle });
-                        ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Aim });
-                        mls.LogInfo("Set hunter to Aim at: " + targetPosition);
+                        //wait after shooting and then set state to ShootEnd
+                        DelayUtility.RunAfterDelay(0.25f, () =>
+                        {
+                            ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.ShootEnd });
+                        });
 
-                        //wait after aim and then shoot
+                        //set it back to idle after a delay
                         DelayUtility.RunAfterDelay(0.5f, () =>
                         {
-                            ReflectionUtils.InvokeMethod(thisHunter, "StateShoot", null);
-
-                            //wait after shooting and then set state to ShootEnd
-                            DelayUtility.RunAfterDelay(0.25f, () =>
-                            {
-                                ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.ShootEnd });
-                            });
-
-                            //set it back to idle after a delay
-                            DelayUtility.RunAfterDelay(0.5f, () =>
-                            {
-                                ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Idle });
-                                mls.LogInfo("Returned hunter to Idle.");
-                            });
+                            ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Idle });
+                            mls.LogInfo("Returned hunter to Idle.");
                         });
                     });
                 }

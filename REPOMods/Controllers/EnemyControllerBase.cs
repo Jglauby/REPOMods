@@ -42,6 +42,15 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         private bool shouldJump = false;
         private bool slowFall = false;
         private GameObject nightLight;
+        public float lastAttackTime = -Mathf.Infinity;
+        public float timeSinceLastAttack
+        {
+            get
+            {
+                return Time.time - lastAttackTime;
+            }
+        }
+
 
         //enemy specs
         private float moveSpeed = 2.7f;

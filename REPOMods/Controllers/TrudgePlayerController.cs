@@ -54,19 +54,17 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             try
             {
-                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle && timeSinceLastAttack >= attackDelay)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () =>
-                    {
-                        ReflectionUtils.InvokeMethod(thisTrudge, "UpdateState", new object[] { EnemySlowWalker.State.Attack });
+                    lastAttackTime = Time.time;
+                    ReflectionUtils.InvokeMethod(thisTrudge, "UpdateState", new object[] { EnemySlowWalker.State.Attack });
 
-                        DelayUtility.RunAfterDelay(4f, () =>
+                    DelayUtility.RunAfterDelay(4f, () =>
+                    {
+                        attackNearbyEnemies();
+                        DelayUtility.RunAfterDelay(1f, () =>
                         {
-                            attackNearbyEnemies();
-                            DelayUtility.RunAfterDelay(1f, () =>
-                            {
-                                ReflectionUtils.InvokeMethod(thisTrudge, "UpdateState", new object[] { EnemySlowWalker.State.Idle });
-                            });
+                            ReflectionUtils.InvokeMethod(thisTrudge, "UpdateState", new object[] { EnemySlowWalker.State.Idle });
                         });
                     });
                 }

@@ -2,6 +2,7 @@
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
 using REPOMods;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.Controllers.IAmEnemy
@@ -49,12 +50,10 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             try
             {
-                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle && timeSinceLastAttack >= attackDelay)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () =>
-                    {
-                        ReflectionUtils.InvokeMethod(thisBang, "ExplodeRPC", new object[] { });
-                    });
+                    lastAttackTime = Time.time;
+                    ReflectionUtils.InvokeMethod(thisBang, "ExplodeRPC", new object[] { });
                 }
             }
             catch { }

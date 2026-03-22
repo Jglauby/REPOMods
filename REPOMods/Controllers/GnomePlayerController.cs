@@ -2,6 +2,7 @@
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
 using REPOMods;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.Controllers.IAmEnemy
@@ -49,21 +50,19 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             try
             {
-                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame)
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle && timeSinceLastAttack >= attackDelay)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    lastAttackTime = Time.time;
+                    if (thisGnome.currentState == EnemyGnome.State.Attack)
                     {
-                        if (thisGnome.currentState == EnemyGnome.State.Attack)
-                        {
-                            mls.LogInfo("Stopping gnome attack mode");
-                            ReflectionUtils.InvokeMethod(thisGnome, "UpdateState", new object[] { EnemyGnome.State.Idle });
-                        }
-                        else if (ConfigVariables.allowAttackToggle)
-                        {
-                            mls.LogInfo("Starting gnome attack mode");
-                            ReflectionUtils.InvokeMethod(thisGnome, "UpdateState", new object[] { EnemyGnome.State.Attack });
-                        }
-                    });
+                        mls.LogInfo("Stopping gnome attack mode");
+                        ReflectionUtils.InvokeMethod(thisGnome, "UpdateState", new object[] { EnemyGnome.State.Idle });
+                    }
+                    else if (ConfigVariables.allowAttackToggle)
+                    {
+                        mls.LogInfo("Starting gnome attack mode");
+                        ReflectionUtils.InvokeMethod(thisGnome, "UpdateState", new object[] { EnemyGnome.State.Attack });
+                    }
                 }
             }
             catch { }

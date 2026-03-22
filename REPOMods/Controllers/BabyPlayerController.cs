@@ -55,19 +55,18 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             try
             {
-                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle)
+                if (Keyboard.current[ConfigVariables.attackButtonKey].wasPressedThisFrame && ConfigVariables.allowAttackToggle && timeSinceLastAttack >= attackDelay)
                 {
-                    DelayUtility.RunAfterDelay(attackDelay, () =>
+                    lastAttackTime = Time.time;
+
+                    if (PhotonNetwork.IsMasterClient)
                     {
-                        if (PhotonNetwork.IsMasterClient)
-                        {
-                            TriggerPickupOrThrow();
-                        }
-                        else
-                        {
-                            EnemySpawnerNetwork.Instance.TriggerSpecialAttack(Vector3.zero, Vector3.zero, controlActorNumber);
-                        }
-                    });
+                        TriggerPickupOrThrow();
+                    }
+                    else
+                    {
+                        EnemySpawnerNetwork.Instance.TriggerSpecialAttack(Vector3.zero, Vector3.zero, controlActorNumber);
+                    }
                 }
             }
             catch {}
