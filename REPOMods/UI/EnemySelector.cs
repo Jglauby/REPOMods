@@ -1,3 +1,4 @@
+using BepInEx.Logging;
 using OpJosModREPO.IAmEnemy.Networking;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
@@ -11,6 +12,11 @@ namespace OpJosModREPO.IAmEnemy.UI
 {
     public static class EnemySelector
     {
+        private static ManualLogSource mls;
+        public static void SetLogSource(ManualLogSource logSource)
+        {
+            mls = logSource;
+        }
         private static EnemyTypes[] _values;
         private static int _selectedIndex = 0;
         private static bool IsChoosingEnemy = false;
@@ -51,14 +57,14 @@ namespace OpJosModREPO.IAmEnemy.UI
             else if (kb.enterKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame)
             {
                 var chosen = _values[_selectedIndex];
-                Debug.Log($"[IAmEnemy] Player chose {chosen}");
+                mls.LogInfo($"Player chose {chosen}");
                 CompleteEnemySelection(chosen);
                 RestoreOriginalTextAndCleanup();
                 IsChoosingEnemy = false;
             }
             else if (kb.escapeKey.wasPressedThisFrame)
             {
-                Debug.Log("[IAmEnemy] Selection cancelled");
+                mls.LogInfo("Selection cancelled");
                 IsChoosingEnemy = false;
                 RestoreOriginalTextAndCleanup();
             }
@@ -78,7 +84,7 @@ namespace OpJosModREPO.IAmEnemy.UI
             // Enforce limits and perform spawn using the same logic as PlayerAvatarPatch
             if (ConfigVariables.limitEnemiesPerLevel && PublicVars.TimesSpawnedEnemy >= ConfigVariables.maxEnemiesPerLevel)
             {
-                Debug.Log("[IAmEnemy] Can't spawn enemy again, set to spectate");
+                mls.LogInfo("Can't spawn enemy again, set to spectate");
                 GeneralUtil.ReleaseEnemyControlToSpectate();
                 return;
             }
@@ -87,13 +93,13 @@ namespace OpJosModREPO.IAmEnemy.UI
 
             if (PhotonNetwork.IsMasterClient)
             {
-                Debug.Log("[IAmEnemy] Confirmed selection, spawning enemy as host");
+                mls.LogInfo("Confirmed selection, spawning enemy as host");
                 GeneralUtil.SpawnEnemyAt(PendingSpawnPosition, 1, PublicVars.NextSpawnType);
             }
             else
             {
-                Debug.Log("[IAmEnemy] Confirmed selection, sending spawn enemy request to host");
-                Debug.Log($"[CLIENT] Sending enemy spawn request. My actor number: {PhotonNetwork.LocalPlayer.ActorNumber}");
+                mls.LogInfo("Confirmed selection, sending spawn enemy request to host");
+                mls.LogInfo($"Sending enemy spawn request. My actor number: {PhotonNetwork.LocalPlayer.ActorNumber}");
                 EnemySpawnerNetwork.Instance.RequestSpawnEnemy(PendingSpawnPosition, PublicVars.NextSpawnType);
             }
         }
@@ -123,7 +129,7 @@ namespace OpJosModREPO.IAmEnemy.UI
             }
             catch { }
 
-            Debug.Log($"[IAmEnemy] Selecting: {_values[_selectedIndex]}");
+            mls.LogInfo($"Selecting: {_values[_selectedIndex]}");
         }
     }
 }
