@@ -119,5 +119,20 @@ namespace OpJosModREPO.IAmEnemy.Networking
         {
             photonView.RPC("RPC_TriggerSpecialMovement", RpcTarget.MasterClient, num, actorNumber);
         }
+
+        [PunRPC]
+        public void RPC_TriggerFlightMovement(int num, int actorNumber)
+        {
+            if (!PhotonNetwork.IsMasterClient || ConfigVariables.hostOnly)
+                return;
+
+            EnemyControllerBase control = GeneralUtil.FindEnemyController(actorNumber);
+            control.FlightMovement(num);
+        }
+
+        public void TriggerFlightMovement(int num, int actorNumber)
+        {
+            photonView.RPC("RPC_TriggerFlightMovement", RpcTarget.MasterClient, num, actorNumber);
+        }
     }
 }

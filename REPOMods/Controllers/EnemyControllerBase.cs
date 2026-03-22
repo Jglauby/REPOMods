@@ -50,13 +50,15 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                 return Time.time - lastAttackTime;
             }
         }
-
+        private float lastWalkInput = -1;
+        private bool movingAnimationOverrides = false;
 
         //enemy specs
         private float moveSpeed = 2.7f;
         private float turnSpeed = 3f;
         private float jumpForce = 0.5f;
         public float attackDelay = 2f;
+        private bool flyingEnemy = false;
 
         protected void OnSetup(int actorNumber, GameObject enemyGameObject, Enemy thisEnemy, Transform enemyTransform, EnemySpecs specs)
         {
@@ -65,11 +67,13 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             thisEnemyGameObject = enemyGameObject;
             thisEnemyEnemy = thisEnemy;
             thisEnemyTransform = enemyTransform;
+            movingAnimationOverrides = specs.MovingAnimationOverrides;
 
             moveSpeed = specs.MoveSpeed;
             turnSpeed = specs.TurnSpeed;
             jumpForce = specs.JumpForce;
             attackDelay = specs.AttackDelay;
+            flyingEnemy = specs.FlyingEnemy;
 
             erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisEnemy, "Rigidbody");
             rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
@@ -88,7 +92,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                 AddGlobalLight();
             }
 
-            cameraTransform = Camera.main.transform; // Get the main camera
+            cameraTransform = Camera.main.transform; // Get the main camera   
         }
 
         // Reattach the main camera to this enemy (used when switching view back to enemy)
@@ -180,6 +184,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             }
 
             handleInput();
+            handleAnimations();
         }
 
         protected void FixedUpdateLogic()
@@ -277,6 +282,78 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                 }
             }
             catch { }
+
+            if (flyingEnemy)
+            {
+                try
+                {
+                    if (Keyboard.current[Key.Space].wasPressedThisFrame)
+                    {
+                        if (isHost)
+                        {
+                            FlightMovement(1);
+                        }
+                        else
+                        {
+                            EnemySpawnerNetwork.Instance.TriggerFlightMovement(1, controlActorNumber);
+                        }
+                    }
+                }
+                catch { }
+
+                try
+                {
+                    if (Keyboard.current[Key.LeftCtrl].wasPressedThisFrame)
+                    {
+                        if (isHost)
+                        {
+                            FlightMovement(0);
+                        }
+                        else
+                        {
+                            EnemySpawnerNetwork.Instance.TriggerFlightMovement(0, controlActorNumber);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+
+        private void handleAnimations()
+        {
+            if (!movingAnimationOverrides) return;
+
+            try
+            {
+                if (Keyboard.current[Key.W].isPressed || Keyboard.current[Key.A].isPressed || Keyboard.current[Key.S].isPressed || Keyboard.current[Key.D].isPressed)
+                {
+                    int currSecond = Mathf.FloorToInt(Time.time);
+                    if (currSecond % 2 == 0 && currSecond != lastWalkInput)
+                    {
+                        lastWalkInput = currSecond;
+                        SetMoveAnimation();
+                    }
+                }
+                else
+                {
+                    int currSecond = Mathf.FloorToInt(Time.time);
+                    if (currSecond % 2 == 0 && currSecond != lastWalkInput)
+                    {
+                        SetStationaryAnimation();
+                    }
+                }
+            }
+            catch { }
+        }
+
+        public virtual void SetMoveAnimation()
+        {
+            mls.LogWarning("SetMoveAnimation was hit in base controller, it should be override");
+        }
+
+        public virtual void SetStationaryAnimation()
+        {
+            mls.LogWarning("SetStationaryAnimation was hit in base controller, it should be override");
         }
 
         public virtual void SpecialAttack(Vector3 pos, Vector3 rot)
@@ -287,6 +364,23 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         public virtual void SpecialMovement(int num)
         {
             mls.LogWarning("Special movement was hit in base controller, it should be override");
+        }
+
+        public void FlightMovement(int num)
+        {
+            //1 -> up, 0 -> down
+            if (num == 1)
+            {
+                EnemyRigidbody erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisEnemyEnemy, "Rigidbody");
+                Rigidbody rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
+                rb.AddForce(Vector3.up * 1f, ForceMode.Impulse);
+            }
+            else if (num == 0)
+            {
+                EnemyRigidbody erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisEnemyEnemy, "Rigidbody");
+                Rigidbody rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
+                rb.AddForce(Vector3.down * 1f, ForceMode.Impulse);
+            }
         }
 
         private void TriggerJump()

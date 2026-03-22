@@ -2,6 +2,7 @@ using OpJosModREPO.IAmEnemy.Networking;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -13,6 +14,8 @@ namespace OpJosModREPO.IAmEnemy.UI
         private static EnemyTypes[] _values;
         private static int _selectedIndex = 0;
         private static bool IsChoosingEnemy = false;
+        private static float lastShownNoteTime = -1;
+        private static float lastSwappedSelection = -1;
 
         public static Vector3 PendingSpawnPosition = Vector3.zero;
 
@@ -37,11 +40,13 @@ namespace OpJosModREPO.IAmEnemy.UI
             {
                 _selectedIndex = Mathf.Clamp(_selectedIndex - 1, 0, _values.Length - 1);
                 RefreshHighlight();
+                lastSwappedSelection = Time.time;
             }
             else if (kb.downArrowKey.wasPressedThisFrame)
             {
                 _selectedIndex = Mathf.Clamp(_selectedIndex + 1, 0, _values.Length - 1);
                 RefreshHighlight();
+                lastSwappedSelection = Time.time;
             }
             else if (kb.enterKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame)
             {
@@ -56,6 +61,12 @@ namespace OpJosModREPO.IAmEnemy.UI
                 Debug.Log("[IAmEnemy] Selection cancelled");
                 IsChoosingEnemy = false;
                 RestoreOriginalTextAndCleanup();
+            }
+            else if (Mathf.FloorToInt(Time.time) % 4 == 0 && Mathf.FloorToInt(Time.time) != lastShownNoteTime && 
+                Time.time - lastSwappedSelection >= 4)//nothign pressed in a bit
+            {
+                lastShownNoteTime = Mathf.FloorToInt(Time.time);
+                SpectateNameUI.instance.SetName("Arrow Keys To Select Enemy. Enter to confirm.");
             }
         }
 

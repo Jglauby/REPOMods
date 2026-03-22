@@ -1,7 +1,10 @@
 ﻿using OpJosModREPO.IAmEnemy;
+using OpJosModREPO.IAmEnemy.Networking;
 using OpJosModREPO.IAmEnemy.Util;
 using Photon.Pun;
 using REPOMods;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace OpJosModREPO.Controllers.IAmEnemy
 {
@@ -19,9 +22,11 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                 MoveSpeed = 2.7f,
                 TurnSpeed = 3f,
                 JumpForce = 0.5f,
-                AttackDelay = 0.1f
+                AttackDelay = 0.1f,
+                FlyingEnemy = true
             };
             base.OnSetup(actorNumber, oogly.gameObject, enemy, oogly.transform, specs);
+            thisOogly.enemyRigidbody.gravity = false;
         }
 
         void Update()
@@ -45,6 +50,6 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         {
             if (controlActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)//dont listen to keys if not your enemy
                 return;
-        }  
+        }
     }
 }

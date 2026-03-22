@@ -24,7 +24,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                 MoveSpeed = 2.7f,
                 TurnSpeed = 3f,
                 JumpForce = 0.5f,
-                AttackDelay = 25f
+                AttackDelay = 25f,
+                MovingAnimationOverrides = true
             };
             base.OnSetup(actorNumber, hunter.gameObject, enemy, hunter.transform, specs);
         }
@@ -85,6 +86,16 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                 }
             }
             catch (Exception e) { mls.LogError(e); }
+        }
+
+        public override void SetMoveAnimation()
+        {
+            ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.InvestigateWalk });
+        }
+
+        public override void SetStationaryAnimation()
+        {
+            ReflectionUtils.InvokeMethod(thisHunter, "UpdateState", new object[] { EnemyHunter.State.Idle });
         }
     }
 }
