@@ -39,6 +39,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         private Vector3 cameraOffset = new Vector3(0, 1.75f, -1.75f);
         private float cameraSmoothSpeed = 15f;
         private Vector3 targetLookDirection;
+        private float lastJumpAt = -1f;
         private bool shouldJump = false;
         private bool slowFall = false;
         private GameObject nightLight;
@@ -58,7 +59,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
         private float turnSpeed = 3f;
         private float jumpForce = 0.5f;
         public float attackDelay = 2f;
-        private bool flyingEnemy = false;
+        public bool flyingEnemy = false;
 
         protected void OnSetup(int actorNumber, GameObject enemyGameObject, Enemy thisEnemy, Transform enemyTransform, EnemySpecs specs)
         {
@@ -385,13 +386,23 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
         private void TriggerJump()
         {
-            if (thisEnemyEnemy == null) return;
+            if (thisEnemyEnemy == null || (Time.time - lastJumpAt < 0.8f) || flyingEnemy) return;
 
             object enemyJump = ReflectionUtils.GetFieldValue<object>(thisEnemyEnemy, "Jump");
-            if (enemyJump == null) return;
-
-            ReflectionUtils.InvokeMethod(enemyJump, "StuckTrigger", new object[] { Vector3.up });
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            if (enemyJump != null)
+            {
+                ReflectionUtils.InvokeMethod(enemyJump, "StuckTrigger", new object[] { Vector3.up });
+            }
+            else
+            {
+                lastJumpAt = Time.time;
+                rb.useGravity = false;
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                DelayUtility.RunAfterDelay(0.55f, () =>
+                {
+                    rb.useGravity = true;
+                });
+            }
         }
 
         private void AddGlobalLight()

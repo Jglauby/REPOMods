@@ -21,8 +21,6 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             var specs = new EnemySpecs
             {
                 MoveSpeed = 2.7f,
-                TurnSpeed = 3f,
-                JumpForce = 0.7f,
                 AttackDelay = 3f
             };
             base.OnSetup(actorNumber, duck.gameObject, duck.enemy, duck.transform, specs);
@@ -71,11 +69,15 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                     {
                         mls.LogInfo("Stopping duck attack mode");
                         ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.Idle });
+                        flyingEnemy = false;
+                        rb.useGravity = true;
                     }
                     else if (ConfigVariables.allowAttackToggle)
                     {
                         mls.LogInfo("Starting duck attack mode");
                         ReflectionUtils.InvokeMethod(thisDuck, "UpdateState", new object[] { EnemyDuck.State.AttackStart });
+                        flyingEnemy = true;
+                        rb.useGravity = false;
                     }
                 }
             }
