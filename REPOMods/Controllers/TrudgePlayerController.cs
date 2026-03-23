@@ -21,7 +21,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 MoveSpeed = 0.7f,
                 TurnSpeed = 3f,
-                JumpForce = 0.5f,
+                JumpForce = 3f,
                 AttackDelay = 10f
             };
             base.OnSetup(actorNumber, trudge.gameObject, enemy, trudge.transform, specs);

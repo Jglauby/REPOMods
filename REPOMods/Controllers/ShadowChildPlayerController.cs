@@ -16,9 +16,9 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             var specs = new EnemySpecs
             {
-                MoveSpeed = 2.7f,
+                MoveSpeed = 4f,
                 TurnSpeed = 3f,
-                JumpForce = 0.5f,
+                JumpForce = 3f,
                 AttackDelay = 0.1f
             };
             base.OnSetup(actorNumber, thinMan.gameObject, enemy, thinMan.transform, specs);

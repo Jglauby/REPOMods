@@ -20,7 +20,6 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 MoveSpeed = 1.7f,
                 TurnSpeed = 3f,
-                JumpForce = 0.5f,
                 AttackDelay = 5f
             };
             base.OnSetup(actorNumber, bowtie.gameObject, enemy, bowtie.transform, specs);

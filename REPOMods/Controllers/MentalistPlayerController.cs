@@ -22,8 +22,8 @@ namespace OpJosModREPO.Controllers.IAmEnemy
             {
                 MoveSpeed = 2.7f,
                 TurnSpeed = 3f,
-                JumpForce = 0.5f,
-                AttackDelay = 0.1f
+                AttackDelay = 0.1f,
+                FlyingEnemy = true,
             };
             base.OnSetup(actorNumber, mentalist.gameObject, enemy, mentalist.transform, specs);
         }
@@ -73,55 +73,6 @@ namespace OpJosModREPO.Controllers.IAmEnemy
                 }
             }
             catch { }
-
-            try
-            {
-                if (Keyboard.current[Key.Space].wasPressedThisFrame)
-                {
-                    if (isHost)
-                    {
-                        SpecialMovement(1);
-                    }
-                    else
-                    {
-                        EnemySpawnerNetwork.Instance.TriggerSpecialMovement(1, controlActorNumber);
-                    }
-                }
-            }
-            catch { }
-
-            try
-            {
-                if (Keyboard.current[Key.LeftCtrl].wasPressedThisFrame)
-                {
-                    if (isHost)
-                    {
-                        SpecialMovement(0);
-                    }
-                    else
-                    {
-                        EnemySpawnerNetwork.Instance.TriggerSpecialMovement(0, controlActorNumber);
-                    }
-                }
-            }
-            catch { }
-        }
-
-        public override void SpecialMovement(int num)
-        {
-            //1 -> up, 0 -> down
-            if (num == 1)
-            {
-                EnemyRigidbody erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisEnemyEnemy, "Rigidbody");
-                Rigidbody rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
-                rb.AddForce(Vector3.up * 1f, ForceMode.Impulse);
-            }
-            else if (num == 0)
-            {
-                EnemyRigidbody erb = ReflectionUtils.GetFieldValue<EnemyRigidbody>(thisEnemyEnemy, "Rigidbody");
-                Rigidbody rb = ReflectionUtils.GetFieldValue<Rigidbody>(erb, "rb");
-                rb.AddForce(Vector3.down * 1f, ForceMode.Impulse);
-            }
-        }
+        }    
     }
 }

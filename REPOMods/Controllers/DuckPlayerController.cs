@@ -20,7 +20,7 @@ namespace OpJosModREPO.Controllers.IAmEnemy
 
             var specs = new EnemySpecs
             {
-                MoveSpeed = 2.7f,
+                MoveSpeed = 3f,
                 AttackDelay = 3f
             };
             base.OnSetup(actorNumber, duck.gameObject, duck.enemy, duck.transform, specs);
