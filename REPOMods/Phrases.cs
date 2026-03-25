@@ -1,4 +1,5 @@
 ﻿using OpJosModREPO.Tourettes.Patches;
+using OpJosModREPO.Tourettes.Util;
 using System;
 using System.Collections.Generic;
 
@@ -79,7 +80,7 @@ namespace OpJosModREPO
                 //just play random phrase
                 PlayerAvatarPatch.isSpeakingBee = false;
                 string phrase = phraseList[rng.Next(phraseList.Count)];
-                __instance.ChatMessageSend(phrase, false);
+                ReflectionUtils.InvokeMethod(__instance, "ChatMessageSend", new object[] { phrase, false });
             }
         }
     }

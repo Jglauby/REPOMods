@@ -1,4 +1,5 @@
 ﻿using OpJosModREPO.Tourettes.Patches;
+using OpJosModREPO.Tourettes.Util;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace OpJosModREPO
             {
                 int length = Math.Min(maxLength, totalLength - index);
                 string chunk = script.Substring(index, length);
-                __instance.ChatMessageSend(chunk, false);
+                ReflectionUtils.InvokeMethod(__instance, "ChatMessageSend", new object[] { chunk, false });
                 index += length;
 
                 yield return new WaitForSeconds(60 * 60);//one hour delay
