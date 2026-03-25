@@ -24,7 +24,7 @@ namespace OpJosModREPO
             {
                 int length = Math.Min(maxLength, totalLength - index);
                 string chunk = script.Substring(index, length);
-                ReflectionUtils.InvokeMethod(__instance, "ChatMessageSend", new object[] { chunk, false });
+                __instance.ChatMessageSend(chunk);
                 index += length;
 
                 yield return new WaitForSeconds(60 * 60);//one hour delay

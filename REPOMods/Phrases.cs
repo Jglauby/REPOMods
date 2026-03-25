@@ -80,7 +80,7 @@ namespace OpJosModREPO
                 //just play random phrase
                 PlayerAvatarPatch.isSpeakingBee = false;
                 string phrase = phraseList[rng.Next(phraseList.Count)];
-                ReflectionUtils.InvokeMethod(__instance, "ChatMessageSend", new object[] { phrase, false });
+                __instance.ChatMessageSend(phrase);
             }
         }
     }
